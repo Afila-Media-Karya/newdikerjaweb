@@ -15,7 +15,7 @@ License: For each use you must have a valid license purchased only from above li
 
     <head>
         <base href="../../../">
-        <title>Login DANGKE</title>
+        <title>Login DIKERJA</title>
         <meta charset="utf-8" />
         <meta name="description"
             content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 94,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue &amp; Laravel versions. Grab your copy now and get life-time updates for free." />
@@ -151,7 +151,7 @@ License: For each use you must have a valid license purchased only from above li
                                 <img src="{{ asset('admin/assets/media/auth/playstore.svg') }}" alt=""
                                     srcset="">
                             </a>
-                            <a href="https://apps.apple.com/us/app/dangke/id6474229039"
+                            <a href="https://apps.apple.com/us/app/DIKERJA/id6474229039"
                                 target="_blank">
                                 <img src="{{ asset('admin/assets/media/auth/appstore.svg') }}" alt=""
                                     srcset="">

@@ -7,7 +7,7 @@
 <head>
     <base href="">
     <meta charset="utf-8" />
-    <title> @yield('title') | DANGKE </title>
+    <title> @yield('title') | DIKERJA </title>
     <meta name="description" content="Sistem pemilihan calon legislatif." />
     <meta name="keywords" content="Legislatif, pemilihan,calon legislatif, pemilihan umum" />
     <link rel="canonical" href="Https://preview.keenthemes.com/metronic8" />
