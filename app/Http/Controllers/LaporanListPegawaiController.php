@@ -56,11 +56,11 @@ class LaporanListPegawaiController extends BaseController
             ->where('tb_pegawai.status', '1')
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'DESC');
 
-        $dinas = 'KABUPATEN ENREKANG';
+        $dinas = 'KABUPATEN BULUKUMBA';
         if (!is_null($satuan_kerja) && $satuan_kerja !== 'semua') {
             $query->where('tb_pegawai.id_satuan_kerja', $satuan_kerja);
             $dinas = PerangkatDaerah::where('id', $satuan_kerja)->first();
-            $dinas = $dinas ? strtoupper($dinas->nama_satuan_kerja) . ' KABUPATEN ENREKANG' : '';
+            $dinas = $dinas ? strtoupper($dinas->nama_satuan_kerja) . ' KABUPATEN BULUKUMBA' : '';
         }
 
         if (!is_null($unit_kerja) && $unit_kerja !== 'semua') {
@@ -118,8 +118,8 @@ class LaporanListPegawaiController extends BaseController
         // dd($data);
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Kinerja')
             ->setSubject('Laporan Rekapitulasi Kinerja')
             ->setDescription('Laporan Rekapitulasi Kinerja')
@@ -146,7 +146,7 @@ class LaporanListPegawaiController extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:I1');
-        $logoPath = 'admin/assets/media/logos/enrekang.png';
+        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');

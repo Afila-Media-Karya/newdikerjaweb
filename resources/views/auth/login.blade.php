@@ -52,24 +52,17 @@ License: For each use you must have a valid license purchased only from above li
                 <div id="aside_login" class="d-flex flex-column flex-lg-row-auto w-xl-800px positon-xl-relative d-none d-md-block">
                     <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 scroll-y">
                         <div class="header_jumbotron">
-                            <img src="{{ asset('admin/assets/media/logos/logo_sm.svg') }}" class="side-logo"
-                                alt="" />
+                            <img src="{{ asset('admin/assets/media/logos/logo_sm.png') }}" class="side-logo" alt="" />
                             <span class="vertical-line"></span>
-                            <h4>BKPSDM <br> KABUPATEN ENREKANG</h4>
+                            <h4>BKPSDM <br> KABUPATEN BULUKUMBA</h4>
                         </div>
                         <div class="center-box">
                             <div class="frame-box">
                                 <div class="welcome-box" style="font-weight:700">Selamat Datang</div>
-                                <p> DANGKE
-                                    <span style="font-weight:200">adalah Platform Digital yang memudahkan pegawai dalam
-                                        pelaporan aktifitas harian dan absensi sebagai dasar pembayaran TPP secara
-                                        otomatis cepat, transparan, terintegrasi, konsisten dan sesuai dengan aturan
-                                        yang berlaku</span>
-                                </p>
+                                <p> DIKERJA (Dokumen Elektronik Kinerja dan Kehadiran)
+                                <span style="font-weight:200">adalah platform digital untuk memudahkan Aparatur Sipil Negara (ASN) dalam melakukan pelaporan aktifitas kinerja dan kehadiran kerja berbasis Website dan Mobile App.</span></p>
                             </div>
                         </div>
-                        <img class="pimpinan_daerah_img" src="{{ asset('admin/assets/media/auth/pimpinan.svg') }}"
-                            alt="" srcset="">
                         <div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px"
                             style="background-image: url(assets/media/illustrations/sketchy-1/13.png"></div>
                     </div>
@@ -78,7 +71,7 @@ License: For each use you must have a valid license purchased only from above li
                     <!--begin::Content-->
                     <div class="d-flex flex-center flex-column flex-column-fluid">
                         <!--begin::Wrapper-->
-                        <img src="{{ asset('admin/assets/media/logos/logo_dangke_auth.svg') }}" alt="" />
+                        <img src="{{ asset('admin/assets/media/logos/logo_dikerja.svg') }}" alt="" />
                         <div class="w-lg-500px p-10 p-lg-15 mx-auto">
 
                             <form class="form w-100" action="{{ route('login.post') }}" method="POST">

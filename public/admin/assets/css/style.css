@@ -21,14 +21,14 @@ th[rowspan] {
 }
 
 #kt_accordion_1 .accordion-button {
-  background-color: #442292;
+  background-color: #0d47a1;
   color: white;
   position: relative;
   right: 16px;
 }
 
 #kt_accordion_1 .accordion-header {
-  background: #442292;
+  background: #0d47a1;
   /* padding: 30px; */
   border-radius: 8px 8px 0px 0px;
   margin-bottom: 20px;
@@ -81,7 +81,7 @@ th[rowspan] {
 
 .center-box {
   position: fixed;
-  top: 30%;
+  bottom: 0;
   left: 28%;
   transform: translate(-50%, -50%);
   z-index: 1000;
@@ -133,7 +133,7 @@ th[rowspan] {
 }
 
 .aside-menu-custom {
-  background: #442292;
+  background: #0d47a1;
   background-image: url("/admin/media/icons/aside/bg_side.png");
   background-repeat: no-repeat; /* Menghindari pengulangan gambar */
   background-size: cover;
@@ -831,7 +831,7 @@ th[rowspan] {
   width: 100%;
   height: 128px;
   flex-shrink: 0;
-  background: #442292;
+  background: #0d47a1;
   border-radius: 16px;
   margin-bottom: 24px;
   background-image: url("/admin/assets/media/icons/dashboard/icon_tpp_kiri.png"),

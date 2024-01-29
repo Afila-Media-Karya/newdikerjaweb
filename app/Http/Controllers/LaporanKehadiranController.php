@@ -119,8 +119,8 @@ class LaporanKehadiranController extends Controller
     {
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Absen Pegawai')
             ->setSubject('Laporan Rekapitulasi Absen Pegawai')
             ->setDescription('Laporan Rekapitulasi Absen Pegawai')
@@ -307,8 +307,8 @@ class LaporanKehadiranController extends Controller
     {
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Absen Pegawai')
             ->setSubject('Laporan Rekapitulasi Absen Pegawai')
             ->setDescription('Laporan Rekapitulasi Absen Pegawai')
@@ -613,8 +613,8 @@ class LaporanKehadiranController extends Controller
     {
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Absen Pegawai')
             ->setSubject('Laporan Rekapitulasi Absen Pegawai')
             ->setDescription('Laporan Rekapitulasi Absen Pegawai')

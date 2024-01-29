@@ -299,8 +299,8 @@ class LaporanSasaranKinerjaController extends BaseController
 
     public function export_rekapitulasi_nilai_skp($data, $type,$satuan_kerja,$nama_unit_kerja){
         $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi SKP Satuan Kerja')
             ->setSubject('Laporan Rekapitulasi SKP Satuan Kerja')
             ->setDescription('Laporan Rekapitulasi SKP Satuan Kerja')
@@ -617,8 +617,8 @@ class LaporanSasaranKinerjaController extends BaseController
 
     public function exportSkpKepala($data, $type, $pegawai, $atasan){
         $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan SKP Kepala')
             ->setSubject('Laporan SKP Kepala')
             ->setDescription('Laporan SKP Kepala')
@@ -803,7 +803,7 @@ class LaporanSasaranKinerjaController extends BaseController
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
-        $sheet->setCellValue('E' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('E' . $cell . ':F' . $cell);
+        $sheet->setCellValue('E' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('E' . $cell . ':F' . $cell);
         $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $sheet->setCellValue('E' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('E' . $cell . ':F' . $cell);
         $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -836,8 +836,8 @@ class LaporanSasaranKinerjaController extends BaseController
     public function exportRealisasiKepala($data,$type, $pegawai, $atasan){
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Penilaian SKP Kepala')
             ->setSubject('Laporan Penilaian SKP Kepala')
             ->setDescription('Laporan Penilaian SKP Kepala')
@@ -1185,7 +1185,7 @@ class LaporanSasaranKinerjaController extends BaseController
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
-        $sheet->setCellValue('H' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('H' . $cell . ':K' . $cell);
+        $sheet->setCellValue('H' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('H' . $cell . ':K' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $sheet->setCellValue('H' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('H' . $cell . ':K' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -1218,8 +1218,8 @@ class LaporanSasaranKinerjaController extends BaseController
 
     public function exportSkpPegawai($data, $type, $pegawai, $atasan){
         $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan SKP ')
             ->setSubject('Laporan SKP ')
             ->setDescription('Laporan SKP ')
@@ -1446,7 +1446,7 @@ class LaporanSasaranKinerjaController extends BaseController
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
-        $sheet->setCellValue('G' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('G' . $cell . ':K' . $cell);
+        $sheet->setCellValue('G' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('G' . $cell . ':K' . $cell);
         $sheet->getStyle('G' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $sheet->setCellValue('G' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('G' . $cell . ':K' . $cell);
         $sheet->getStyle('G' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -1490,8 +1490,8 @@ class LaporanSasaranKinerjaController extends BaseController
    
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Penilaian SKP')
             ->setSubject('Laporan Penilaian SKP')
             ->setDescription('Laporan Penilaian SKP')
@@ -1911,7 +1911,7 @@ class LaporanSasaranKinerjaController extends BaseController
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
-        $sheet->setCellValue('H' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('H' . $cell . ':K' . $cell);
+        $sheet->setCellValue('H' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('H' . $cell . ':K' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $sheet->setCellValue('H' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('H' . $cell . ':K' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);

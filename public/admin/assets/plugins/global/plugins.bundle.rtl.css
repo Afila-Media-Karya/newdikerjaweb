@@ -22843,7 +22843,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 .highlight .highlight-copy:hover {
   transition: all 0.2s ease;
   background-color: #323268;
-  color: #442292;
+  color: #0d47a1;
 }
 .highlight:hover .highlight-copy {
   display: flex;
@@ -23190,7 +23190,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
   .select2-dropdown
   .select2-results__option:not(.select2-results__option--group):hover {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 .select2-container--bootstrap5
@@ -23202,7 +23202,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 11'%3e%3cpath fill='%23FFFFFF' d='M4.89557 6.49823L2.79487 4.26513C2.26967 3.70683 1.38251 3.70683 0.857309 4.26513C0.375593 4.77721 0.375593 5.57574 0.857309 6.08781L4.74989 10.2257C5.14476 10.6455 5.81176 10.6455 6.20663 10.2257L13.1427 2.85252C13.6244 2.34044 13.6244 1.54191 13.1427 1.02984C12.6175 0.471537 11.7303 0.471536 11.2051 1.02984L6.06096 6.49823C5.74506 6.83403 5.21146 6.83403 4.89557 6.49823Z'/%3e%3c/svg%3e");
   background-size: 0.8rem;
   background-position: center right 1.25rem;
-  background-color: #442292;
+  background-color: #0d47a1;
   color: #fff;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -23316,11 +23316,11 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 }
 .daterangepicker .ranges li:hover {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 .daterangepicker .ranges li.active {
-  background-color: #442292;
+  background-color: #0d47a1;
   color: #fff;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -23545,7 +23545,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 .daterangepicker .drp-calendar th.available:hover {
   border-radius: 0.475rem;
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
 }
 .daterangepicker .drp-calendar th {
   font-weight: 500;
@@ -23562,7 +23562,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 }
 .daterangepicker .drp-calendar th.next.available:hover span,
 .daterangepicker .drp-calendar th.prev.available:hover span {
-  border-color: #442292;
+  border-color: #0d47a1;
 }
 .daterangepicker .drp-calendar th.next span {
   margin-right: 1px;
@@ -23577,7 +23577,7 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
   color: #b5b5c3;
 }
 .daterangepicker .drp-calendar td.active {
-  background-color: #442292 !important;
+  background-color: #0d47a1 !important;
   color: #fff !important;
   border-radius: 0.475rem;
 }
@@ -23595,18 +23595,18 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-right {
 .daterangepicker .drp-calendar td.today,
 .daterangepicker .drp-calendar td.today.active {
   background: #f1faff !important;
-  color: #442292 !important;
+  color: #0d47a1 !important;
   border-radius: 0.475rem;
 }
 .daterangepicker
   .drp-calendar
   td.in-range.available:not(.active):not(.off):not(.today) {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
 }
 .daterangepicker .drp-calendar td:hover {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
 }
 .daterangepicker select.ampmselect,
 .daterangepicker select.hourselect,
@@ -23849,7 +23849,7 @@ span.flatpickr-weekday {
   cursor: pointer;
   outline: 0;
   background: #f1faff;
-  color: #442292;
+  color: #0d47a1;
   border-color: transparent;
 }
 .flatpickr-day.today {
@@ -23881,7 +23881,7 @@ span.flatpickr-weekday {
 .flatpickr-day.startRange.prevMonthDay,
 .flatpickr-day.startRange:focus,
 .flatpickr-day.startRange:hover {
-  background: #442292;
+  background: #0d47a1;
   color: #fff;
   border-color: transparent;
 }
@@ -23900,7 +23900,7 @@ span.flatpickr-weekday {
   cursor: pointer;
   outline: 0;
   background: #f1faff;
-  color: #442292;
+  color: #0d47a1;
   border-color: transparent;
 }
 .flatpickr-day.today {
@@ -23930,7 +23930,7 @@ span.flatpickr-weekday {
 .flatpickr-day.startRange.prevMonthDay,
 .flatpickr-day.startRange:focus,
 .flatpickr-day.startRange:hover {
-  background: #442292;
+  background: #0d47a1;
   color: #fff;
   border-color: transparent;
 }
@@ -24125,7 +24125,7 @@ span.flatpickr-weekday {
 .tagify__dropdown .tagify__dropdown__item.tagify__dropdown__item--active,
 .tagify__dropdown .tagify__dropdown__item:hover {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
 }
 .tagify__dropdown.tagify__inline__suggestions {
   padding: 0.75rem 1rem;
@@ -24143,7 +24143,7 @@ span.flatpickr-weekday {
   .tagify__dropdown__item.tagify__dropdown__item--active,
 .tagify__dropdown.tagify__inline__suggestions .tagify__dropdown__item:hover {
   background-color: #f1faff;
-  color: #442292;
+  color: #0d47a1;
 }
 .bootstrap-maxlength {
   z-index: 1040 !important;
@@ -24165,7 +24165,7 @@ span.flatpickr-weekday {
   border-radius: 0.475rem !important;
 }
 .ck-content.ck-focused {
-  border-color: #442292 !important;
+  border-color: #0d47a1 !important;
   box-shadow: none !important;
 }
 .ck-editor .ck-toolbar {
@@ -24185,7 +24185,7 @@ span.flatpickr-weekday {
   border-color: transparent !important;
 }
 .ck-body .ck-balloon-panel .ck-content.ck-focused {
-  border-color: #442292 !important;
+  border-color: #0d47a1 !important;
 }
 .ck-body .ck-balloon-panel .ck-toolbar,
 .ck-body .ck-balloon-panel.ck-toolbar-container {
@@ -24221,7 +24221,7 @@ div.dataTables_wrapper div.dataTables_paginate .pagination {
 }
 table.dataTable tbody > tr.selected,
 table.dataTable tbody > tr > .selected {
-  background-color: #442292;
+  background-color: #0d47a1;
 }
 table.dataTable tbody td.selected,
 table.dataTable tbody th.selected,
@@ -24318,7 +24318,7 @@ table.dataTable.dtr-inline.collapsed
   > tr.parent
   > th.dtr-control:before {
   content: "-";
-  background-color: #442292;
+  background-color: #0d47a1;
   color: #fff;
 }
 table.dataTable > tbody > tr.child span.dtr-title {
@@ -24334,7 +24334,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
   padding: 1.5rem 1.75rem;
   text-align: center;
   cursor: pointer;
-  border: 1px dashed #442292;
+  border: 1px dashed #0d47a1;
   background-color: #f1faff;
   border-radius: 0.475rem !important;
 }
@@ -24431,7 +24431,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
   .dropzone-item
   .dropzone-file
   .dropzone-filename:hover {
-  color: #442292;
+  color: #0d47a1;
 }
 .dropzone.dropzone-queue .dropzone-item .dropzone-file .dropzone-error {
   margin-top: 0.25rem;
@@ -24504,7 +24504,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
   .dropzone-toolbar
   .dropzone-start:hover
   i {
-  color: #442292;
+  color: #0d47a1;
 }
 .dropzone.dropzone-queue .dropzone-item .dropzone-toolbar .dropzone-start {
   transition: color 0.2s ease, background-color 0.2s ease;
@@ -24556,7 +24556,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
   display: none;
 }
 .noUi-target .noUi-connect {
-  background: #442292;
+  background: #0d47a1;
 }
 .noUi-target .noUi-handle {
   border: 1px solid #eff2f5;
@@ -24621,7 +24621,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
 .ql-toolbar.ql-snow button:focus .ql-stroke,
 .ql-toolbar.ql-snow button:hover .ql-fill,
 .ql-toolbar.ql-snow button:hover .ql-stroke {
-  stroke: #442292;
+  stroke: #0d47a1;
 }
 .ql-toolbar.ql-snow .ql-picker.ql-active .ql-fill,
 .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-fill,
@@ -24631,7 +24631,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
 .ql-toolbar.ql-snow button.ql-expanded .ql-fill,
 .ql-toolbar.ql-snow button:focus .ql-fill,
 .ql-toolbar.ql-snow button:hover .ql-fill {
-  fill: #442292;
+  fill: #0d47a1;
 }
 .ql-editor {
   color: #181c32;
@@ -24653,7 +24653,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
 }
 .ql-snow .ql-picker .ql-picker-label.ql-active,
 .ql-snow .ql-picker .ql-picker-label:hover {
-  color: #442292;
+  color: #0d47a1;
 }
 .ql-snow .ql-picker.ql-expanded {
   outline: 0 !important;
@@ -24661,12 +24661,12 @@ table.dataTable > tbody > tr.child span.dtr-data {
 }
 .ql-snow .ql-picker.ql-expanded .ql-picker-label {
   border-color: transparent !important;
-  color: #442292;
+  color: #0d47a1;
   outline: 0 !important;
 }
 .ql-snow .ql-picker.ql-expanded .ql-picker-label.ql-active,
 .ql-snow .ql-picker.ql-expanded .ql-picker-label:hover {
-  color: #442292;
+  color: #0d47a1;
 }
 .ql-snow .ql-picker.ql-expanded .ql-picker-options {
   border: 0;
@@ -24682,7 +24682,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
 .ql-snow .ql-picker.ql-expanded .ql-picker-options .ql-picker-item.ql-active,
 .ql-snow .ql-picker.ql-expanded .ql-picker-options .ql-picker-item.ql-selected,
 .ql-snow .ql-picker.ql-expanded .ql-picker-options .ql-picker-item:hover {
-  color: #442292;
+  color: #0d47a1;
 }
 .ql-snow .ql-tooltip {
   border: 0;
@@ -24714,7 +24714,7 @@ table.dataTable > tbody > tr.child span.dtr-data {
 }
 .ql-snow .ql-tooltip .ql-action:hover {
   transition: color 0.3s ease;
-  color: #442292;
+  color: #0d47a1;
 }
 .modal .ql-snow .ql-tooltip.ql-editing {
   left: 20px !important;
@@ -24840,8 +24840,8 @@ body.swal2-height-auto {
   color: #7239ea;
 }
 .swal2-icon.swal2-question {
-  border-color: #442292;
-  color: #442292;
+  border-color: #0d47a1;
+  color: #0d47a1;
 }
 .tox-target {
   display: none;
@@ -25026,7 +25026,7 @@ body.swal2-height-auto {
   fill: #fff !important;
 }
 .apexcharts-bar-hover-primary .apexcharts-bar-area:hover {
-  fill: #442292 !important;
+  fill: #0d47a1 !important;
 }
 .apexcharts-bar-hover-secondary .apexcharts-bar-area:hover {
   fill: #e4e6ef !important;
@@ -25116,7 +25116,7 @@ body.swal2-height-auto {
   margin: 0 0.25rem;
   border-radius: 0.475rem;
   padding: 0.5rem 0.75rem;
-  background-color: #442292;
+  background-color: #0d47a1;
   color: #fff;
 }
 .tns .tns-controls button:hover {
@@ -25140,7 +25140,7 @@ body.swal2-height-auto {
   border-radius: 0.35rem;
 }
 .tns .tns-nav button.tns-nav-active {
-  background-color: #442292;
+  background-color: #0d47a1;
 }
 .tns.tns-initiazlied [data-tns="true"] {
   display: flex;
@@ -25173,8 +25173,8 @@ body.swal2-height-auto {
   }
 }
 body {
-  --fc-event-border-color: #442292;
-  --fc-event-bg-color: #442292;
+  --fc-event-border-color: #0d47a1;
+  --fc-event-bg-color: #0d47a1;
   --fc-event-text-color: #ffffff;
 }
 .fc {
@@ -25283,7 +25283,7 @@ body {
 .fc .fc-daygrid-dot-event.fc-event-mirror,
 .fc .fc-daygrid-dot-event:hover {
   background-color: #f5f8fa;
-  color: #442292;
+  color: #0d47a1;
 }
 .fc .fc-daygrid-event-dot {
   margin-left: 0.5rem;
@@ -25311,7 +25311,7 @@ body {
   color: #7e8299;
 }
 .fc .fc-popover .fc-popover-header .fc-popover-close:hover {
-  color: #442292;
+  color: #0d47a1;
 }
 .fc .fc-popover .fc-popover-body {
   padding: 0.5rem 0.75rem 0.75rem 0.75rem;
@@ -25431,7 +25431,7 @@ body {
   color: #f5f8fa;
 }
 .kanban-container .kanban-board .kanban-board-header.primary {
-  background-color: #442292;
+  background-color: #0d47a1;
   box-shadow: none;
 }
 .kanban-container
@@ -25448,7 +25448,7 @@ body {
   .kanban-board
   .kanban-board-header.light-primary
   .kanban-title-board {
-  color: #442292;
+  color: #0d47a1;
 }
 .kanban-container .kanban-board .kanban-board-header.secondary {
   background-color: #e4e6ef;
@@ -25599,7 +25599,7 @@ body {
   .kanban-board
   .kanban-drag
   .kanban-item[data-class="primary"] {
-  background-color: #442292;
+  background-color: #0d47a1;
   color: #fff;
   box-shadow: none;
 }
@@ -25608,7 +25608,7 @@ body {
   .kanban-drag
   .kanban-item[data-class="light-primary"] {
   background-color: rgba(0, 158, 247, 0.1);
-  color: #442292;
+  color: #0d47a1;
   box-shadow: none;
 }
 .kanban-container
@@ -25805,7 +25805,7 @@ body {
 .vakata-context ul li a:hover {
   margin: 0;
   background-color: #f5f8fa;
-  color: #442292;
+  color: #0d47a1;
   box-shadow: none;
 }
 .vakata-context .vakata-context-hover > a .ins,
@@ -25853,7 +25853,7 @@ body {
 .vis-timeline .vis-item {
   position: absolute;
   color: #5e6278;
-  border-color: #442292;
+  border-color: #0d47a1;
   border-width: 1px;
   background-color: #f5f8fa;
   border-radius: 0.475rem !important;

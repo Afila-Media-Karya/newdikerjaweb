@@ -46,9 +46,9 @@
                 data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}"
                 data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
                 <!--begin::Brand-->
-                <div class="aside-logo flex-column-auto" style="background-color: #442292" id="kt_aside_logo">
+                <div class="aside-logo flex-column-auto" style="background-color: #0D47A1" id="kt_aside_logo">
                     <a href="#">
-                        <img src="{{ asset('admin/assets/media/logos/dangke_side.svg') }}" alt=""
+                        <img src="{{ asset('admin/assets/media/logos/bulkum.svg') }}" alt=""
                             srcset="">
                     </a>
 

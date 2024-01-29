@@ -227,8 +227,8 @@ class LaporanKinerjaController extends BaseController
     public function export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan)
     {
         $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Pembayaran TPP')
             ->setSubject('Laporan Pembayaran TPP')
             ->setDescription('Laporan Pembayaran TPP')
@@ -438,7 +438,7 @@ class LaporanKinerjaController extends BaseController
 
         $tgl_cetak = date("t", strtotime((int)session('tahun_penganggaran'))) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
-        // $sheet->setCellValue('E' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('E' . $cell . ':F' . $cell);
+        // $sheet->setCellValue('E' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('E' . $cell . ':F' . $cell);
         // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         // $sheet->setCellValue('E' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('E' . $cell . ':F' . $cell);
         // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -489,8 +489,8 @@ class LaporanKinerjaController extends BaseController
     {
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Kinerja')
             ->setSubject('Laporan Rekapitulasi Kinerja')
             ->setDescription('Laporan Rekapitulasi Kinerja')
@@ -617,7 +617,7 @@ class LaporanKinerjaController extends BaseController
         $cell++;
 
         if (count($pegawai_ttd) > 0) {
-            $sheet->setCellValue('E' . ++$cell, 'Kabupaten ENREKANG ' . date('d/m/Y'))->mergeCells('E' . $cell . ':H' . $cell);
+            $sheet->setCellValue('E' . ++$cell, 'Kabupaten BULUKUMBA ' . date('d/m/Y'))->mergeCells('E' . $cell . ':H' . $cell);
             $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
             $sheet->setCellValue('E' . ++$cell, $pegawai_ttd['nama_jabatan'])->mergeCells('E' . $cell . ':H' . $cell);
             $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);

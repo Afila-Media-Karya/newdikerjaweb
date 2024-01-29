@@ -108,8 +108,8 @@ class JabatanPltController extends BaseController
         
          $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Kinerja')
             ->setSubject('Laporan Rekapitulasi Kinerja')
             ->setDescription('Laporan Rekapitulasi Kinerja')
@@ -135,7 +135,7 @@ class JabatanPltController extends BaseController
         $spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.3);
 
         $sheet->setCellValue('A1', 'DAFTAR JABATAN PLT')->mergeCells('A1:E1');
-        $sheet->setCellValue('A2', 'PEMERINTAH KABUPATEN ENREKANG')->mergeCells('A2:E2');
+        $sheet->setCellValue('A2', 'PEMERINTAH KABUPATEN BULUKUMBA')->mergeCells('A2:E2');
 
         $sheet->getStyle('A5:E5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
 

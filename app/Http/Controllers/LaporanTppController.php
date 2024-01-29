@@ -172,8 +172,8 @@ class LaporanTppController extends BaseController
     public function export_tpp($data, $type,$nama_satuan_kerja,$nama_unit_kerja,$bulan){
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Pembayaran TPP')
             ->setSubject('Laporan Pembayaran TPP')
             ->setDescription('Laporan Pembayaran TPP')
@@ -506,7 +506,7 @@ class LaporanTppController extends BaseController
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, $bulan + 1, 0, (int)session('tahun_penganggaran')));
 
-        // $sheet->setCellValue('S' . ++$cell, 'ENREKANG, ' . $tgl_cetak)->mergeCells('S' . $cell . ':V' . $cell);
+        // $sheet->setCellValue('S' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('S' . $cell . ':V' . $cell);
         // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
 
         // $cell = $cell + 1;
@@ -756,8 +756,8 @@ class LaporanTppController extends BaseController
 
     public function export_tpp_pegawai($data,$type, $pegawai, $atasan, $bulan){
          $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Pembayaran TPP')
             ->setSubject('Laporan Pembayaran TPP')
             ->setDescription('Laporan Pembayaran TPP')
@@ -968,8 +968,8 @@ class LaporanTppController extends BaseController
     
     public function export_tpp_pegawai_opd($data,$type, $pegawai, $atasan, $bulan){
          $spreadsheet = new Spreadsheet();
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Pembayaran TPP')
             ->setSubject('Laporan Pembayaran TPP')
             ->setDescription('Laporan Pembayaran TPP')

@@ -8,7 +8,7 @@
     <style>
         .box-header {
             border-radius: 8px 8px 0px 0px;
-            background: #442292;
+            background: #0D47A1;
             padding: 16px;
             color: #fff;
             font-size: 18px;

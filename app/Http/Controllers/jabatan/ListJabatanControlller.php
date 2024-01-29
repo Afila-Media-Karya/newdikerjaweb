@@ -109,8 +109,8 @@ class ListJabatanControlller extends BaseController
 
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Kinerja')
             ->setSubject('Laporan Rekapitulasi Kinerja')
             ->setDescription('Laporan Rekapitulasi Kinerja')
@@ -137,7 +137,7 @@ class ListJabatanControlller extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:F1');
-        $logoPath = 'admin/assets/media/logos/enrekang.png';
+        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');
@@ -147,7 +147,7 @@ class ListJabatanControlller extends BaseController
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
 
         $sheet->setCellValue('A2', 'DAFTAR JABATAN')->mergeCells('A2:F2');
-        $sheet->setCellValue('A3', 'PEMERINTAH KABUPATEN ENREKANG')->mergeCells('A3:F3');
+        $sheet->setCellValue('A3', 'PEMERINTAH KABUPATEN BULUKUMBA')->mergeCells('A3:F3');
         $sheet->setCellValue('A4', ' ')->mergeCells('A4:F4');
 
         $sheet->setCellValue('A5', 'NO');
@@ -269,8 +269,8 @@ class ListJabatanControlller extends BaseController
 
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekap Kelas Jabatan')
             ->setSubject('Laporan Rekap Kelas Jabatan')
             ->setDescription('Laporan Rekap Kelas Jabatan')
@@ -297,7 +297,7 @@ class ListJabatanControlller extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:R1');
-        $logoPath = 'admin/assets/media/logos/enrekang.png';
+        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');
@@ -307,7 +307,7 @@ class ListJabatanControlller extends BaseController
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
 
         $sheet->setCellValue('A2', 'REKAP JABATAN PER KELAS')->mergeCells('A2:R2');
-        $sheet->setCellValue('A3', 'PEGAWAI NEGERI SIPIL DI LINGKUP PEMERINTAH KABUPATEN ENREKANG')->mergeCells('A3:R3');
+        $sheet->setCellValue('A3', 'PEGAWAI NEGERI SIPIL DI LINGKUP PEMERINTAH KABUPATEN BULUKUMBA')->mergeCells('A3:R3');
         $sheet->setCellValue('A4', ' ')->mergeCells('A4:F4');
 
          $sheet->setCellValue('A5', 'NO')->mergeCells('A5:A6');

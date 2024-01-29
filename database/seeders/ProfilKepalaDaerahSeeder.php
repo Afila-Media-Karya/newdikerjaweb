@@ -16,11 +16,11 @@ class ProfilKepalaDaerahSeeder extends Seeder
     {
         DB::table('tb_profil_daerah')->insert([
             'uuid' => Generator::uuid4()->toString(),
-            'nama_daerah' => 'ENREKANG',
+            'nama_daerah' => 'BULUKUMBA',
             'pimpinan_daerah' => 'Andi Muchtar Ali Yusuf',
             'email' => 'bupati@gmail.com',
             'no_telp' => '081234234234',
-            'alamat' => 'Rumah Jabatan Bupati ENREKANG',
+            'alamat' => 'Rumah Jabatan Bupati BULUKUMBA',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

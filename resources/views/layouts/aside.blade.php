@@ -8,7 +8,7 @@
         data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
         data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside_menu"
         data-kt-scroll-offset="0">
-        <div class="menu-title" style="background-color: #442292; padding: 0 25px; color: #FFFFFF; font-size: 12px">
+        <div class="menu-title" style="background-color: #0D47A1; padding: 0 25px; color: #FFFFFF; font-size: 12px">
             {{session('session_satuan_kerja')}}
         </div>
         <!--begin::Menu-->

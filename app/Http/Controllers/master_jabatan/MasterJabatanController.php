@@ -329,8 +329,8 @@ class MasterJabatanController extends BaseController
     public function export_jabatan($data){
         $spreadsheet = new Spreadsheet();
 
-        $spreadsheet->getProperties()->setCreator('BKPSDM ENREKANG')
-            ->setLastModifiedBy('BKPSDM ENREKANG')
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Struktur Jabatan')
             ->setSubject('Laporan Struktur Jabatan')
             ->setDescription('Laporan Struktur Jabatan')
