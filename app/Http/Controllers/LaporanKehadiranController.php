@@ -536,12 +536,17 @@ class LaporanKehadiranController extends Controller
             $item->jml_potongan_kehadiran_kerja = $child['jml_potongan_kehadiran_kerja'];
             $item->jml_hadir = $child['jml_hadir'];
             $item->jml_sakit = $child['jml_sakit'];
+            $item->jml_cuti = $child['jml_cuti'];
             $item->jml_izin_cuti = $child['jml_izin_cuti'];
             $item->jml_dinas_luar = $child['jml_dinas_luar'];
             $item->kmk_30 = $child['kmk_30'];
-            $item->kmk_30_keatas = $child['kmk_30_keatas'];
+            $item->kmk_60 = $child['kmk_60'];
+            $item->kmk_90 = $child['kmk_90'];
+            $item->kmk_90_keatas = $child['kmk_90_keatas'];
             $item->cpk_30 = $child['cpk_30'];
-            $item->cpk_30_keatas = $child['cpk_30_keatas'];
+            $item->cpk_60 = $child['cpk_60'];
+            $item->cpk_90 = $child['cpk_90'];
+            $item->cpk_90_keatas = $child['cpk_90_keatas'];
             $item->jml_tidak_apel = $child['jml_tidak_apel'];
             $item->jml_tidak_hadir_berturut_turut = $child['jml_tidak_hadir_berturut_turut'];
             return $item;
@@ -609,8 +614,7 @@ class LaporanKehadiranController extends Controller
         return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
     }
 
-    public function export_rekapitulasi_absen($data, $type, $bulan, $satuan_kerja, $nama_unit_kerja)
-    {
+   public function export_rekapitulasi_absen($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
@@ -637,75 +641,79 @@ class LaporanKehadiranController extends Controller
         $sheet->setCellValue('A1', 'REKAPITULASI CAPAIAN DISIPLIN / KEHADIRAN KERJA');
         $sheet->mergeCells('A1:AF1');
 
-        $perangka_daerah = '';
-        if ($satuan_kerja == $nama_unit_kerja || $nama_unit_kerja == 'Semua') {
-            $perangka_daerah = $satuan_kerja;
-        } else {
-            $perangka_daerah = $satuan_kerja . ' - ' . $nama_unit_kerja;
-        }
-
         $sheet->setCellValue('A3', 'PERANGKAT DAERAH');
         $sheet->mergeCells('A3:B3');
         $sheet->setCellValue('C3', ': ');
-        $sheet->setCellValue('D3', $perangka_daerah)->mergeCells('D3:AF3');
+        $sheet->setCellValue('D3', $satuan_kerja)->mergeCells('D3:AF3');
 
         $sheet->setCellValue('A4', 'PERIODE');
         $sheet->mergeCells('A4:B4');
         $sheet->setCellValue('C4', ':');
-        $bulan = date('F', strtotime(date('Y-') . $bulan . date('-d')));
-        $sheet->setCellValue('D4', $bulan)->mergeCells('D4:AF4');
+        $sheet->setCellValue('D4', $tanggal_awal . ' s/d ' . $tanggal_akhir)->mergeCells('D4:AF4');
 
         $sheet->setCellValue('A5', ' ');
 
-
-
-        $sheet->getStyle('A1:W1')->getFont()->setSize(16);
-        $sheet->getStyle('A3:W4')->getFont()->setSize(12);
+        
+        
+        $sheet->getStyle('A1:AF1')->getFont()->setSize(16);
+        $sheet->getStyle('A3:AF4')->getFont()->setSize(12);
 
         $sheet->getColumnDimension('B')->setWidth(35);
+       
 
-
-        // $sheet->getStyle('A6:W10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
+        $sheet->getStyle('A6:AF10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
 
         // konten
         $sheet->setCellValue('A6', 'No')->mergeCells('A6:A10');
         $sheet->setCellValue('B6', 'NAMA/NIP')->mergeCells('B6:B10');
         $sheet->setCellValue('C6', 'JML HARI KERJA')->mergeCells('C6:C10');
         $sheet->setCellValue('D7', 'HADIR')->mergeCells('D7:D10');
-        $sheet->setCellValue('E7', 'DINAS LUAR')->mergeCells('E7:E10');
-        $sheet->setCellValue('F7', 'IZIN/CUTI')->mergeCells('F7:F10');
-        $sheet->setCellValue('G7', 'SAKIT')->mergeCells('G7:G10');
+        $sheet->setCellValue('E7', 'SAKIT')->mergeCells('E7:E10');
+        $sheet->setCellValue('F7', 'CUTI')->mergeCells('F7:F10');
+        $sheet->setCellValue('G7', 'DINAS LUAR')->mergeCells('G7:G10');
 
 
-        $sheet->setCellValue('D6', 'KEHADIRAN KERJA')->mergeCells('D6:I6');
+        $sheet->setCellValue('D6', 'KEHADIRAN KERJA')->mergeCells('D6:AF6');
+        $sheet->setCellValue('AE7', 'JUMLAH POTONGAN KEHADIRAN KERJA')->mergeCells('AE7:AE10');
+        $sheet->setCellValue('AF7', 'KETERANGAN')->mergeCells('AF7:AF10');
 
+       
+        $sheet->setCellValue('H7', 'TANPA KETERANGAN')->mergeCells('H7:J7');
+         $sheet->setCellValue('H8', 'JUMLAH KEHADIRAN KERJA')->mergeCells('H8:H10');
+        $sheet->setCellValue('I8', 'JUMLAH HARI TANPA KETERANGAN')->mergeCells('I8:I10');
+        $sheet->setCellValue('J8', 'TOTAL POTONGAN (%)')->mergeCells('J8:J10');
 
-        $sheet->setCellValue('H7', 'TANPA KETERANGAN')->mergeCells('H7:H10');
-        $sheet->setCellValue('I7', 'TOTAL POTONGAN (%)')->mergeCells('I7:I10');
-
-        $sheet->setCellValue('J6', 'TERLAMBAT DATANG KERJA')->mergeCells('J6:N7');
-        $sheet->setCellValue('N8', 'TOTAL POTONGAN (%)')->mergeCells('N8:N10');
-
-        $sheet->setCellValue('O6', 'CEPAT PULANG KERJA')->mergeCells('O6:S7');
+        $sheet->setCellValue('K7', 'KETERLAMBATAN MASUK KERJA')->mergeCells('K7:S7');
+        $sheet->setCellValue('K8', 'WAKTU TMK (MENIT)')->mergeCells('K8:R8');
         $sheet->setCellValue('S8', 'TOTAL POTONGAN (%)')->mergeCells('S8:S10');
 
-        $sheet->setCellValue('J8', '1-30' . PHP_EOL . 'MENIT' . PHP_EOL . '(kali)')->mergeCells('J8:J10');
-        $sheet->setCellValue('K8', 'JML' . PHP_EOL . 'POT' . PHP_EOL . '(%)')->mergeCells('K8:K10');
-        $sheet->setCellValue('L8', '31 ~' . PHP_EOL . 'MENIT' . PHP_EOL . '(kali)')->mergeCells('L8:L10');
-        $sheet->setCellValue('M8', 'JML' . PHP_EOL . 'POT' . PHP_EOL . '(%)')->mergeCells('M8:M10');
+        $sheet->setCellValue('T7', 'CEPAT PULANG KERJA')->mergeCells('T7:AB7');
+        $sheet->setCellValue('T8', 'WAKTU CPK (MENIT)')->mergeCells('T8:AA8');
+        $sheet->setCellValue('AB8', 'TOTAL POTONGAN (%)')->mergeCells('AB8:AB10');
 
-        $sheet->setCellValue('O8', '1-30' . PHP_EOL . 'MENIT' . PHP_EOL . '(kali)')->mergeCells('O8:O10');
-        $sheet->setCellValue('P8', 'JML' . PHP_EOL . 'POT' . PHP_EOL . '(%)')->mergeCells('P8:P10');
-        $sheet->setCellValue('Q8', '31 ~' . PHP_EOL . 'MENIT' . PHP_EOL . '(kali)')->mergeCells('Q8:Q10');
-        $sheet->setCellValue('R8', 'JML' . PHP_EOL . 'POT' . PHP_EOL . '(%)')->mergeCells('R8:R10');
+        $sheet->setCellValue('AC7', 'APEL / UPACARA')->mergeCells('AC7:AD7');
+        $sheet->setCellValue('AC8', 'JUMLAH TIDAK HADIR APEL/ UPACARA')->mergeCells('AC8:AC10');
+        $sheet->setCellValue('AD8', 'TOTAL POTONGAN (%)')->mergeCells('AD8:AD10');
 
-        $sheet->setCellValue('T6', 'APEL / UPACARA')->mergeCells('T6:U7');
-        $sheet->setCellValue('T8', 'JUMLAH TIDAK HADIR APEL/ UPACARA')->mergeCells('T8:T10');
-        $sheet->setCellValue('U8', 'TOTAL POTONGAN (%)')->mergeCells('U8:U10');
+    
 
-        $sheet->setCellValue('V6', 'JUMLAH POTONGAN KEHADIRAN KERJA')->mergeCells('V6:V10');
-        $sheet->setCellValue('W6', 'KETERANGAN')->mergeCells('W6:W10');
-        $spreadsheet->getActiveSheet()->getRowDimension(6)->setRowHeight(25);
+        $sheet->setCellValue('K9', '1-30' . PHP_EOL . 'M')->mergeCells('K9:K10');
+        $sheet->setCellValue('L9', 'JML' . PHP_EOL . 'POT')->mergeCells('L9:L10');
+        $sheet->setCellValue('M9', '31-60' . PHP_EOL . 'M')->mergeCells('M9:M10');
+        $sheet->setCellValue('N9', 'JML' . PHP_EOL . 'POT')->mergeCells('N9:N10');
+        $sheet->setCellValue('O9', '60-90' . PHP_EOL . 'M')->mergeCells('O9:O10');
+        $sheet->setCellValue('P9', 'JML' . PHP_EOL . 'POT')->mergeCells('P9:P10');
+        $sheet->setCellValue('Q9', '91' . PHP_EOL . 'Keatas')->mergeCells('Q9:Q10');
+        $sheet->setCellValue('R9', 'JML' . PHP_EOL . 'POT')->mergeCells('R9:R10');
+
+        $sheet->setCellValue('T9', '1-30' . PHP_EOL . 'M')->mergeCells('T9:T10');
+        $sheet->setCellValue('U9', 'JML' . PHP_EOL . 'POT')->mergeCells('U9:U10');
+        $sheet->setCellValue('V9', '31-60' . PHP_EOL . 'M')->mergeCells('V9:V10');
+        $sheet->setCellValue('W9', 'JML' . PHP_EOL . 'POT')->mergeCells('W9:W10');
+        $sheet->setCellValue('X9', '60-90' . PHP_EOL . 'M')->mergeCells('X9:X10');
+        $sheet->setCellValue('Y9', 'JML' . PHP_EOL . 'POT')->mergeCells('Y9:Y10');
+        $sheet->setCellValue('Z9', '91' . PHP_EOL . 'Keatas')->mergeCells('Z9:Z10');
+        $sheet->setCellValue('AA9', 'JML' . PHP_EOL . 'POT')->mergeCells('AA9:AA10');
 
         $cell = 11;
 
@@ -714,36 +722,46 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('B' . $cell, $value->nama . ' ' . PHP_EOL . ' ' . $value->nip);
             $sheet->setCellValue('C' . $cell, $value->jml_hari_kerja);
             $sheet->setCellValue('D' . $cell, $value->jml_hadir);
-            $sheet->setCellValue('E' . $cell, $value->jml_dinas_luar);
-            $sheet->setCellValue('F' . $cell, $value->jml_izin_cuti);
-            $sheet->setCellValue('G' . $cell, $value->jml_sakit);
-            $sheet->setCellValue('H' . $cell, $value->tanpa_keterangan);
-            $sheet->setCellValue('I' . $cell, $value->potongan_tanpa_keterangan);
-            $sheet->setCellValue('J' . $cell, $value->kmk_30);
-            $sheet->setCellValue('K' . $cell, $value->kmk_30 * 0.5);
-            $sheet->setCellValue('L' . $cell, $value->kmk_30_keatas);
-            $sheet->setCellValue('M' . $cell, $value->kmk_30_keatas * 1);
-            $sheet->setCellValue('N' . $cell, $value->potongan_masuk_kerja);
-            $sheet->setCellValue('O' . $cell, $value->cpk_30);
-            $sheet->setCellValue('P' . $cell, $value->cpk_30 * 0.5);
-            $sheet->setCellValue('Q' . $cell, $value->cpk_30_keatas);
-            $sheet->setCellValue('R' . $cell, $value->cpk_30_keatas * 1);
-            $sheet->setCellValue('S' . $cell, $value->potongan_pulang_kerja);
-            $sheet->setCellValue('T' . $cell, $value->jml_tidak_apel);
-            $sheet->setCellValue('U' . $cell, $value->potongan_apel);
+            $sheet->setCellValue('E' . $cell, $value->jml_sakit);
+            $sheet->setCellValue('F' . $cell, $value->jml_cuti);
+            $sheet->setCellValue('G' . $cell, $value->jml_dinas_luar);
+            $sheet->setCellValue('H' . $cell, ($value->jml_hadir + $value->jml_dinas_luar));
+            $sheet->setCellValue('I' . $cell, $value->tanpa_keterangan);
+            $sheet->setCellValue('J' . $cell, $value->tanpa_keterangan * 3);
+            $sheet->setCellValue('K' . $cell, $value->kmk_30);
+            $sheet->setCellValue('L' . $cell, $value->kmk_30 * 0.5);
+            $sheet->setCellValue('M' . $cell, $value->kmk_60);
+            $sheet->setCellValue('N' . $cell, $value->kmk_60 * 1);
+            $sheet->setCellValue('O' . $cell, $value->kmk_90);
+            $sheet->setCellValue('P' . $cell, $value->kmk_90 * 1.25);
+            $sheet->setCellValue('Q' . $cell, $value->kmk_90_keatas);
+            $sheet->setCellValue('R' . $cell, $value->kmk_90_keatas * 1.5);
+            $sheet->setCellValue('S' . $cell, $value->potongan_masuk_kerja);
+
+            $sheet->setCellValue('T' . $cell, $value->cpk_30);
+            $sheet->setCellValue('U' . $cell, $value->cpk_30 * 0.5);
+            $sheet->setCellValue('V' . $cell, $value->cpk_60);
+            $sheet->setCellValue('W' . $cell, $value->cpk_60 * 1);
+            $sheet->setCellValue('X' . $cell, $value->cpk_90);
+            $sheet->setCellValue('Y' . $cell, $value->cpk_90 * 1.25);
+            $sheet->setCellValue('Z' . $cell, $value->cpk_90_keatas);
+            $sheet->setCellValue('AA' . $cell, $value->cpk_90_keatas * 1.5);
+
+            $sheet->setCellValue('AB' . $cell, $value->potongan_pulang_kerja);
+            $sheet->setCellValue('AC' . $cell, $value->jml_tidak_apel);
+            $sheet->setCellValue('AD' . $cell, $value->potongan_apel);
+            
             $keterangan = '';
 
-            
+            $value->tanpa_keterangan > 3 ? $keterangan = 'TMS' : $keterangan = 'MS';
+            $sheet->setCellValue('AE' . $cell, $value->jml_potongan_kehadiran_kerja);
+            $sheet->setCellValue('AF' . $cell, $keterangan);
 
-            $value->tanpa_keterangan >= 11 && $value->jml_tidak_hadir_berturut_turut >= 5 ? $keterangan = 'TMS' : $keterangan = 'MS';
-            $sheet->setCellValue('V' . $cell, $value->jml_potongan_kehadiran_kerja);
-            $sheet->setCellValue('W' . $cell, $keterangan);
-
-            if ($keterangan == 'TMS') {
-                $sheet->getStyle('W' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336');
-            } else {
-                $sheet->getStyle('W' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
-            }
+            if ($value->tanpa_keterangan > 3) {
+                $sheet->getStyle('AF' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336'); 
+             }else{
+                $sheet->getStyle('AF' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
+             }
             $cell++;
         }
 
@@ -757,26 +775,26 @@ class LaporanKehadiranController extends Controller
             ],
         ];
 
-        $sheet->getStyle('D8:E' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('ECF1E0');
-        $sheet->getStyle('F8:I' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('DFBAB8');
-        // $sheet->getStyle('J8:N' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
-        $sheet->getStyle('J8:N' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F5D6B7');
-        $sheet->getStyle('O8:S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F9EADB');
-        $sheet->getStyle('T8:U' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('BCCBE2');
-        // $sheet->getStyle('AE7:W' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('4EAD5A');
+        $sheet->getStyle('D7:G' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('ECF1E0');
+        $sheet->getStyle('H7:J' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('DFBAB8');
+        $sheet->getStyle('I7:I' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
+        $sheet->getStyle('K7:S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F5D6B7');
+        $sheet->getStyle('T7:AB' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F9EADB');
+        $sheet->getStyle('AC7:AD' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('BCCBE2');
+        $sheet->getStyle('AE7:AE' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('4EAD5A');
 
-        $sheet->getStyle('A6:W' . $cell)->applyFromArray($border);
-        $sheet->getStyle('A:W')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('A:W')->getAlignment()->setVertical('center');
+        $sheet->getStyle('A6:AF' . $cell)->applyFromArray($border);
+        $sheet->getStyle('A:AF')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A:AF')->getAlignment()->setVertical('center');
         $sheet->getStyle('B7:B' . $cell)->getAlignment()->setHorizontal('rigth');
-        $sheet->getStyle('A3:W4')->getAlignment()->setHorizontal('rigth');
+        $sheet->getStyle('A3:AF4')->getAlignment()->setHorizontal('rigth');
 
-        $periode = date('F', strtotime(date('Y-') . $bulan . date('-d')));
+        $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
         if ($type == 'excel') {
             $writer = new Xlsx($spreadsheet);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-            $periode = date('F', strtotime(date('Y-') . $bulan . date('-d')));
+            $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
             $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
             header("Content-Disposition: attachment;filename=\"$filename\"");
         } else {

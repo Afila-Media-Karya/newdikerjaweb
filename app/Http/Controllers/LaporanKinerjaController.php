@@ -580,12 +580,12 @@ class LaporanKinerjaController extends BaseController
             $sheet->setCellValue('G' . $cell, round($nilai_kinerja, 2));
 
 
-            if ($value->capaian_waktu > 0) {
-                $keterangan = 'MS';
-                $sheet->getStyle('H' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
-            } else {
+            if ($nilai_kinerja < 50) {
                 $keterangan = 'TMS';
                 $sheet->getStyle('H' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336');
+            } else {
+                $keterangan = 'MS';
+                $sheet->getStyle('H' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');   
             }
 
             $sheet->setCellValue('H' . $cell, $keterangan);

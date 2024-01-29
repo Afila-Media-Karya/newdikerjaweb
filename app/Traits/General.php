@@ -362,10 +362,14 @@ trait General
         $jml_alfa = 0;
 
         $kmk_30 = 0;
-        $kmk_30_keatas = 0;
+        $kmk_60 = 0;
+        $kmk_90 = 0;
+        $kmk_90_keatas = 0;
 
         $cpk_30 = 0;
-        $cpk_30_keatas = 0;
+        $cpk_60 = 0;
+        $cpk_90 = 0;
+        $cpk_90_keatas = 0;
 
         $count_hadir = 0;
         $count_sakit = 0;
@@ -458,14 +462,22 @@ trait General
 
                 if ($selisih_waktu_masuk >= 1 && $selisih_waktu_masuk <= 30) {
                     $kmk_30 += 1;
-                } elseif ($selisih_waktu_masuk > 31) {
-                    $kmk_30_keatas += 1;
+                } elseif ($selisih_waktu_masuk >= 31 && $selisih_waktu_masuk <= 60) {
+                    $kmk_60 += 1;
+                } elseif ($selisih_waktu_masuk >= 61 && $selisih_waktu_masuk <= 90) {
+                    $kmk_90 += 1;
+                } elseif ($selisih_waktu_masuk >= 91) {
+                    $kmk_90_keatas += 1;
                 }
 
                 if ($selisih_waktu_pulang >= 1 && $selisih_waktu_pulang <= 30) {
                     $cpk_30 += 1;
-                } elseif ($selisih_waktu_pulang >= 31) {
-                    $cpk_30_keatas += 1;
+                } elseif ($selisih_waktu_pulang >= 31 && $selisih_waktu_pulang <= 60) {
+                    $cpk_60 += 1;
+                } elseif ($selisih_waktu_pulang >= 61 && $selisih_waktu_pulang <= 90) {
+                    $cpk_90 += 1;
+                } elseif ($selisih_waktu_pulang >= 91) {
+                    $cpk_90_keatas += 1;
                 }
 
                 $waktu_pulang = $absen_per_tanggal[$tanggal]['waktu_keluar'];
@@ -580,8 +592,8 @@ trait General
             $potongan_sakit = 0;
         }
 
-        $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_30_keatas * 1); 
-        $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_30_keatas * 1); 
+        $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5); 
+        $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
         $potongan_tanpa_keterangan = $potongan_cuti_izin + $potongan_sakit + ($jml_alfa * 3);
         $potongan_apel = $jml_tidak_apel * 2;
         $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel;
@@ -602,9 +614,13 @@ trait General
             'jml_izin_cuti' => $count_izin_cuti,
             'jml_dinas_luar' => $count_dinas_luar,
             'kmk_30' => $kmk_30,
-            'kmk_30_keatas' => $kmk_30_keatas,
+            'kmk_60' => $kmk_60,
+            'kmk_90' => $kmk_90,
+            'kmk_90_keatas' => $kmk_90_keatas,
             'cpk_30' => $cpk_30,
-            'cpk_30_keatas' => $cpk_30_keatas,
+            'cpk_60' => $cpk_60,
+            'cpk_90' => $cpk_90,
+            'cpk_90_keatas' => $cpk_90_keatas,
             'jml_tidak_apel' => $jml_tidak_apel,
             'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut
         ];

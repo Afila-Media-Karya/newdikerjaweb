@@ -206,83 +206,72 @@ class LaporanTppController extends BaseController
             $periode = "Tahun " . session('tahun_penganggaran');
         }
 
-        $sheet->setCellValue('A1', 'LAPORAN PEMBAYARAN TAMBAHAN PENGAHASILAN PEGAWAI')->mergeCells('A1:S1');
+        $sheet->setCellValue('A1', 'LAPORAN PEMBAYARAN TAMBAHAN PENGAHASILAN PEGAWAI')->mergeCells('A1:U1');
         //$sheet->setCellValue('A2', 'OPD ' . strtoupper($data['satuan_kerja']))->mergeCells('A2:U2');
-        $sheet->setCellValue('A2', strtoupper($nama_satuan_kerja))->mergeCells('A2:S2');
-        $row_bulan = 3;
-        if ($nama_unit_kerja !== 'Semua' && $nama_satuan_kerja !== $nama_unit_kerja) {
-            $sheet->setCellValue('A3',strtoupper($nama_unit_kerja))->mergeCells('A3:S3');
-            $row_bulan = 4;
-        }
-        $sheet->setCellValue('A'.$row_bulan, 'BULAN '.strtoupper(konvertBulan($bulan)))->mergeCells('A'.$row_bulan.':S'.$row_bulan);
+        $sheet->setCellValue('A2', strtoupper($nama_satuan_kerja))->mergeCells('A2:U2');
+        $sheet->setCellValue('A3', '' . strtoupper(konvertBulan($bulan)). ' '. date('Y'))->mergeCells('A3:U3');
 
-        $sheet->getStyle('A6:S9')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
+        $sheet->getStyle('A5:V8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
 
 
-        $sheet->setCellValue('A6', 'NO.')->mergeCells('A6:A8');
-        $sheet->setCellValue('B6', 'NAMA & NIP')->mergeCells('B6:B8');
-        $sheet->setCellValue('C6', 'GOL.')->mergeCells('C6:C8');
-        $sheet->setCellValue('D6', 'JABATAN')->mergeCells('D6:D8');
-        $sheet->getColumnDimension('D')->setWidth(35);
-        $sheet->setCellValue('E6', 'JENIS JABATAN SESUAI PERBUB TPP')->mergeCells('E6:E8');
-        $sheet->getColumnDimension('E')->setWidth(20);
-        $sheet->setCellValue('F6', 'KELAS JABATAN')->mergeCells('F6:F8');
-        $sheet->setCellValue('G6', 'PAGU TPP')->mergeCells('G6:G8');
-        $sheet->getColumnDimension('G')->setWidth(20);
-        $sheet->setCellValue('H6', 'BESARAN TPP')->mergeCells('H6:N6');
-        $sheet->setCellValue('H7', 'KINERJA')->mergeCells('H7:J7');
-        $sheet->setCellValue('K7', 'KEHADIRAN')->mergeCells('K7:N7');
-        $sheet->setCellValue('H8', 'KINERJA MAKS' . PHP_EOL .'(Rp)');
-        $sheet->getColumnDimension('H')->setWidth(20);
-        $sheet->setCellValue('I8', 'CAPAIAN KINERJA ' . PHP_EOL .'(%)');
-        $sheet->setCellValue('J8', 'NILAI KINERJA ' . PHP_EOL .'(Rp)');
-        $sheet->getColumnDimension('J')->setWidth(20);
-        $sheet->setCellValue('K8', 'KEHADIRAN MAKS ' . PHP_EOL .'(Rp)');
-        $sheet->getColumnDimension('K')->setWidth(20);
-        $sheet->setCellValue('L8', 'POTONGAN KEHADIRAN' . PHP_EOL .'(%)');
-        $sheet->setCellValue('M8', 'POTONGAN KEHADIRAN' . PHP_EOL .'(Rp)');
-         $sheet->getColumnDimension('M')->setWidth(20);
-        $sheet->setCellValue('N8', 'NILAI KEHADIRAN ' . PHP_EOL .'(Rp)');
-        $sheet->getColumnDimension('N')->setWidth(20);
-        $sheet->setCellValue('O6', 'TPP BRUTO')->mergeCells('O6:O8');
-        $sheet->getColumnDimension('O')->setWidth(20);
-        $sheet->setCellValue('P6', 'PPH PSL 21')->mergeCells('P6:P8');
-        $sheet->getColumnDimension('P')->setWidth(20);
-        $sheet->setCellValue('Q6', 'TPP NETTO')->mergeCells('Q6:Q8');
-        $sheet->getColumnDimension('Q')->setWidth(20);
-        $sheet->setCellValue('R6', 'NO. REK')->mergeCells('R6:R8');
-        $sheet->getColumnDimension('R')->setWidth(20);
-        $sheet->setCellValue('S6', 'KETERANGAN')->mergeCells('S6:S8');
+        $sheet->setCellValue('A5', 'NO.')->mergeCells('A5:A7');
+        $sheet->setCellValue('B5', 'NAMA & NIP')->mergeCells('B5:B7');
+        $sheet->setCellValue('C5', 'GOL.')->mergeCells('C5:C7');
+        $sheet->setCellValue('D5', 'JABATAN')->mergeCells('D5:D7');
+        $sheet->setCellValue('E5', 'JENIS JABATAN SESUAI PERBUB TPP')->mergeCells('E5:E7');
+        $sheet->setCellValue('F5', 'KELAS JABATAN')->mergeCells('F5:F7');
+        $sheet->setCellValue('G5', 'PAGU TPP')->mergeCells('G5:G7');
+        $sheet->setCellValue('H5', 'BESARAN TPP')->mergeCells('H5:N5');
+        $sheet->setCellValue('H6', 'KINERJA 60%')->mergeCells('H6:J6');
+        $sheet->setCellValue('K6', 'KEHADIRAN 40%')->mergeCells('K6:N6');
+        $sheet->setCellValue('H7', 'KINERJA MAKS' . PHP_EOL .'(Rp)');
+        $sheet->setCellValue('I7', 'CAPAIAN KINERJA ' . PHP_EOL .'(%)');
+        $sheet->setCellValue('J7', 'NILAI KINERJA ' . PHP_EOL .'(Rp)');
+        $sheet->setCellValue('K7', 'KEHADIRAN MAKS ' . PHP_EOL .'(Rp)');
+        $sheet->setCellValue('L7', 'POTONGAN KEHADIRAN' . PHP_EOL .'(%)');
+        $sheet->setCellValue('M7', 'POTONGAN KEHADIRAN' . PHP_EOL .'(Rp)');
+        $sheet->setCellValue('N7', 'NILAI KEHADIRAN ' . PHP_EOL .'(Rp)');
+        $sheet->setCellValue('O5', 'BPJS 1%')->mergeCells('O5:O7');
+        $sheet->setCellValue('P5', 'TPP BRUTO')->mergeCells('P5:P7');
+        $sheet->setCellValue('Q5', 'PPH PSL 21')->mergeCells('Q5:Q7');
+        $sheet->setCellValue('R5', 'TPP NETTO')->mergeCells('R5:R7');
+        $sheet->setCellValue('S5', 'NILAI BRUTO SPM')->mergeCells('S5:S7');
+        $sheet->setCellValue('T5', 'NO. REK')->mergeCells('T5:T7');
+        $sheet->setCellValue('U5', 'IURAN 4% (DIBAYAR OLEH PEMDA)')->mergeCells('U5:U7');
+        $sheet->setCellValue('V5', 'KETERANGAN')->mergeCells('V5:V7');
 
-            $sheet->setCellValue('A9', 'A');
-            $sheet->setCellValue('B9', 'B');
-            $sheet->setCellValue('C9', 'C');
-            $sheet->setCellValue('D9', 'D');
-            $sheet->setCellValue('E9', 'E');
-            $sheet->setCellValue('F9', 'F');
-            $sheet->setCellValue('G9', 'G');
-            $sheet->setCellValue('H9', 'H');
-            $sheet->setCellValue('I9', 'I');
-            $sheet->setCellValue('J9', 'J');
-            $sheet->setCellValue('K9', 'K');
-            $sheet->setCellValue('L9', 'L');
-            $sheet->setCellValue('M9', 'M');
-            $sheet->setCellValue('N9', 'N');
-            $sheet->setCellValue('O9', 'O');
-            $sheet->setCellValue('P9', 'P');
-            $sheet->setCellValue('Q9', 'Q');
-            $sheet->setCellValue('R9', 'R');
-            $sheet->setCellValue('S9', 'S');
+             $sheet->setCellValue('A8', 'A');
+            $sheet->setCellValue('B8', 'B');
+            $sheet->setCellValue('C8', 'C');
+            $sheet->setCellValue('D8', 'D');
+            $sheet->setCellValue('E8', 'E');
+            $sheet->setCellValue('F8', 'F');
+            $sheet->setCellValue('G8', 'G');
+            $sheet->setCellValue('H8', 'H');
+            $sheet->setCellValue('I8', 'I');
+            $sheet->setCellValue('J8', 'J');
+            $sheet->setCellValue('K8', 'K');
+            $sheet->setCellValue('L8', 'L');
+            $sheet->setCellValue('M8', 'M');
+            $sheet->setCellValue('N8', 'N');
+            $sheet->setCellValue('O8', 'O');
+            $sheet->setCellValue('P8', 'P');
+            $sheet->setCellValue('Q8', 'Q');
+            $sheet->setCellValue('R8', 'R');
+            $sheet->setCellValue('S8', 'S');
+            $sheet->setCellValue('T8', 'T');
+            $sheet->setCellValue('U8', 'U');
+            $sheet->setCellValue('V8', 'V');
 
         $sheet->getColumnDimension('B')->setWidth(35);
 
-        $sheet->getStyle('A1:A4')->getFont()->setSize(12);
+        $sheet->getStyle('A1:A3')->getFont()->setSize(12);
         $sheet->getStyle('A:V')->getAlignment()->setWrapText(true);
-        $sheet->getStyle('A1:A4')->getAlignment()->setVertical('center')->setHorizontal('center');
-        $sheet->getStyle('A6:V9')->getFont()->setBold(true);
-        $sheet->getStyle('A6:V9')->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('A1:A3')->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('A5:V8')->getFont()->setBold(true);
+        $sheet->getStyle('A5:V8')->getAlignment()->setVertical('center')->setHorizontal('center');
 
-        $cell = $cell_head = 10;
+        $cell = 9;
         $jmlPaguTpp = 0;
         $jmlNilaiKinerja = 0;
         $jmlNilaiKehadiran = 0;
@@ -302,51 +291,43 @@ class LaporanTppController extends BaseController
         $keterangan = '';
         $kelas_jabatan = '';
         $golongan = '';
- 
         foreach ($data as $key => $value) {
 
-            
 
             $value->golongan !== null ? $golongan = explode("/",$value->golongan)[1] : $golongan = '-';
 
             $value->target_waktu !== null ? $target_nilai = $value->target_waktu : $target_nilai = 0;
 
-            $target_nilai > 0 ? $nilai_kinerja = ( intval($value->capaian_waktu) / $target_nilai ) * 100 : $nilai_kinerja = 0;
+            if ($value->kelas_jabatan == 1 || $value->kelas_jabatan == 3 || $value->kelas_jabatan == 15) {
+                $nilai_kinerja = 100;
+            }else{
+                $target_nilai > 0 ? $nilai_kinerja = ( intval($value->capaian_waktu) / $target_nilai ) * 100 : $nilai_kinerja = 0;
+            }
+
+            
+
 
             if ($nilai_kinerja > 100) {
                 $nilai_kinerja = 100;
             }
 
-            $value->tanpa_keterangan >= 11 || $value->jml_tidak_hadir_berturut_turut == 5 || $nilai_kinerja <= 0 ? $keterangan = 'TMS' : $keterangan = 'MS';
-
-            $nilaiPaguTpp = $value->pagu_tpp * $value->pembayaran / 100;
+            $nilaiPaguTpp = $value->pagu_tpp;
 
             $sheet->setCellValue('A' . $cell, $key + 1);
-            $sheet->setCellValue('B' . $cell, $value->nama . PHP_EOL . "" . $value->nip);
+            $sheet->setCellValue('B' . $cell, $value->nama . PHP_EOL . "'" . $value->nip);
             $sheet->setCellValue('C' . $cell, $golongan);
-
-            $jabatan_pegawai = $value->nama_jabatan;
-            if ($value->status_jabatan !== 'definitif') {
-                $jabatan_pegawai = strtoupper($value->status_jabatan).' '.$value->nama_jabatan;
-            }
-
-            $sheet->setCellValue('D' . $cell, $jabatan_pegawai);
+            $sheet->setCellValue('D' . $cell, $value->nama_jabatan);
 
             $jenis_jabatan = '';
             
-            if ($value->level_jabatan > 0 && $value->level_jabatan <= 2) {
+            if ($value->kelas_jabatan >= 14) {
                 $jenis_jabatan = 'JPT';
-            }elseif ($value->level_jabatan > 2 && $value->level_jabatan <= 4) {
+            }elseif ($value->kelas_jabatan >= 9) {
                 $jenis_jabatan = 'Administrator';
-            }elseif ($value->level_jabatan > 4 && $value->level_jabatan <= 6) {
+            }elseif ($value->kelas_jabatan >= 7) {
                 $jenis_jabatan = 'Pengawas';
-            }elseif ($value->level_jabatan == 7) {
+            }else {
                 $jenis_jabatan = 'Fungsional';
-            }elseif ($value->level_jabatan == 8) {
-                $jenis_jabatan = 'Pelaksana';
-            }
-            else {
-                $jenis_jabatan = '-';
             }
 
             $sheet->setCellValue('E' . $cell, $jenis_jabatan);
@@ -355,39 +336,15 @@ class LaporanTppController extends BaseController
             $sheet->setCellValue('F' . $cell, $kelas_jabatan);
             $sheet->setCellValue('G' . $cell, number_format($nilaiPaguTpp));
 
-            $pembagi_nilai_kinerja = 0;
-            $pembagi_nilai_kehadiran = 0;
-
-            if ($value->kelas_jabatan > 0 && $value->kelas_jabatan <= 10) {
-                $pembagi_nilai_kinerja = 30;
-                $pembagi_nilai_kehadiran = 70;
-            }elseif ($value->kelas_jabatan > 10 && $value->kelas_jabatan <= 12) {
-                $pembagi_nilai_kinerja = 50;
-                $pembagi_nilai_kehadiran = 50;
-            }else{
-                $pembagi_nilai_kinerja = 70;
-                $pembagi_nilai_kehadiran = 30;
-            }
-
-            $jumlahKehadiran = 0;
-            $tppBruto = 0;
-                $bpjs=0;
-                $iuran=0;
-                $brutoSpm=0;
-                $pphPsl = 0;
-                $tppNetto = 0;
-
-            if ($keterangan !== 'TMS') {
-                
-                 $nilai_kinerja_rp = $nilaiPaguTpp* $pembagi_nilai_kinerja/100; 
+            $nilai_kinerja_rp = $nilaiPaguTpp* 60/100; 
 
             $sheet->setCellValue('H' . $cell, number_format($nilai_kinerja_rp));
             $sheet->setCellValue('I' . $cell, round($nilai_kinerja,2));
             
-            $nilaiKinerja = $nilai_kinerja * $nilai_kinerja_rp / 100;
+            $nilai_kinerja <= 50 ? $nilaiKinerja = 0 : $nilaiKinerja = $nilai_kinerja * $nilai_kinerja_rp / 100; 
             $sheet->setCellValue('J' . $cell, number_format($nilaiKinerja));
 
-            $persentaseKehadiran = $pembagi_nilai_kehadiran * $nilaiPaguTpp / 100;
+            $persentaseKehadiran = 40 * $nilaiPaguTpp / 100;
             $sheet->setCellValue('K' . $cell, number_format($persentaseKehadiran));
             $sheet->setCellValue('L' . $cell, $value->jml_potongan_kehadiran_kerja);
 
@@ -398,7 +355,9 @@ class LaporanTppController extends BaseController
             $sheet->setCellValue('N' . $cell, number_format($jumlahKehadiran));
 
             $bpjs = 1 * $nilaiPaguTpp / 100;
+            $value->tanpa_keterangan > 3  ? $keterangan = 'TMS'  : $keterangan = 'MS';
             
+
             $tppBruto = 0;
             $iuran = 4 * $nilaiPaguTpp / 100;
             if ($keterangan === 'TMS') {
@@ -407,12 +366,11 @@ class LaporanTppController extends BaseController
                 $iuran=0;
                 $brutoSpm=0;
             }else{
-                $tppBruto = $nilaiKinerja + $jumlahKehadiran;
+                $tppBruto = $nilaiKinerja + $jumlahKehadiran - $bpjs;
                 $brutoSpm = $nilaiKinerja + $jumlahKehadiran + $iuran;
             }
 
-            $sheet->setCellValue('O' . $cell, number_format($tppBruto) );
-            
+            $sheet->setCellValue('P' . $cell, number_format($tppBruto));
             if (strstr( $golongan, 'IV' )) {
                 $pphPsl = 15 * $tppBruto / 100;
             }elseif (strstr( $golongan, 'III' )) {
@@ -420,30 +378,22 @@ class LaporanTppController extends BaseController
             }else{
                 $pphPsl = 0;
             }
-
-            $sheet->setCellValue('P' . $cell, number_format($pphPsl));
           
-            // $sheet->setCellValue('O' . $cell, number_format($bpjs));
-            // $sheet->setCellValue('Q' . $cell, number_format($pphPsl) );
-
-            
+            $sheet->setCellValue('O' . $cell, number_format($bpjs));
+            $sheet->setCellValue('Q' . $cell, number_format($pphPsl) );
 
             $tppNetto = $tppBruto - $pphPsl;
-            $sheet->setCellValue('Q' . $cell, number_format($tppNetto));
+            $sheet->setCellValue('R' . $cell, number_format($tppNetto));
             
-            // $sheet->setCellValue('S' . $cell, number_format($brutoSpm));
-            $sheet->setCellValue('R' . $cell, '-');
-            // $sheet->setCellValue('U' . $cell, number_format($iuran));
-
-            }
-
-           
-            $sheet->setCellValue('S'.$cell, $keterangan);
+            $sheet->setCellValue('S' . $cell, number_format($brutoSpm));
+            $sheet->setCellValue('T' . $cell, '-');
+            $sheet->setCellValue('U' . $cell, number_format($iuran));
+            $sheet->setCellValue('V'.$cell, $keterangan);
             if ($keterangan === 'TMS') {
-                $sheet->getStyle('S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336');
+                $sheet->getStyle('V' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336');
                 
              }else{
-                $sheet->getStyle('S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
+                $sheet->getStyle('V' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
              }
             $jmlPaguTpp += $nilaiPaguTpp;
             $jmlNilaiKinerja += $nilaiKinerja;
@@ -462,74 +412,70 @@ class LaporanTppController extends BaseController
         $sheet->setCellValue('G' . $cell, number_format($jmlPaguTpp));
         $sheet->setCellValue('J' . $cell, number_format($jmlNilaiKinerja));
         $sheet->setCellValue('N' . $cell, number_format($jmlNilaiKehadiran));
-        // $sheet->setCellValue('O' . $cell, number_format($jmlBpjs));
-        $sheet->setCellValue('O' . $cell, number_format($jmlTppBruto));
-        $sheet->setCellValue('P' . $cell, number_format($jmlPphPsl));
-        $sheet->setCellValue('Q' . $cell, number_format($jmlTppNetto));
-        // $sheet->setCellValue('S' . $cell, number_format($jmlBrutoSpm));
-        // $sheet->setCellValue('U' . $cell, number_format($jmlIuran));
-        $spreadsheet->getActiveSheet()->getRowDimension($cell)->setRowHeight(25);
+        $sheet->setCellValue('O' . $cell, number_format($jmlBpjs));
+        $sheet->setCellValue('P' . $cell, number_format($jmlTppBruto));
+        $sheet->setCellValue('Q' . $cell, number_format($jmlPphPsl));
+        $sheet->setCellValue('R' . $cell, number_format($jmlTppNetto));
+        $sheet->setCellValue('S' . $cell, number_format($jmlBrutoSpm));
+        $sheet->setCellValue('U' . $cell, number_format($jmlIuran));
 
         $sheet->getStyle('G9:G' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('B2DFDB');
         $sheet->getStyle('H9:J' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFECB3');
         $sheet->getStyle('K9:N' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFF9C4');
-        $sheet->getStyle('O9:O' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFCDD2');
-        $sheet->getStyle('Q9:Q' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
-        // $sheet->getStyle('S9:S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('B3E5FC');
+        $sheet->getStyle('P9:P' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFCDD2');
+        $sheet->getStyle('R9:R' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
+        $sheet->getStyle('S9:S' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('B3E5FC');
 
 
-        $sheet->getStyle('A10:U' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
-        $sheet->getStyle('B10:B' . $cell)->getAlignment()->setVertical('center')->setHorizontal('left');
-        $sheet->getStyle('D10:D' . $cell)->getAlignment()->setVertical('center')->setHorizontal('left');
-        $sheet->getStyle('G10:G' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
-        $sheet->getStyle('H10:H' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
-        $sheet->getStyle('J10:K' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
-        $sheet->getStyle('M10:U' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
-        $sheet->getStyle('T10:T' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
-        $sheet->getStyle('V10:V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('A9:U' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('B9:B' . $cell)->getAlignment()->setVertical('center')->setHorizontal('left');
+        $sheet->getStyle('D9:D' . $cell)->getAlignment()->setVertical('center')->setHorizontal('left');
+        $sheet->getStyle('G9:G' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
+        $sheet->getStyle('H9:H' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
+        $sheet->getStyle('J9:K' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
+        $sheet->getStyle('M9:U' . $cell)->getAlignment()->setVertical('center')->setHorizontal('right');
+        $sheet->getStyle('T9:T' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('V9:V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
         
-        $sheet->getStyle('A' . $cell . ':S' . $cell)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $cell . ':U' . $cell)->getFont()->setBold(true);
 
         $border = [
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                     'color' => ['argb' => '0000000'],
-                ]
+                ],
             ],
         ];
 
-        $sheet->getStyle('A6:S' . $cell)->applyFromArray($border);
+        $sheet->getStyle('A5:V' . $cell)->applyFromArray($border);
 
         $cell++;
         $sheet->setCellValue('B' . $cell, '')->mergeCells('B' . $cell . ':U' . $cell);
 
         $tgl_cetak = date("t", strtotime($tahun)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, $bulan + 1, 0, (int)session('tahun_penganggaran')));
 
-        // $sheet->setCellValue('S' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('S' . $cell . ':V' . $cell);
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->setCellValue('S' . ++$cell, 'Bulukumba, ' . $tgl_cetak)->mergeCells('S' . $cell . ':U' . $cell);
+        $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        // $cell = $cell + 1;
-        // $sheet->setCellValue('A' . $cell, 'KEPALA OPD')->mergeCells('A' . $cell . ':C' . $cell);
-        // $sheet->setCellValue('I' . $cell, 'BENDAHARA PENGELUARAN')->mergeCells('I' . $cell . ':N' . $cell);
-        // $sheet->setCellValue('S' . $cell, 'NAMA PEMBUAT DAFTAR')->mergeCells('S' . $cell . ':V' . $cell);
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $cell = $cell + 2;
+        $sheet->setCellValue('C' . $cell, 'KEPALA OPD')->mergeCells('C' . $cell . ':D' . $cell);
+        $sheet->setCellValue('I' . $cell, 'BENDAHARA PENGELUARAN')->mergeCells('I' . $cell . ':L' . $cell);
+        $sheet->setCellValue('R' . $cell, 'NAMA PEMBUAT DAFTAR')->mergeCells('R' . $cell . ':T' . $cell);
+        $sheet->getStyle('C' . $cell . ':S' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
 
 
-        // $cell = $cell + 5;
-        // $sheet->setCellValue('A' . $cell, 'NAMA KEPALA OPD')->mergeCells('A' . $cell . ':C' . $cell);
-        // $sheet->setCellValue('I' . $cell, 'NAMA BENDAHARA')->mergeCells('I' . $cell . ':N' . $cell);
-        // $sheet->setCellValue('S' . $cell, 'NAMA PEMBUAT DAFTAR')->mergeCells('S' . $cell . ':V' . $cell);
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getFont()->setUnderline(true);;
+        $cell = $cell + 3;
+        $sheet->setCellValue('C' . $cell, 'NAMA KEPALA OPD')->mergeCells('C' . $cell . ':D' . $cell);
+        $sheet->setCellValue('I' . $cell, 'NAMA BENDAHARA')->mergeCells('I' . $cell . ':L' . $cell);
+        $sheet->setCellValue('R' . $cell, 'NAMA PEMBUAT DAFTAR')->mergeCells('R' . $cell . ':T' . $cell);
+        $sheet->getStyle('C' . $cell . ':S' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('C' . $cell . ':S' . $cell)->getFont()->setUnderline(true);;
 
-        // $cell++;
-        // $sheet->setCellValue('A' . $cell, 'GOLONGAN JABATAN')->mergeCells('A' . $cell . ':C' . $cell);
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
-        
-        // $cell++;
-        // $sheet->setCellValue('A' . $cell, 'NIP')->mergeCells('A' . $cell . ':C' . $cell);
-        // $sheet->getStyle('A' . $cell . ':V' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $cell++;
+        $sheet->setCellValue('C' . $cell, 'GOLONGAN JABATAN')->mergeCells('C' . $cell . ':D' . $cell);
+        $sheet->setCellValue('C' . $cell, 'NIP')->mergeCells('C' . $cell . ':D' . $cell);
+        $sheet->getStyle('C' . $cell . ':S' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
 
         if ($type == 'excel') {
             // Untuk download 
@@ -541,7 +487,6 @@ class LaporanTppController extends BaseController
             $filename = "LAPORAN TPP {$satuan_kerja_tmt} BULAN {$bulan_tmt}.xlsx";
             header("Content-Disposition: attachment;filename=\"$filename\"");
         } else {
-            $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, $cell_head - 1);
             $spreadsheet->getActiveSheet()->getHeaderFooter()
                 ->setOddHeader('&C&H' . url()->current());
             $spreadsheet->getActiveSheet()->getHeaderFooter()

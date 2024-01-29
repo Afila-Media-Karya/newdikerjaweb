@@ -18,9 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ asset('admin/assets/media/logos/favicon.png') }}" />
-    <!--end::Fonts-->
-    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link rel="shortcut icon" href="{{ asset('admin/assets/media/logos/logofavdikerja.png') }}" />
     <link href="{{ asset('admin/assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/plugins/custom/datatables/datatables.bundle_old.css') }}" rel="stylesheet"
         type="text/css" />
