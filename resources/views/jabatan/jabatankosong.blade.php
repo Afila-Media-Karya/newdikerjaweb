@@ -134,14 +134,14 @@
 
                     <div class="mb-10">
                         <label class="form-label">Jabatan</label>
-                        <input type="text" id="jabatan" class="form-control" name="jabatan" disabled>
+                        <input type="text" id="jabatan" class="form-control" name="jabatan">
                         <small class="text-danger jabatan_error"></small>
                     </div>
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Satuan Kerja</label>
                         <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja"
-                            data-control="select2" disabled data-placeholder="Pilih Satuan Kerja">
+                            data-control="select2" data-placeholder="Pilih Satuan Kerja">
                             <option></option>
                             @foreach ($satuan_kerja as $val)
                                 <option value="{{ $val->value }}">{{ $val->text }}</option>
@@ -153,7 +153,7 @@
                     <div class="mb-10">
                         <label class="form-label">Unit Kerja</label>
                         <select class="form-select form-control" name="id_unit_kerja" id="id_unit_kerja"
-                            data-control="select2" data-placeholder="Pilih Unit Kerja" disabled>
+                            data-control="select2" data-placeholder="Pilih Unit Kerja">
                             <option></option>
                         </select>
                         <small class="text-danger id_unit_kerja_error"></small>

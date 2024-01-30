@@ -304,9 +304,6 @@ class LaporanTppController extends BaseController
                 $target_nilai > 0 ? $nilai_kinerja = ( intval($value->capaian_waktu) / $target_nilai ) * 100 : $nilai_kinerja = 0;
             }
 
-            
-
-
             if ($nilai_kinerja > 100) {
                 $nilai_kinerja = 100;
             }
