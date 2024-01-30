@@ -56,7 +56,7 @@ class lokasiController extends BaseController
 
     public function datatable(){
         $data = array();
-        $data = DB::table('tb_lokasi')->join('tb_satuan_kerja','tb_lokasi.id_satuan_kerja','=','tb_satuan_kerja.id')->select('tb_lokasi.id','tb_lokasi.uuid','tb_lokasi.nama_lokasi','tb_satuan_kerja.nama_satuan_kerja')->get();
+        $data = DB::table('tb_lokasi')->join('tb_satuan_kerja','tb_lokasi.id_satuan_kerja','=','tb_satuan_kerja.id')->select('tb_lokasi.id','tb_lokasi.uuid','tb_lokasi.nama_lokasi','tb_satuan_kerja.nama_satuan_kerja')->orderBy('longitude','DESC')->get();
         return $this->sendResponse($data, 'Data Pegawai Pensiun Fetched Success');
     }
 
