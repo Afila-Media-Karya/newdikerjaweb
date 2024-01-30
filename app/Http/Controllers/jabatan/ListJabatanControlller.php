@@ -555,7 +555,7 @@ class ListJabatanControlller extends BaseController
     {
         $data = array();
         try {
-
+            $pegawai_val = $request->id_pegawai;
             $check_jabatan = $this->checkJabatanDefinitif($request->id_pegawai);
             $data = Jabatan::where('uuid', $params)->first();
 
@@ -578,7 +578,9 @@ class ListJabatanControlller extends BaseController
                 }
             }
 
-            
+            if ($pegawai_val === '-') {
+                $pegawai_val = null;
+            }
 
             if (isset($data->id_satuan_kerja) || isset($data->id_master_jabatan)) {
 
