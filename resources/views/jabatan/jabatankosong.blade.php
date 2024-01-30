@@ -131,6 +131,7 @@
 
                     <input type="hidden" name="id">
                     <input type="hidden" name="uuid">
+                    <input type="hidden" name="kelas_jabatan">
 
                     <div class="mb-10">
                         <label class="form-label">Jabatan</label>
@@ -253,11 +254,14 @@
 
         $(document).on('change', '#id_unit_kerja', function(e) {
             e.preventDefault();
-            role.guard !== 'web' ? control.push_select(
-                `/pegawai/list-pegawai/option?satuan_kerja=${$('#id_satuan_kerja').val()}&unit_kerja=${$(this).val()}`,
+            let kelas_jabatan  = $("input[name='kelas_jabatan']").val();
+            if ($(this).val() !== '') {
+                role.guard !== 'web' ? control.push_select(
+                `/pegawai/list-pegawai/option?satuan_kerja=${$('#id_satuan_kerja').val()}&unit_kerja=${$(this).val()}&kelas_jabatan=${kelas_jabatan}`,
                 '#id_pegawai') : control.push_select(
-                `/pegawai-opd/list-pegawai-opd/option?satuan_kerja=${$('#id_satuan_kerja').val()}&unit_kerja=${$(this).val()}`,
+                `/pegawai-opd/list-pegawai-opd/option?satuan_kerja=${$('#id_satuan_kerja').val()}&unit_kerja=${$(this).val()}&kelas_jabatan=${kelas_jabatan}`,
                 '#id_pegawai');
+            }
         })
 
         $('.export-laporan').click(function(e) {

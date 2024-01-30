@@ -96,14 +96,18 @@ trait General
         return $pegawaiAkanPensiun;
     }
 
-    public function option_pegawaiBy_satuan_kerja($satuan_kerja){
+    public function option_pegawaiBy_satuan_kerja($satuan_kerja,$kelas_jabatan){
         $data = array();
 
-        $data = DB::table('tb_pegawai')
+        $query = DB::table('tb_pegawai')
         ->select(DB::raw('CONCAT(nama, " - ", nip) as text'), 'id','tipe_pegawai')
-        ->where('id_satuan_kerja', $satuan_kerja)
-        ->where('status', '1')
-        ->get();
+        ->where('status', '1');
+
+        if ($kelas_jabatan < 12) {
+            $query->where('id_satuan_kerja', $satuan_kerja);
+        }
+
+        $data = $query->get();
         return $data;
     }
 
@@ -563,8 +567,6 @@ trait General
             }
             $jml_alfa = $jumlah_alfa_nakes;
         }
-
-        // dd($jml_alfa);
 
         $potongan_cuti_izin = 0;
 

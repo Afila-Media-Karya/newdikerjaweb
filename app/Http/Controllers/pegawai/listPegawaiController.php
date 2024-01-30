@@ -260,7 +260,9 @@ class listPegawaiController extends BaseController
         try {
             $satuan_kerja = request('satuan_kerja');
             $unit_kerja = request("unit_kerja");
-            $data = $this->option_pegawaiBy_satuan_kerja($satuan_kerja);
+            $kelas_jabatan = intval(request("kelas_jabatan"));
+           
+            $data = $this->option_pegawaiBy_satuan_kerja($satuan_kerja, $kelas_jabatan);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
         }

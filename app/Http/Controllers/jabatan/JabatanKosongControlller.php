@@ -80,15 +80,6 @@ class JabatanKosongControlller extends BaseController
         $satuan_kerja = intval(request('satuan_kerja'));
         $type = request('type');
 
-        // $query = DB::table('tb_jabatan')
-        // ->join('tb_master_jabatan as jabatan1','tb_jabatan.id_master_jabatan','=','jabatan1.id')
-        // ->leftJoin('tb_master_jabatan as jabatan2', 'jabatan1.id_parent', '=', 'jabatan2.id')
-        // ->join('tb_satuan_kerja','tb_jabatan.id_satuan_kerja','=','tb_satuan_kerja.id')
-        // ->select('tb_jabatan.id','tb_jabatan.uuid','jabatan1.nama_jabatan as jabatan','jabatan2.nama_jabatan as atasan_langsung','tb_jabatan.status','tb_satuan_kerja.nama_satuan_kerja')
-        // ->orderBy('tb_satuan_kerja.nama_satuan_kerja','DESC')
-        // ->orderBy('jabatan2.id_parent','DESC')
-        // ->whereNull('tb_jabatan.id_pegawai');
-
         $query = DB::table('tb_jabatan as tb_jabatan1')
             ->leftJoin('tb_satuan_kerja', 'tb_jabatan1.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan1', 'tb_jabatan1.id_master_jabatan', '=', 'tb_master_jabatan1.id')
@@ -257,7 +248,7 @@ class JabatanKosongControlller extends BaseController
                 // ->leftJoin('tb_master_jabatan as jabatan2', 'jabatan1.id_parent', '=', 'jabatan2.id')
 
                 ->join('tb_satuan_kerja', 'tb_jabatan1.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
-                ->select('tb_jabatan1.id', 'tb_jabatan1.uuid', 'masterjabatan1.nama_jabatan as jabatan', 'masterjabatan2.nama_jabatan as atasan_langsung', 'tb_jabatan1.status', 'tb_jabatan1.id_satuan_kerja', 'tb_satuan_kerja.nama_satuan_kerja', 'tb_jabatan1.id_unit_kerja')
+                ->select('tb_jabatan1.id', 'tb_jabatan1.uuid', 'masterjabatan1.nama_jabatan as jabatan', 'masterjabatan2.nama_jabatan as atasan_langsung', 'tb_jabatan1.status', 'tb_jabatan1.id_satuan_kerja', 'tb_satuan_kerja.nama_satuan_kerja', 'tb_jabatan1.id_unit_kerja','masterjabatan1.kelas_jabatan')
                 ->where('tb_jabatan1.uuid', $params)
                 ->first();
         } catch (\Exception $e) {
