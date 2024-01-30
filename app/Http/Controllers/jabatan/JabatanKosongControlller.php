@@ -229,11 +229,14 @@ class JabatanKosongControlller extends BaseController
             // dd($check_jabatan);
             $data = Jabatan::where('uuid', $params)->first();
 
-            if ($data->status !== 'plt') {
-                if ($check_jabatan) {
-                    return $this->sendError($check_jabatan->nama . ' mengisi jabatan ' . $check_jabatan->nama_jabatan, 'Maaf tidak bisa mengatur jabatan!', 200);
+            if ($request->status_jabatan !== 'plt') {
+                if ($data->status !== 'plt') {
+                    if ($check_jabatan) {
+                        return $this->sendError($check_jabatan->nama . ' mengisi jabatan ' . $check_jabatan->nama_jabatan, 'Maaf tidak bisa mengatur jabatan!', 200);
+                    }
                 }
             }
+            
             $data->id_pegawai = $request->id_pegawai;
             $data->status = $request->status_jabatan;
             $data->save();
