@@ -582,7 +582,7 @@ class ListJabatanControlller extends BaseController
 
             if (isset($data->id_satuan_kerja) || isset($data->id_master_jabatan)) {
 
-                $data->id_pegawai = $request->id_pegawai;
+                $data->id_pegawai = $pegawai_val;
                 if (isset($request->id_master_jabatan)) {
                     $data->id_master_jabatan = $request->id_master_jabatan;
                 }
