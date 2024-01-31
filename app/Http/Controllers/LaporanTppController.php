@@ -576,22 +576,22 @@ class LaporanTppController extends BaseController
             $pembagi_nilai_kinerja = 0;
             $pembagi_nilai_kehadiran = 0;
 
-            if ($data->kelas_jabatan > 0 && $data->kelas_jabatan <= 10) {
-                $pembagi_nilai_kinerja = 30;
-                $pembagi_nilai_kehadiran = 70;
-            }elseif ($data->kelas_jabatan > 10 && $data->kelas_jabatan <= 12) {
-                $pembagi_nilai_kinerja = 50;
-                $pembagi_nilai_kehadiran = 50;
-            }else{
-                $pembagi_nilai_kinerja = 70;
-                $pembagi_nilai_kehadiran = 30;
-            }
+            // if ($data->kelas_jabatan > 0 && $data->kelas_jabatan <= 10) {
+            //     $pembagi_nilai_kinerja = 30;
+            //     $pembagi_nilai_kehadiran = 70;
+            // }elseif ($data->kelas_jabatan > 10 && $data->kelas_jabatan <= 12) {
+            //     $pembagi_nilai_kinerja = 50;
+            //     $pembagi_nilai_kehadiran = 50;
+            // }else{
+            //     $pembagi_nilai_kinerja = 70;
+            //     $pembagi_nilai_kehadiran = 30;
+            // }
 
             $nilaiPaguTpp = $data->pagu_tpp * $data->pembayaran / 100;
 
-            $nilai_kinerja_rp = $nilaiPaguTpp* $pembagi_nilai_kinerja/100; 
+            $nilai_kinerja_rp = $nilaiPaguTpp* 60/100; 
             $nilaiKinerja = $nilai_kinerja * $nilai_kinerja_rp / 100;
-            $persentaseKehadiran = $pembagi_nilai_kehadiran * $nilaiPaguTpp / 100;
+            $persentaseKehadiran = 40 * $nilaiPaguTpp / 100;
             $nilaiKehadiran = $persentaseKehadiran * $data->jml_potongan_kehadiran_kerja / 100;
             $jumlahKehadiran = $persentaseKehadiran - $nilaiKehadiran;
             $bpjs = 1 * $nilaiPaguTpp / 100;
@@ -604,7 +604,7 @@ class LaporanTppController extends BaseController
                 $iuran=0;
                 $brutoSpm=0;
             }else{
-                $tppBruto = $nilaiKinerja + $jumlahKehadiran;
+                $tppBruto = $nilaiKinerja + $jumlahKehadiran - $bpjs;
                 $brutoSpm = $nilaiKinerja + $jumlahKehadiran + $iuran;
             }
 

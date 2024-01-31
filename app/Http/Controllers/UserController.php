@@ -54,7 +54,7 @@ class UserController extends BaseController
         $data = array();
         try {
             $data = User::where('uuid',$request->uuid)->first();
-            $data->password = Hash::make('DIKERJAmaspul');
+            $data->password = Hash::make('dikerja');
             $data->save();
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
