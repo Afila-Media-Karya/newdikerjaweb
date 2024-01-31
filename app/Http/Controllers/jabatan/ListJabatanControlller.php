@@ -129,7 +129,7 @@ class ListJabatanControlller extends BaseController
         $spreadsheet->getActiveSheet()->getPageSetup()->setHorizontalCentered(true);
         $spreadsheet->getActiveSheet()->getPageSetup()->setVerticalCentered(false);
 
-        // //Margin PDF
+        // Margin PDF
         $spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.3);
         $spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.3);
         $spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.5);

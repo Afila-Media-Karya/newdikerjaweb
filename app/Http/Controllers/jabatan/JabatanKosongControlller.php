@@ -229,6 +229,8 @@ class JabatanKosongControlller extends BaseController
             }
             
             $data->id_pegawai = $request->id_pegawai;
+            $data->id_satuan_kerja = $request->id_satuan_kerja;
+            $data->id_unit_kerja = $request->id_unit_kerja;
             $data->status = $request->status_jabatan;
             $data->save();
         } catch (\Exception $e) {
