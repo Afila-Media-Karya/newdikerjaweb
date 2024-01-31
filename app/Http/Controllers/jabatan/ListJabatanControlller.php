@@ -137,7 +137,7 @@ class ListJabatanControlller extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:F1');
-        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
+        $logoPath = 'admin/assets/media/logos/logo_sm.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');
@@ -297,7 +297,7 @@ class ListJabatanControlller extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:R1');
-        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
+        $logoPath = 'admin/assets/media/logos/logo_sm.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');
