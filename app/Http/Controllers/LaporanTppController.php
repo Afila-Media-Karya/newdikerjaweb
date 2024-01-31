@@ -621,7 +621,7 @@ class LaporanTppController extends BaseController
             }
             $tppNetto = $tppBruto - $pphPsl;
             
-            $tpp_bulan_ini = ($persentaseKehadiran - $nilaiKehadiran) + $nilaiKinerja;
+            $tpp_bulan_ini = $tppNetto;
             $potongan_jkn_pph_tmt = $pphPsl + $bpjs; 
 
         return [
@@ -678,12 +678,6 @@ class LaporanTppController extends BaseController
             // dd($atasan);
             // if ($atasan) {
                 $data = $this->data_tpp_pegawai($pegawai_params, $bulan);
-                // return $data;
-                // if (request('is_opd')) {
-                //     return $this->export_tpp_pegawai_opd($data,$type,$pegawai,$atasan,$bulan);
-                // }  else {
-                    
-                // }
 
                 return $this->export_tpp_pegawai($data,$type,$pegawai,$atasan,$bulan);
 
