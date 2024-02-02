@@ -211,7 +211,7 @@ trait General
             $result = DB::table('tb_master_jabatan')
             ->where('tb_master_jabatan.id_satuan_kerja', 0)
             ->where('tb_master_jabatan.nama_jabatan', '!=', 'BUPATI')
-            ->orWhereIn('tb_master_jabatan.level_jabatan', [7, 8])
+            ->orWhereIn('tb_master_jabatan.level_jabatan', [5, 8])
             ->distinct()
             ->select('tb_master_jabatan.id as id', 'tb_master_jabatan.nama_jabatan as text')
             ->get();
