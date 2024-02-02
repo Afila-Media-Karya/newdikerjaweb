@@ -247,7 +247,7 @@
 
             // Hitung tanggal 5 hari sebelum hari ini
             const fiveDaysAgo = new Date(today);
-            fiveDaysAgo.setDate(today.getDate() - 3);
+            fiveDaysAgo.setDate(today.getDate() - 5);
 
             const UnlimitedDaysAgo = new Date(today);
             UnlimitedDaysAgo.setDate(today.getDate() - 100);

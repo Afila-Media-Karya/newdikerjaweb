@@ -57,7 +57,7 @@ class AktivitasController extends BaseController
         try {
             date_default_timezone_set('UTC');
             $currentDate = date('Y-m-d');
-            $futureDate = date('Y-m-d', strtotime('-4 days', strtotime($currentDate)));
+            $futureDate = date('Y-m-d', strtotime('-6 days', strtotime($currentDate)));
 
             $pegawai = Auth::user()->id_pegawai;
             if (isset($request->id_pegawai)) {
@@ -124,7 +124,7 @@ class AktivitasController extends BaseController
             }else{
                 date_default_timezone_set('UTC');
                 $currentDate = date('Y-m-d');
-                $futureDate = date('Y-m-d', strtotime('-4 days', strtotime($currentDate)));
+                $futureDate = date('Y-m-d', strtotime('-6 days', strtotime($currentDate)));
 
                 if ($request->tanggal <= $futureDate) {
                     return $this->sendError('Tanggal aktivitas sudah lewat 3 hari', 'Gagal', 200);
