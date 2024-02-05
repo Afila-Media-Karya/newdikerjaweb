@@ -185,7 +185,7 @@ class listPegawaiController extends BaseController
             $user = new User();
             $user->id_pegawai = $data->id;
             $user->username = $data->nip;
-            $user->password = Hash::make('DIKERJAmaspul');
+            $user->password = Hash::make('dikerja');
             $user->role = '2';
             $user->status = 1;
             $user->save();
