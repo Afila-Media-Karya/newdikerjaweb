@@ -552,13 +552,11 @@ class LaporanKinerjaController extends BaseController
             $value->golongan !== null ? $golongan = $value->golongan : $golongan = '';
             $value->target_waktu !== null ? $target_nilai = $value->target_waktu : $target_nilai = 0;
 
-            // if ($value->kelas_jabatan == 1 || $value->kelas_jabatan == 3 || $value->kelas_jabatan == 15) {
-            //     $nilai_kinerja = 100;
-            // } else {
-                
-            // }
-
-            $target_nilai > 0 ? $nilai_kinerja = ($value->capaian_waktu / $target_nilai) * 100 : $nilai_kinerja = 0;
+            if ($value->kelas_jabatan == 1 || $value->kelas_jabatan == 3 || $value->kelas_jabatan == 15) {
+                $nilai_kinerja = 100;
+            } else {
+                $target_nilai > 0 ? $nilai_kinerja = ($value->capaian_waktu / $target_nilai) * 100 : $nilai_kinerja = 0;
+            }
 
             if ($nilai_kinerja > 100) {
                 $nilai_kinerja = 100;
