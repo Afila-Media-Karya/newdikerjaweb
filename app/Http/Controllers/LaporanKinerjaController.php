@@ -404,7 +404,7 @@ class LaporanKinerjaController extends BaseController
         }
 
         if ($capaian_prod_kinerja > 0 || $target_produktivitas_kerja > 0) {
-            $nilai_produktivitas_kerja = ($capaian_prod_kinerja / $target_produktivitas_kerja) * 100;
+            $nilai_produktivitas_kerja = $target_produktivitas_kerja ? ($capaian_prod_kinerja / $target_produktivitas_kerja) * 100 : 0;
         }
 
         if ($nilai_produktivitas_kerja > 100) {
