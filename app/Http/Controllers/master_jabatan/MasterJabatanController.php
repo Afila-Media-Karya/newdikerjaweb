@@ -106,7 +106,7 @@ class MasterJabatanController extends BaseController
                 $jabatan->level_jabatan = $request->level_jabatan;   
                 $jabatan->kelas_jabatan = $request->kelas_jabatan;   
                 $jabatan->id_kelompok_jabatan = $request->id_kelompok_jabatan;   
-                $jabatan->target_waktu = 6750;
+                $jabatan->target_waktu = $request->target_waktu;
                 $jabatan->status = 1;    
                 $jabatan->save(); 
             // }else{
@@ -132,7 +132,8 @@ class MasterJabatanController extends BaseController
                 $jabatan->id_satuan_kerja = $request->id_satuan_kerja;    
                 $jabatan->level_jabatan = $request->level_jabatan;   
                 $jabatan->kelas_jabatan = $request->kelas_jabatan;    
-                $jabatan->id_kelompok_jabatan = $request->id_kelompok_jabatan;   
+                $jabatan->id_kelompok_jabatan = $request->id_kelompok_jabatan; 
+                $jabatan->target_waktu = $request->target_waktu;  
                 $jabatan->save(); 
 
             DB::commit();

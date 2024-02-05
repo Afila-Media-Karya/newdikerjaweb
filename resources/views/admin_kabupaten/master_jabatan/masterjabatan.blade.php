@@ -150,6 +150,12 @@
                     </div>
 
                     <div class="mb-10">
+                        <label class="form-label">Target Waktu</label>
+                        <input type="number" id="target_waktu" class="form-control" name="target_waktu" placeholder="Masukkan Targer Waktu">
+                        <small class="text-danger target_waktu_error"></small>
+                    </div>
+
+                    <div class="mb-10">
                         <label class="form-label">Satuan Kerja</label>
                         <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja" data-control="select2" data-placeholder="Pilih Satuan Kerja">
                             <option value="0"selected> Semua</option>
