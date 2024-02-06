@@ -29,7 +29,7 @@
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
             <a href="#" class="d-lg-none">
-                <img src="{{ asset('admin/assets/media/logos/logo_header.svg') }}" style="width: 150px;" alt=""
+                <img src="{{ asset('admin/assets/media/logos/bulkum.svg') }}" style="width: 37px;" alt=""
                             srcset="">
             </a>
         </div>
