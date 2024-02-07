@@ -64,9 +64,9 @@ class AktivitasController extends BaseController
                 $pegawai = $request->id_pegawai;
             }
 
-            if ($request->tanggal <= $futureDate) {
-                return $this->sendError('Tanggal aktivitas sudah lewat 3 hari', 'Gagal', 200);
-            }
+            // if ($request->tanggal <= $futureDate) {
+            //     return $this->sendError('Tanggal aktivitas sudah lewat 5 hari', 'Gagal', 200);
+            // }
 
             $check_absen = $this->checkAbsenByTanggal($pegawai, $request->tanggal);
             
@@ -82,12 +82,12 @@ class AktivitasController extends BaseController
             $jumlah_kinerja = $this->checkMenitKinerja($request->tanggal,$pegawai);
             $total_time_recorded = $jumlah_kinerja->count;
             $requested_time = $request->waktu;
-            $remaining_time = 360 - $total_time_recorded;
+            $remaining_time = 420 - $total_time_recorded;
             $total_time = $total_time_recorded + $requested_time;
 
-            if ($total_time > 360) {
-                $exceeded_time = $total_time - 360;
-                return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 360 menit', 'Gagal', 200); 
+            if ($total_time > 420) {
+                $exceeded_time = $total_time - 420;
+                return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 420 menit', 'Gagal', 200); 
             } else {
                 $waktu = $requested_time;
             }
@@ -126,9 +126,9 @@ class AktivitasController extends BaseController
                 $currentDate = date('Y-m-d');
                 $futureDate = date('Y-m-d', strtotime('-6 days', strtotime($currentDate)));
 
-                if ($request->tanggal <= $futureDate) {
-                    return $this->sendError('Tanggal aktivitas sudah lewat 3 hari', 'Gagal', 200);
-                }
+                // if ($request->tanggal <= $futureDate) {
+                //     return $this->sendError('Tanggal aktivitas sudah lewat 5 hari', 'Gagal', 200);
+                // }
 
                 $check_absen = $this->checkAbsenByTanggal(Auth::user()->id_pegawai, $request->tanggal);
                 
@@ -143,12 +143,12 @@ class AktivitasController extends BaseController
                 $jumlah_kinerja = $this->checkMenitKinerja($request->tanggal,$pegawai);
                 $total_time_recorded = $jumlah_kinerja->count;
                 $requested_time = $request->waktu;
-                $remaining_time = 360 - $total_time_recorded;
+                $remaining_time = 420 - $total_time_recorded;
                 $total_time = $total_time_recorded + $requested_time;
 
-                if ($total_time > 360) {
-                    $exceeded_time = $total_time - 360;
-                    return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 360 menit', 'Gagal', 200); 
+                if ($total_time > 420) {
+                    $exceeded_time = $total_time - 420;
+                    return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 420 menit', 'Gagal', 200); 
                 } else {
                     $waktu = $requested_time;
                 }
