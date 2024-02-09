@@ -195,6 +195,11 @@
                 },
             });
 
+            $(".btn-submit").prop("disabled", true);
+            $(".btn-submit").html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+            );
+
             $.ajax({
             type: 'POST',
             url: '/master-jabatan/kelompok-aktivitas/update/{{$data->id}}',

@@ -187,6 +187,11 @@
             e.preventDefault();
         //    console.log($(this).serialize()) 
 
+        $(".btn-submit").prop("disabled", true);
+        $(".btn-submit").html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+        );
+
             $.ajaxSetup({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
