@@ -87,7 +87,7 @@ class LaporanTppController extends BaseController
             tb_master_jabatan.nama_jabatan,
             tb_master_jabatan.target_waktu,
             tb_master_jabatan.kelas_jabatan,
-            tb_master_jabatan.pagu_tpp,
+            tb_jabatan.pagu_tpp,
             tb_master_jabatan.jenis_jabatan,
             tb_master_jabatan.level_jabatan,
             tb_jabatan.pembayaran,
@@ -102,7 +102,7 @@ class LaporanTppController extends BaseController
         //->where('tb_satuan_kerja.id', $satuan_kerja)
         ->where('tb_pegawai.status','1')
         ->orderBy('tb_master_jabatan.kelas_jabatan','DESC')
-        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_jabatan.status','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar');
+        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_jabatan.status','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar');
         
         $role = hasRole();
 
@@ -513,7 +513,7 @@ class LaporanTppController extends BaseController
             tb_master_jabatan.nama_jabatan,
             tb_master_jabatan.target_waktu,
             tb_master_jabatan.kelas_jabatan,
-            tb_master_jabatan.pagu_tpp,
+            tb_jabatan.pagu_tpp,
             tb_master_jabatan.jenis_jabatan,
             tb_master_jabatan.level_jabatan,
             tb_jabatan.pembayaran,
@@ -525,7 +525,7 @@ class LaporanTppController extends BaseController
         ->join('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
         ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
         ->where('tb_pegawai.id', $pegawai)
-        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar')
+        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar')
         ->first();
 
         $child = $this->data_kehadiran_pegawai($data->id,$tanggal_awal,$tanggal_akhir,$data->waktu_masuk,$data->waktu_keluar,$data->tipe_pegawai);

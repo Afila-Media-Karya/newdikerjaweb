@@ -117,6 +117,7 @@ class Control {
 
               if (x === "id_parent") {
                 setTimeout(function () {
+                  // alert(y);
                   $("#id_parent").val(y);
                   $("#id_parent").trigger("change");
                 }, 1500);

@@ -192,7 +192,7 @@ class MasterJabatanController extends BaseController
         $jabatan = array();
 
         $query = DB::table('tb_master_jabatan')
-            ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id as id_jabatan','tb_master_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
+            ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id as id_jabatan','tb_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
             ->leftJoin('tb_kelompok_jabatan','tb_master_jabatan.id_kelompok_jabatan','=','tb_kelompok_jabatan.id')
             ->leftJoin('tb_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
             ->leftJoin('tb_pegawai','tb_jabatan.id_pegawai','=','tb_pegawai.id')
@@ -271,7 +271,7 @@ class MasterJabatanController extends BaseController
                 // return $jabatanPuncak;
                 
                 $jabatanpuncak_tmt = DB::table('tb_master_jabatan')
-                    ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id_parent','tb_jabatan.id_unit_kerja','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_master_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
+                    ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id_parent','tb_jabatan.id_unit_kerja','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
                     ->leftJoin('tb_kelompok_jabatan','tb_master_jabatan.id_kelompok_jabatan','=','tb_kelompok_jabatan.id')
                     ->leftJoin('tb_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
                     ->leftJoin('tb_pegawai','tb_jabatan.id_pegawai','=','tb_pegawai.id')
@@ -298,7 +298,7 @@ class MasterJabatanController extends BaseController
 
             if (strpos($unit_kerja->nama_unit_kerja,'PUSKESMAS') === 0) {
                 $jabatanPuncak = DB::table('tb_master_jabatan')
-                ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.id_unit_kerja','tb_master_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
+                ->select('tb_master_jabatan.id','tb_master_jabatan.nama_struktur','tb_master_jabatan.nama_jabatan','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.kelas_jabatan','tb_master_jabatan.level_jabatan','tb_kelompok_jabatan.kelompok','tb_lokasi.nama_lokasi','tb_pegawai.nama as nama_pegawai','tb_pegawai.nip','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.id_unit_kerja','tb_jabatan.pagu_tpp','lokasi_apel.nama_lokasi as lokasi_apel')
                 ->leftJoin('tb_kelompok_jabatan','tb_master_jabatan.id_kelompok_jabatan','=','tb_kelompok_jabatan.id')
                 ->leftJoin('tb_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
                 ->leftJoin('tb_pegawai','tb_jabatan.id_pegawai','=','tb_pegawai.id')

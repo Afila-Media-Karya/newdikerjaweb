@@ -529,6 +529,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_satuan_kerja = $request->id_satuan_kerja;
                     $data->id_unit_kerja = $request->id_unit_kerja;
                     $data->status = $request->status;
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
                     $data->save();
                 } else {
@@ -541,6 +542,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_lokasi_kerja = $request->id_lokasi_kerja;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
                     $data->save();
                 }
@@ -602,6 +604,7 @@ class ListJabatanControlller extends BaseController
                 }
                 $data->status = $request->status;
                 $data->pembayaran = $request->pembayaran;
+                $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                 $data->save();
             } else {
                 if ($request->type == 'administrator') {
@@ -616,6 +619,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_lokasi_kerja = $request->id_lokasi_kerja;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
                     $data->save();
                 } else {
@@ -626,6 +630,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_pegawai = $pegawai_val;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
                     $data->save();
                 }

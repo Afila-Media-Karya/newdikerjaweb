@@ -181,9 +181,9 @@ trait General
       ->select('tb_jabatan.id','tb_master_jabatan.id as id_master_jabatan','tb_master_jabatan.nama_jabatan as text','tb_pegawai.nama')
       ->where('tb_master_jabatan.level_jabatan','<=',6);
 
-    //   if (intval($level) > 2) {
+      if (intval($level) > 2) {
            $query->where('tb_master_jabatan.id_satuan_kerja',$satuan_kerja);
-    //   }
+      }
 
        $data = $query->get();
 

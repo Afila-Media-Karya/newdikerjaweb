@@ -267,6 +267,12 @@
                     </div>
 
                     <div class="mb-10">
+                        <label class="form-label">Pagu TPP</label>
+                        <input type="text" id="pagu_tpp" class="form-control pagu_tpp" value="0" name="pagu_tpp" data-inputmask="'alias': 'currency', 'radixPoint': ',', 'groupSeparator': '.', 'numericInput': true, 'autoUnmask': true, 'rightAlign': false">
+                        <small class="text-danger pagu_tpp_error"></small>
+                    </div>
+
+                    <div class="mb-10">
                         <label class="form-label">Pembayaran</label>
                         <select name="pembayaran" class="form-control">
                             <option selected disabled>Pilih Pembayaran</option>
@@ -570,6 +576,13 @@
         }
 
         $(function() {
+
+            Inputmask("Rp 999.999.999", {
+            radixPoint: ",",
+            groupSeparator: ".",
+            numericInput: true
+            }).mask("#pagu_tpp");
+
             if (role.guard == 'web') {
                 $('#id_satuan_kerja').val(satuan_kerja_user.id_satuan_kerja);
                 $('#id_satuan_kerja').trigger('change');
