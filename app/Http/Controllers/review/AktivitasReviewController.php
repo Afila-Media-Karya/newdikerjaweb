@@ -31,7 +31,7 @@ class AktivitasReviewController extends BaseController
         $nilai_produktivitas_kerja = 0;
         // $jabatan = $this->checkJabatanDefinitif($pegawai);
 
-        $jabatan = DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_master_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->first();
+        $jabatan = DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->first();
 
         $target_waktu = 0;
 
@@ -110,7 +110,7 @@ class AktivitasReviewController extends BaseController
 
         // $target_waktu = $this->checkJabatanDefinitif(Auth::user()->id_pegawai)->target_waktu;
 
-        $jabatan = DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_master_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->first();
+        $jabatan = DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->first();
 
         $target_waktu = $jabatan->target_waktu;
 

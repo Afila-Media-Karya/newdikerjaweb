@@ -152,7 +152,7 @@ class LaporanKinerjaController extends BaseController
                 'tb_pegawai.nip',
                 'tb_pegawai.golongan',
                 'tb_master_jabatan.nama_jabatan',
-                'tb_master_jabatan.target_waktu',
+                'tb_jabatan.target_waktu',
                 'tb_master_jabatan.kelas_jabatan',
                 'tb_jabatan.status as status_jabatan'
             )
@@ -160,7 +160,7 @@ class LaporanKinerjaController extends BaseController
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->join('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
             ->where('tb_pegawai.status', '=', '1')
-            ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.target_waktu', 'tb_master_jabatan.kelas_jabatan','tb_jabatan.status')
+            ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.target_waktu', 'tb_master_jabatan.kelas_jabatan','tb_jabatan.status')
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'DESC');
 
 

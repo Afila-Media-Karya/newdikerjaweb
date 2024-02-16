@@ -273,6 +273,12 @@
                     </div>
 
                     <div class="mb-10">
+                        <label class="form-label">Target Waktu</label>
+                        <input type="number" id="target_waktu" class="form-control" name="target_waktu" placeholder="Masukkan Targer Waktu">
+                        <small class="text-danger target_waktu_error"></small>
+                    </div>
+
+                    <div class="mb-10">
                         <label class="form-label">Pembayaran</label>
                         <select name="pembayaran" class="form-control">
                             <option selected disabled>Pilih Pembayaran</option>

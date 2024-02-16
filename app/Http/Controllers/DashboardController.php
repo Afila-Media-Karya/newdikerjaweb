@@ -287,7 +287,7 @@ class DashboardController extends BaseController
                 'tb_pegawai.nip',
                 'tb_pegawai.golongan',
                 'tb_master_jabatan.nama_jabatan',
-                'tb_master_jabatan.target_waktu',
+                'tb_jabatan.target_waktu',
                 'tb_master_jabatan.kelas_jabatan',
                 DB::raw('COALESCE(SUM(tb_aktivitas.waktu), 0) as capaian_waktu')
             )
@@ -305,7 +305,7 @@ class DashboardController extends BaseController
                 'tb_pegawai.nip',
                 'tb_pegawai.golongan',
                 'tb_master_jabatan.nama_jabatan',
-                'tb_master_jabatan.target_waktu',
+                'tb_jabatan.target_waktu',
                 'tb_master_jabatan.kelas_jabatan'
             )
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'DESC');

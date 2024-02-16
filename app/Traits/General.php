@@ -252,14 +252,14 @@ trait General
        return DB::table('tb_pegawai')
        ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
        ->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
-       ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_master_jabatan.target_waktu','tb_master_jabatan.level_jabatan')
+       ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu','tb_master_jabatan.level_jabatan')
        ->where('tb_jabatan.status',$status)
        ->where('tb_pegawai.id',$pegawai)->first();
        
     }
 
     public function checkJabatanAll($pegawai){
-       return DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_master_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->get();
+       return DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->get();
     }
 
     public function optionJabatanKosong($params){
@@ -321,7 +321,7 @@ trait General
         }
         
         $query = DB::table('tb_pegawai')
-            ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_master_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
+            ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
             ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
             ->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
             ->join('tb_satuan_kerja','tb_pegawai.id_satuan_kerja','=','tb_satuan_kerja.id')
@@ -664,7 +664,7 @@ trait General
     public function persentase_kinerja($bulan,$pegawai){
         
             $persentase = 0;
-            $jabatan = DB::table('tb_jabatan')->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->select("tb_master_jabatan.target_waktu")->where('id_pegawai',$pegawai)->first();
+            $jabatan = DB::table('tb_jabatan')->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->select("tb_jabatan.target_waktu")->where('id_pegawai',$pegawai)->first();
 
             $aktivitas = DB::table('tb_aktivitas')
             ->select(

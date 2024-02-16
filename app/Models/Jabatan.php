@@ -11,7 +11,7 @@ class Jabatan extends Model
 {
     use HasFactory;
     protected $table = 'tb_jabatan';
-    protected $fillable = ['id','uuid','id_pegawai','id_master_jabatan','id_satuan_kerja','status','pembayaran','pagu_tpp'];
+    protected $fillable = ['id','uuid','id_pegawai','id_master_jabatan','id_satuan_kerja','status','pembayaran','pagu_tpp','target_waktu'];
 
     protected static function boot(){
         parent::boot();

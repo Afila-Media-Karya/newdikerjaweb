@@ -531,6 +531,7 @@ class ListJabatanControlller extends BaseController
                     $data->status = $request->status;
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
+                    $data->target_waktu = $request->target_waktu;
                     $data->save();
                 } else {
                     $data = new Jabatan();
@@ -544,6 +545,7 @@ class ListJabatanControlller extends BaseController
                     $data->status = $request->status;
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
+                    $data->target_waktu = $request->target_waktu;
                     $data->save();
                 }
             }
@@ -604,7 +606,8 @@ class ListJabatanControlller extends BaseController
                 }
                 $data->status = $request->status;
                 $data->pembayaran = $request->pembayaran;
-                $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
+                $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
+                $data->target_waktu = $request->target_waktu;  
                 $data->save();
             } else {
                 if ($request->type == 'administrator') {
@@ -621,6 +624,7 @@ class ListJabatanControlller extends BaseController
                     $data->status = $request->status;
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
+                    $data->target_waktu = $request->target_waktu;
                     $data->save();
                 } else {
                    
@@ -632,6 +636,7 @@ class ListJabatanControlller extends BaseController
                     $data->status = $request->status;
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
                     $data->pembayaran = $request->pembayaran;
+                    $data->target_waktu = $request->target_waktu;
                     $data->save();
                 }
             }
