@@ -331,8 +331,10 @@ class LaporanKinerjaController extends BaseController
 
         $sheet->setCellValue('A12', 'No');
         $sheet->setCellValue('B12', 'Tanggal');
-        $sheet->setCellValue('C12', 'Aktifitas')->mergeCells('C12:F12');
-        $sheet->setCellValue('G12', 'Keterangan aktivitas')->mergeCells('G12:I12');
+        $sheet->setCellValue('C12', 'Aktifitas')->mergeCells('C12:E12');
+        $sheet->setCellValue('F12', 'Keterangan aktivitas')->mergeCells('F12:G12');
+        $sheet->setCellValue('H12', 'Hasil');
+        $sheet->setCellValue('I12', 'Satuan');
         $sheet->setCellValue('J12', 'Waktu (menit)');
         $sheet->setCellValue('K12', 'Waktu di muat');
         $sheet->getStyle('I12')->getAlignment()->setHorizontal('center');
@@ -361,7 +363,7 @@ class LaporanKinerjaController extends BaseController
                 $spreadsheet->getActiveSheet()->getRowDimension($cell)->setRowHeight(20);
                 $sheet->setCellValue('A' . $cell, $key + 1);
                 $sheet->getStyle('A' . $cell)->getAlignment()->setHorizontal('center');
-                $sheet->setCellValue('B' . $cell,  " " . $value['rencana'])->mergeCells('B' . $cell . ':F' . $cell);
+                $sheet->setCellValue('B' . $cell,  " " . $value['rencana'])->mergeCells('B' . $cell . ':K' . $cell);
                 $sheet->getStyle('A' . $cell . ':K' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('ECF1E0');
                 $sheet->setCellValue('G' . $cell,  '')->mergeCells('G' . $cell . ':H' . $cell);
                 $sheet->getStyle('A' . $cell . ':K' . $cell)->getAlignment()->setVertical('center');
@@ -381,8 +383,11 @@ class LaporanKinerjaController extends BaseController
                     $sheet->setCellValue('A' . $cell, '');
                     $sheet->setCellValue('B' . $cell, " " . Carbon::createFromFormat('Y-m-d', $v->tanggal)->format('d/m/y'));
                     $sheet->getStyle('B' . $cell)->getAlignment()->setHorizontal('center');
-                    $sheet->setCellValue('C' . $cell,  " " . $v->aktivitas)->mergeCells('C' . $cell . ':F' . $cell);
-                    $sheet->setCellValue('G' . $cell,  " " . $v->keterangan)->mergeCells('G' . $cell . ':I' . $cell);
+                    $sheet->setCellValue('C' . $cell,  " " . $v->aktivitas)->mergeCells('C' . $cell . ':E' . $cell);
+                    $sheet->setCellValue('F' . $cell,  " " . $v->keterangan)->mergeCells('F' . $cell . ':G' . $cell);
+                    $sheet->setCellValue('H' . $cell, $v->volume);
+                    $sheet->setCellValue('I' . $cell, $v->satuan);
+                    $sheet->getStyle('H' . $cell .':I'.$cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                     $sheet->setCellValue('J' . $cell, $v->total_waktu);
                     $sheet->setCellValue('K' . $cell, date("d/m/y", strtotime($v->created_at)));
                     if ($selisih_hari >= 6) {
@@ -436,17 +441,9 @@ class LaporanKinerjaController extends BaseController
             $cell++;
         }
 
-        $tgl_cetak = date("t", strtotime((int)session('tahun_penganggaran'))) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
+        
 
-        // $sheet->setCellValue('E' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('E' . $cell . ':F' . $cell);
-        // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        // $sheet->setCellValue('E' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('E' . $cell . ':F' . $cell);
-        // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        // $cell = $cell + 3;
-        // $sheet->setCellValue('E' . ++$cell, $atasan->nama)->mergeCells('E' . $cell . ':F' . $cell);
-        // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        // $sheet->setCellValue('E' . ++$cell, $atasan->nip)->mergeCells('E' . $cell . ':F' . $cell);
-        // $sheet->getStyle('E' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $tgl_cetak = date("t", strtotime((int)session('tahun_penganggaran'))) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
 
         $border_row = [
             'borders' => [
@@ -458,9 +455,36 @@ class LaporanKinerjaController extends BaseController
         ];
 
         $sheet->getStyle('A12:K' . $cell)->applyFromArray($border_row);
+        
+        $cell++;
+
+        $sheet->setCellValue('H' . ++$cell, 'BULUKUMBA, ' . $tgl_cetak)->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->setCellValue('H' . ++$cell, 'Pejabat Penilai Kinerja')->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('B' .$cell, 'Pegawai dinilai')->mergeCells('B' . $cell . ':D' . $cell);
+        $cell_pegawai = $cell + 1;
+        $cell = $cell + 3;
+        // $sheet->setCellValue('B' . ++$cell_pegawai, $pegawai->nama)->mergeCells('B' . $cell_pegawai . ':D' . $cell_pegawai);
+
+        $sheet->setCellValue('H' . ++$cell, $atasan->nama)->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->setCellValue('H' . ++$cell, $atasan->nip)->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        $sheet->setCellValue('B' . $cell - 1, $pegawai->nama)->mergeCells('B' . $cell - 1 . ':D' . $cell - 1);
+        $sheet->setCellValue('B' . $cell, $pegawai->nip)->mergeCells('B' . $cell . ':D' . $cell);
+        $sheet->getStyle('B' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+        
+
+        
         $sheet->getStyle('A12:K12')->getAlignment()->setHorizontal('center');
         $sheet->getStyle('A12:K12')->getAlignment()->setVertical('center');
         // $sheet->getStyle('B6:C' . $cell)->getAlignment()->setHorizontal('rigth');
+
+        
 
         if ($type == 'excel') {
 
