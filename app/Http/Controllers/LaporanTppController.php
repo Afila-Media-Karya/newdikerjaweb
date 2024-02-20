@@ -94,7 +94,7 @@ class LaporanTppController extends BaseController
             tb_jabatan.status as status_jabatan,
             tb_unit_kerja.waktu_masuk,
             tb_unit_kerja.waktu_keluar,
-            (SELECT SUM(waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND MONTH(tanggal) = ? LIMIT 1) as capaian_waktu', [$bulan])
+            (SELECT SUM(tb_aktivitas.waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND MONTH(tb_aktivitas.tanggal) = ? AND tb_aktivitas.id_pegawai IS NOT NULL) as capaian_waktu', [$bulan])
         ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
         ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
         ->join('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
@@ -165,7 +165,6 @@ class LaporanTppController extends BaseController
 
         $data = $this->data_tpp_satuan_kerja($satuan_kerja,$unit_kerja, $bulan);
         $type = request('type');
-        // return $data;
         return $this->export_tpp($data, $type,$nama_satuan_kerja,$nama_unit_kerja,$bulan);
     }
 
@@ -292,7 +291,6 @@ class LaporanTppController extends BaseController
         $kelas_jabatan = '';
         $golongan = '';
         foreach ($data as $key => $value) {
-
 
             $value->golongan !== null ? $golongan = explode("/",$value->golongan)[1] : $golongan = '-';
 
