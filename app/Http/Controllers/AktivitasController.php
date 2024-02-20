@@ -95,7 +95,7 @@ class AktivitasController extends BaseController
             $data = new Aktivitas();
             $data->aktivitas = $request->aktivitas;
             $data->keterangan = $request->keterangan;
-            $data->volume = 0;
+            $data->volume = $request->volume;
             $data->satuan = $request->satuan;
             $data->waktu = $waktu;
             $data->tanggal = $request->tanggal;
@@ -157,7 +157,7 @@ class AktivitasController extends BaseController
             $data = Aktivitas::where('uuid',$params)->first();
             $data->aktivitas = $request->aktivitas;
             $data->keterangan = $request->keterangan;
-            $data->volume = 0;
+            $data->volume = $request->volume;
             $data->satuan = $request->satuan;
             $data->waktu = $waktu;
             $data->id_sasaran = $request->id_sasaran;

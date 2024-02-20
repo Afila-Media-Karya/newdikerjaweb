@@ -25,7 +25,8 @@ class AktivitasRequest extends FormRequest
             'tanggal' => 'required',
             'id_sasaran' => 'required',
             'aktivitas' => 'required',
-            'keterangan' => 'required'
+            'keterangan' => 'required',
+            'volume' => 'required',
         ];
     }
 
@@ -35,7 +36,8 @@ class AktivitasRequest extends FormRequest
                 'tanggal.required' => 'kolom tanggal tidak boleh kosong.',
                 'id_sasaran.required' => 'kolom sasaran kinerja tidak boleh kosong.',
                 'aktivitas.required' => 'kolom aktivitas tidak boleh kosong.',
-                'keterangan.required' => 'kolom keterangan tidak boleh kosong.'
+                'keterangan.required' => 'kolom keterangan tidak boleh kosong.',
+                'volume.required' => 'kolom hasil tidak boleh kosong.',
             ]; 
     }
 }

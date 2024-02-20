@@ -91,7 +91,7 @@ class Control {
                 setTimeout(function () {
                   $("#kelompok_jabatan").val(y);
                   $("#kelompok_jabatan").trigger("change");
-                }, 800);
+                }, 200);
               }
 
               if (x === "id_lokasi_kerja") {

@@ -127,12 +127,17 @@
                     <input type="hidden" name="id_pegawai" value="{{ $id_pegawai }}">
 
                     <div class="row mb-10">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
+                            <label class="form-label">Hasil</label>
+                            <input type="number" id="hasil" class="form-control" name="volume">
+                            <small class="text-danger volume_error"></small>  
+                        </div>
+                        <div class="col-lg-4">
                             <label class="form-label">Satuan</label>
                             <input type="text" id="satuan" class="form-control" name="satuan" placeholder="Satuan" readonly>
                             <small class="text-danger satuan_error"></small>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <label class="form-label">Waktu</label>
                             <input type="text" id="waktu" class="form-control" name="waktu" placeholder="0 Menit" readonly>
                             <small class="text-danger waktu_error"></small>
