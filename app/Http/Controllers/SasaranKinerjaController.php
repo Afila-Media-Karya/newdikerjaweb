@@ -77,7 +77,7 @@ class SasaranKinerjaController extends BaseController
     }
 
     public function checkReviewer($params){
-        return DB::table('tb_master_jabatan')->join('tb_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->join('tb_pegawai','tb_jabatan.id_pegawai','=','tb_pegawai.id')->select('tb_jabatan.id as jabatan_id_atasan')->where('tb_master_jabatan.id',$params)->first();
+        return DB::table('tb_master_jabatan')->join('tb_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->join('tb_pegawai','tb_jabatan.id_pegawai','=','tb_pegawai.id')->select('tb_jabatan.id as jabatan_id_atasan')->where('tb_jabatan.id',$params)->first();
     }
 
     public function store(SasaranKinerjaRequest $request){

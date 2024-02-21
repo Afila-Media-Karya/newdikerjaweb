@@ -142,7 +142,7 @@
                     <input type="hidden" name="uuid">
                     <input type="hidden" name="level" value="{{$level}}">
                     <div class="mb-10">
-                        <label class="form-label">Jenis Kinerja</label>
+                        <label class="form-label">Jenis Kinerjas</label>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-check form-check-custom form-check-solid">
