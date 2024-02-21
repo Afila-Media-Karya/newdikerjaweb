@@ -234,7 +234,7 @@
             $('#kelas_jabatan').val(selectedDataKelas);
             $('#level_jabatan').val(selectedDataLevel);
 
-            control.push_select(`/master-jabatan/master-jabatan/option-kelompok-jabatan?jenis_jabatan=${selectedDataId}&level=${selectedDataLevel}`,'#kelompok_jabatan');
+            control.push_select(`/master-jabatan/master-jabatan/option-kelompok-jabatan?jenis_jabatan=${selectedDataId}&level=${selectedDataKelas}`,'#kelompok_jabatan');
         })
 
         $(document).on('change','#satuan_kerja_filter', function () {

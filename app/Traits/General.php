@@ -164,8 +164,8 @@ trait General
        return DB::table('tb_kelompok_jabatan')
        ->select('tb_kelompok_jabatan.id','tb_kelompok_jabatan.kelompok as text')
        ->join('tb_jenis_jabatan','tb_kelompok_jabatan.id_jenis_jabatan','=','tb_jenis_jabatan.id')
-       ->where('id_jenis_jabatan',$jenis_jabatan)
-       ->where('tb_jenis_jabatan.level',$level)
+       ->where('tb_kelompok_jabatan.id_jenis_jabatan',$jenis_jabatan)
+       ->where('tb_jenis_jabatan.kelas_jabatan',$level)
        ->get(); 
     }
 

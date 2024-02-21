@@ -123,11 +123,34 @@ class Control {
                 }, 1500);
               }
 
+              if (x == "jenis_kelas") {
+                setTimeout(function () {
+                  $("#jenis_jabatan option").each(function () {
+                    // Memeriksa apakah nilai dan data-kelas sesuai dengan kriteria
+                    if (
+                      $(this).val() === y.jenis &&
+                      $(this).data("kelas") === y.kelas
+                    ) {
+                      $(this).prop("selected", true); // Mengatur opsi menjadi dipilih
+                    }
+                  });
+                  // Menerapkan plugin select2 pada elemen select
+                  $("#jenis_jabatan").select2();
+                  $("#jenis_jabatan").trigger("change");
+                }, 500);
+              }
+
               if (x == "id_pegawai") {
                 setTimeout(function () {
-                  console.log("pegawai");
                   $("#id_pegawai").val(y);
                   $("#id_pegawai").trigger("change");
+                }, 1000);
+              }
+
+              if (x == "id_kelompok_jabatan") {
+                setTimeout(function () {
+                  $("#kelompok_jabatan").val(y);
+                  $("#kelompok_jabatan").trigger("change");
                 }, 1000);
               }
 

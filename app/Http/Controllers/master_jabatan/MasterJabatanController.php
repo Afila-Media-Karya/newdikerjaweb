@@ -148,6 +148,10 @@ class MasterJabatanController extends BaseController
        $data = array();
         try {
             $data = DB::table('tb_master_jabatan')->where('uuid',$params)->first();
+            $data->jenis_kelas = [
+                'jenis' => $data->jenis_jabatan,
+                'kelas' => $data->kelas_jabatan,
+            ];
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
         }
