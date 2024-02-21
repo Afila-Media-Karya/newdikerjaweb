@@ -91,7 +91,7 @@
                                             </div>
 
                                             <div class="row mb-5">
-                                                <div class="col-lg-4">
+                                                <div class="col-lg-6">
                                                     <select class="form-control form-control-sm" name="pendidikan" data-control="select2" data-placeholder="Pendidikan">
                                                         <option></option>
                                                         <option value="semua">Semua</option>
@@ -100,7 +100,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-4">
+                                                <div class="col-lg-6">
                                                     <select class="form-control form-control-sm" name="golongan" data-control="select2" data-placeholder="Golongan">
                                                         <option></option>
                                                         <option value="semua">Semua</option>
@@ -109,16 +109,6 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-4">
-                                                    <select class="form-control form-control-sm" name="eselon" data-control="select2" data-placeholder="Eselon">
-                                                        <option></option>
-                                                        <option value="semua">Semua</option>
-                                                        @foreach($eselon as $val)
-                                                            <option value="{{$val->value}}">{{$val->text}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                
                                             </div>
 
                                             <div class="row mb-5">

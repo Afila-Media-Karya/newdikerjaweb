@@ -42,7 +42,6 @@ class listPegawaiController extends BaseController
         $jenis_jabatan = request('jenis_jabatan');
         $status_kepegawaian = request('status_kepegawaian');
         $tipe_pegawai = request('tipe_pegawai');
-        $eselon = request('eselon');
         $unit_kerja = request('unit_kerja');
         $role = hasRole();
 
@@ -92,10 +91,6 @@ class listPegawaiController extends BaseController
 
         if (!is_null($tipe_pegawai) && $tipe_pegawai !== 'semua') {
             $query->where('tb_pegawai.tipe_pegawai', $tipe_pegawai);
-        }
-
-        if (!is_null($eselon) && $eselon !== 'semua') {
-            $query->where('tb_pegawai.eselon', $eselon);
         }
 
         if ($role['guard'] == 'web') {
