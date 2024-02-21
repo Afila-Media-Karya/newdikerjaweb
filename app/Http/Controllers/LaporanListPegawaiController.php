@@ -28,7 +28,6 @@ class LaporanListPegawaiController extends BaseController
         $jenis_jabatan = request('jenis_jabatan');
         $status_kepegawaian = request('status_kepegawaian');
         $tipe_pegawai = request('tipe_pegawai');
-        $eselon = request('eselon');
         $type = request('type');
         $role = hasRole();
 
@@ -95,10 +94,6 @@ class LaporanListPegawaiController extends BaseController
             $query->where('tb_pegawai.tipe_pegawai', $tipe_pegawai);
         }
 
-        if (!is_null($eselon) && $eselon !== 'semua') {
-            $query->where('tb_pegawai.eselon', $eselon);
-        }
-
         if ($role['guard'] == 'web') {
             $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
             $query->where('tb_pegawai.id_satuan_kerja', $satuan_kerja->id_satuan_kerja);
@@ -146,7 +141,7 @@ class LaporanListPegawaiController extends BaseController
 
         // Load a logo image
         $spreadsheet->getActiveSheet()->mergeCells('A1:I1');
-        $logoPath = 'admin/assets/media/logos/BULUKUMBA.png';
+        $logoPath = 'admin/assets/media/logos/logo_sm.png';
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Paid');
         $drawing->setDescription('Paid');

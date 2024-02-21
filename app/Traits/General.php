@@ -579,24 +579,24 @@ trait General
         //     $potongan_cuti_izin = 0;
         // }
 
-        if ($count_izin_cuti > 2) {
-            $potongan_cuti_izin = ($count_izin_cuti - 2) * 1;
-        } else {
-            $potongan_cuti_izin = 0;
-        }
+        // if ($count_izin_cuti > 2) {
+        //     $potongan_cuti_izin = ($count_izin_cuti - 2) * 1;
+        // } else {
+        //     $potongan_cuti_izin = 0;
+        // }
 
-        $potongan_sakit = 0;
-        if ($count_sakit > 7) {
-            $potongan_sakit = ($count_sakit - 7) * 3;
-        }elseif ($count_sakit > 3) {
-            $potongan_sakit = ($count_sakit - 3) * 1;
-        } else {
-            $potongan_sakit = 0;
-        }
+        // $potongan_sakit = 0;
+        // if ($count_sakit > 7) {
+        //     $potongan_sakit = ($count_sakit - 7) * 3;
+        // }elseif ($count_sakit > 3) {
+        //     $potongan_sakit = ($count_sakit - 3) * 1;
+        // } else {
+        //     $potongan_sakit = 0;
+        // }
 
         $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5); 
         $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
-        $potongan_tanpa_keterangan = $potongan_cuti_izin + $potongan_sakit + ($jml_alfa * 3);
+        $potongan_tanpa_keterangan = $jml_alfa * 3;
         $potongan_apel = $jml_tidak_apel * 2;
         $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel;
 
