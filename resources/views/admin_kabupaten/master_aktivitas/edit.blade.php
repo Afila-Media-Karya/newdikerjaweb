@@ -226,7 +226,7 @@
             error: function (xhr) {
                 Swal.fire(
                     "Gagal Memproses data!",
-                    "Silahkan Hubungi Admin",
+                    `${xhr.responseJSON.message}`,
                     "warning"
                 );
             },

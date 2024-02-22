@@ -99,6 +99,7 @@ class KelompokAktivitasController extends BaseController
             MasterAkvititas::where('id_kelompok_jabatan',$data->id)->delete();
 
             foreach ($request['repeater-aktivitas'] as $key => $value) {
+                if (isset($value['satuan'])){
                     $master_aktivitas = new MasterAkvititas();
                     $master_aktivitas->aktivitas = $value['aktivitas'];
                     $master_aktivitas->satuan = $value['satuan'];
@@ -110,6 +111,8 @@ class KelompokAktivitasController extends BaseController
                     $master_aktivitas->jenis = 'khusus';
                     $master_aktivitas->save();
                 }
+                    
+            }
 
             DB::commit();
         } catch (\Exception $e) {
