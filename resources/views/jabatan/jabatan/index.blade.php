@@ -286,6 +286,7 @@
                             <option value="80">80</option>
                             <option value="75">75</option>
                             <option value="25">25</option>
+                            <option value="20">20</option>
                             <option value="0">0</option>
                         </select>
                         <small class="text-danger pembayaran_error"></small>

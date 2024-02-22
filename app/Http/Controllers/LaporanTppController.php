@@ -306,7 +306,9 @@ class LaporanTppController extends BaseController
                 $nilai_kinerja = 100;
             }
 
-            $nilaiPaguTpp = $value->pagu_tpp;
+            $pembayaran = intval($value->pembayaran);
+
+            $nilaiPaguTpp = $pembayaran < 100 ? $value->pagu_tpp * $pembayaran / 100 : $value->pagu_tpp;
 
             $sheet->setCellValue('A' . $cell, $key + 1);
             $sheet->setCellValue('B' . $cell, $value->nama . PHP_EOL . "'" . $value->nip);
