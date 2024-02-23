@@ -14,6 +14,8 @@
     </a>
 </div>
 
+@if($role['role'] == '2')
+
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'pegawai' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
         <span class="menu-icon">
@@ -171,6 +173,8 @@
     </a>
 </div>
 
+@endif
+
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
         <span class="menu-icon">
@@ -226,6 +230,7 @@
     </div>
 </div>
 
+@if($role['role'] == '2')
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'layanan' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
@@ -433,8 +438,6 @@
     </a>
 </div>
 
-
-
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'user' ? 'active' : '' }}"
         href="{{ route('kabupaten.pegawai.user.index') }}">
@@ -450,6 +453,8 @@
             style="{{ $path[0] == 'user' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">User</span>
     </a>
 </div>
+
+
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'admin' ? 'active' : '' }}"
@@ -467,4 +472,4 @@
     </a>
 </div>
 
-
+@endif

@@ -16,7 +16,7 @@
             id="#kt_aside_menu" data-kt-menu="true">
 
 
-            @if($role['guard'] == 'administrator' && $role['role'] == '2')
+            @if($role['guard'] == 'administrator')
                 @include('layouts.aside.kabupaten')
             @elseif($role['guard'] == 'web' && $role['role'] == '1' || $role['role'] == '3')    
                 @include('layouts.aside.opd')

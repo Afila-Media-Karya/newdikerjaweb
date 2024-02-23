@@ -17,7 +17,7 @@ class AdminKabupaten
     {
         if (Auth::guard('administrator')->check()) {
             
-            if (Auth::guard('administrator')->user()->role == '2') {
+            if (Auth::guard('administrator')->user()->role == '2' || Auth::guard('administrator')->user()->role == '3') {
                 return $next($request);
             }else{
                 Auth::guard('administrator')->logout();
