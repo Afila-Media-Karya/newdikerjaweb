@@ -64,6 +64,8 @@ class DashboardController extends BaseController
 
     public function change_session($params){
         $jabatan = request('jabatan');
+        $kode = request('kode');
+        session(['session_jabatan_kode' => $kode]);
         session(['session_jabatan' => $params]);
         session(['session_nama_jabatan' => $jabatan]);
         return redirect()->back()->with('success', 'Sesi jabatan anda berhasil di ubah');

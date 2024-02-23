@@ -29,7 +29,7 @@ class ComposerServiceProvider extends ServiceProvider
             if (hasRole()['guard'] == 'web') {
                 $jabatan = DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select(
                     'tb_pegawai.id','tb_master_jabatan.nama_jabatan',
-                    'tb_jabatan.status',
+                    'tb_jabatan.status','tb_jabatan.id as id_jabatan',
                     DB::raw('
                         CASE 
                             WHEN tb_jabatan.status = "definitif" THEN tb_master_jabatan.nama_jabatan

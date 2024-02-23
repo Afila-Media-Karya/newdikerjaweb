@@ -254,6 +254,7 @@ trait General
        ->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
        ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu','tb_master_jabatan.level_jabatan')
        ->where('tb_jabatan.status',$status)
+       ->where('tb_jabatan.id',session('session_jabatan_kode'))
        ->where('tb_pegawai.id',$pegawai)->first();
        
     }
@@ -329,6 +330,7 @@ trait General
             ->where('tb_pegawai.id',$params);
             if ($status !== '') {
                 $query->where('tb_jabatan.status', $status);
+                $query->where('tb_jabatan.id',session('session_jabatan_kode'));
             }
             $data = $query->first();
 

@@ -139,9 +139,9 @@
                                 @foreach($jabatan as $val)
                         
                                     <div class="menu-item px-5">
-                                        <a href="/change-session-jabatan/{{$val->status}}?jabatan={{$val->nama_jabatan}}" @if($val->status == session('session_jabatan')) style="background:#F3FAFE" @endif class="menu-link px-5">
+                                        <a href="/change-session-jabatan/{{$val->status}}?jabatan={{$val->nama_jabatan}}&kode={{$val->id_jabatan}}" @if($val->status == session('session_jabatan') && $val->id_jabatan == session('session_jabatan_kode')) style="background:#F3FAFE" @endif class="menu-link px-5">
                                         <span class="menu-title position-relative">{{ $val->text }}
-                                             @if($val->status == session('session_jabatan')))
+                                             @if($val->status == session('session_jabatan') && $val->id_jabatan == session('session_jabatan_kode'))
                                             <span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                                 <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('admin/assets/media/icons/checkmark-circle.png') }}" alt="">
                                             </span>

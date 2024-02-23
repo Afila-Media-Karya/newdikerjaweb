@@ -20,6 +20,7 @@ class AuthController extends BaseController
          $credentials = $request->getCredentials();
 
          $value_session_jabatan = '';
+         $value_session_jabatan_kode = '';
          $value_session_nama = '';
          $value_session_nama_jabatan = '';
          $value_session_foto = '';
@@ -38,6 +39,7 @@ class AuthController extends BaseController
             if ($userData->status == 'definitif') {
                 // Jika status definitif ditemukan, langsung set nilainya dan hentikan iterasi
                 $value_session_jabatan = 'definitif';
+                $value_session_jabatan_kode = $userData->id_jabatan;
                 $value_session_nama = $userData->nama_pegawai;
                 $value_session_nama_jabatan = $userData->nama_jabatan;
                 $value_session_satuan_kerja = $userData->nama_unit_kerja;
@@ -48,6 +50,7 @@ class AuthController extends BaseController
             } else{
                 if ($value_session_jabatan !== 'definitif') {
                     $value_session_jabatan = $userData->status;
+                    $value_session_jabatan_kode = $userData->id_jabatan;
                     $value_session_nama = $userData->nama_pegawai;
                     $value_session_nama_jabatan = $userData->status.' '.$userData->nama_jabatan;
                     $value_session_foto = $userData->foto;
@@ -68,6 +71,7 @@ class AuthController extends BaseController
             $user = Auth::user();
             Session::put('tahun_penganggaran', date('Y'));
             Session::put('session_jabatan',$value_session_jabatan);
+            Session::put('session_jabatan_kode',$value_session_jabatan_kode);
             Session::put('session_nama',$value_session_nama);
             Session::put('session_nama_jabatan',$value_session_nama_jabatan);
             Session::put('session_foto',$value_session_foto);
