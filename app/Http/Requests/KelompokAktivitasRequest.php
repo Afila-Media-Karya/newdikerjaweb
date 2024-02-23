@@ -22,23 +22,23 @@ class KelompokAktivitasRequest extends FormRequest
                 'repeater-aktivitas' => [
                 'required',
                 'array',
-                 function($attribute, $value, $fail){
-                     $result = false;
-                    $commonValues = [];
+                //  function($attribute, $value, $fail){
+                //      $result = false;
+                //     $commonValues = [];
 
-                    $array = array_column($value, 'aktivitas');
-                    $counts = array_count_values($array);
+                //     $array = array_column($value, 'aktivitas');
+                //     $counts = array_count_values($array);
 
-                    $duplicates = array_filter($counts, function ($count) {
-                        return $count > 1;
-                    });
+                //     $duplicates = array_filter($counts, function ($count) {
+                //         return $count > 1;
+                //     });
 
-                    $result = array_keys($duplicates);
+                //     $result = array_keys($duplicates);
                 
-                    if (count($result) > 0) {
-                        $fail("Aktivitas tidak boleh sama");
-                    }
-                }
+                //     if (count($result) > 0) {
+                //         $fail("Aktivitas tidak boleh sama");
+                //     }
+                // }
             ],
             'repeater-aktivitas.*.aktivitas' => 'required',
             ];
