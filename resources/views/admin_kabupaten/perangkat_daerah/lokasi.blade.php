@@ -208,8 +208,9 @@
 
         let marker;
         function initMap(lat = null, lng = null) {
-                lat = lat ? lat : '-3.5884643723530205';
-                lng = lng ? lng : '119.77026700973511';
+                lat = lat ? lat : '-5.558543';
+                lng = lng ? lng : '120.1909133,17';
+                
                 var center = { lat: parseFloat(lat), lng: parseFloat(lng) };
                 const bounds = new google.maps.LatLngBounds();
                 const map = new google.maps.Map(document.getElementById("mapView"), {
