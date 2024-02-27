@@ -162,7 +162,7 @@
     </div>
 @endsection
 @section('script')
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHpPxw7M0utVr3oj2XSfz_xP4Sddii9CY&callback=initMap&libraries=v=weekly,places&sensor=false" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA97drRATl2BEEoFPEqpF1o9Jk0wenosuU&callback=initMap&libraries=v=weekly,places&sensor=false" defer></script>
     <script>
         let control = new Control();
 
