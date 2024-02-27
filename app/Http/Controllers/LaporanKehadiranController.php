@@ -104,6 +104,7 @@ class LaporanKehadiranController extends Controller
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
+
         $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai);
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif') {

@@ -97,6 +97,7 @@ class SasaranKinerjaController extends BaseController
             }
 
             $jabatan = $this->checkJabatanDefinitif(hasRole()['id_pegawai']);
+            
             if (is_null($jabatan)) {
                 return $this->sendError('Maaf anda belum bisa menambah aktivitas, anda belum mempunyai jabatan', 'Gagal', 200);
             }

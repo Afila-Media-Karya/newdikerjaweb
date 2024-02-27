@@ -17,7 +17,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/', 'DashboardController@index')->name('app.index');
     Route::get('set-tahun-penganggaran', 'DashboardController@setTahunAnggaran')->name('set-tahun-penganggaran');
     Route::prefix('set-laporan')->group(function () {
-        Route::get('/laporan-kehadiran-pegawai', 'LaporanKehadiranController@export_pegawai')->name('setlaporan.laporan.kehadiran.export');
+        Route::get('/laporan-kehadiran-pegawai', 'LaporanKehadiranController@export_pegawai_bulan')->name('setlaporan.laporan.kehadiran.export');
         Route::get('/laporan-kinerja-pegawai', 'LaporanKinerjaController@export_pegawai')->name('setlaporan.laporan.kinerja.export');
         Route::get('/laporan-tpp-pegawai', 'LaporanTppController@export_pegawai')->name('setlaporan.laporan.tpp.export');
     });
