@@ -174,7 +174,7 @@ class KehadiranController extends BaseController
             $data->validation = $validation;
             $data->tahun = date('Y');
             $user_update = 0;
-            hasRole()['guard'] == 'web' ? $data->user_type = 0 : $data->user_type = 1;
+            // hasRole()['guard'] == 'web' ? $data->user_type = 0 : $data->user_type = 1;
             if (hasRole()['guard'] == 'administrator') {
                 $user_update = hasRole()['id'];
             }else {
@@ -185,7 +185,7 @@ class KehadiranController extends BaseController
                 $data->shift = $request->shift;
             }
 
-            $data->user_update = $user_update;
+            // $data->user_update = $user_update;
             $data->save();
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
