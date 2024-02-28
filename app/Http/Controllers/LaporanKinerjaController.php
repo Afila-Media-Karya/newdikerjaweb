@@ -75,22 +75,22 @@ class LaporanKinerjaController extends BaseController
 
     public function data_kinerja_pegawai($pegawai, $jabatan, $bulan)
     {
-
+        $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
         $dataArray = SasaranKinerja::query()
             ->select('id', 'id_satuan_kerja', 'rencana', 'id_jabatan', 'tahun')
-            ->with(['aktivitas' => function ($query) use ($bulan, $jabatan) {
+            ->with(['aktivitas' => function ($query) use ($bulan, $jabatan,$tahun) {
                 $query->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'));
                 $query->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at');
                 $query->whereMonth('tanggal', $bulan);
-                $query->where('tahun',session('tahun_penganggaran'));
+                $query->where('tahun',$tahun);
                 $query->orderBy('tanggal', 'ASC');
             }])
-            ->where('tahun', session('tahun_penganggaran'))
+            ->where('tahun', $tahun)
             ->where('id_jabatan', $jabatan->id_jabatan)
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        // $dataArray = $sasaran->toArray();
+            // dd($dataArray);
 
         $aktivitas = DB::table('tb_aktivitas')
             ->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'))
@@ -129,7 +129,6 @@ class LaporanKinerjaController extends BaseController
             $atasan = $this->findAtasan($pegawai_params);
             // if ($atasan) {
             $data = $this->data_kinerja_pegawai($pegawai_params, $checkJabatan, $bulan);
-            // return $data;
             return $this->export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan);
 
             // }else{
@@ -439,9 +438,10 @@ class LaporanKinerjaController extends BaseController
             $cell++;
         }
 
-        
+        $tahun_n = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
 
-        $tgl_cetak = date("t", strtotime((int)session('tahun_penganggaran'))) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)session('tahun_penganggaran')));
+        $tgl_cetak = date("t", strtotime((int)$tahun_n)) . ' ' . strftime('%B %Y', mktime(0, 0, 0, date("n") + 1, 0, (int)$tahun_n));
+
 
         $border_row = [
             'borders' => [
