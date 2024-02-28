@@ -188,6 +188,18 @@
                     </div>
 
                     <div class="mb-10">
+                        <label class="form-label">Pagu TPP</label>
+                        <input type="text" id="pagu_tpp" class="form-control pagu_tpp" value="0" name="pagu_tpp" data-inputmask="'alias': 'currency', 'radixPoint': ',', 'groupSeparator': '.', 'numericInput': true, 'autoUnmask': true, 'rightAlign': false">
+                        <small class="text-danger pagu_tpp_error"></small>
+                    </div>
+
+                    <div class="mb-10">
+                        <label class="form-label">Target Waktu</label>
+                        <input type="number" id="target_waktu" class="form-control" name="target_waktu" placeholder="Masukkan Targer Waktu">
+                        <small class="text-danger target_waktu_error"></small>
+                    </div>
+
+                    <div class="mb-10">
                         <label class="form-label">Pembayaran</label>
                         <select name="pembayaran" class="form-control">
                             <option selected disabled>Pilih Pembayaran</option>
@@ -226,7 +238,7 @@
         let url_main = '/jabatan-opd/list-jabatan';
 
         $(document).on('click', '#button-side-form', function() {
-            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', false);
+            $('#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', false);
             control.overlay_form('Tambah', 'Jabatan');
             $('#id_satuan_kerja').val(satuan_kerja_user);
             $('#id_satuan_kerja').trigger('change');
@@ -304,11 +316,12 @@
                     control.push_select_atasan_langsung(`/master-jabatan-opd/master-jabatan/option-atasan-langsung?level=${result.level}&satuan_kerja=${$('#id_satuan_kerja').val()}`,'#id_parent');   
 
                     if ($('.form-data').attr('data-type') !== 'add') {
-                        if (parseInt(result.level) < 7) {
-                            $('#id_parent').prop('disabled',true);
-                        }else{
-                            $('#id_parent').prop('disabled',false);
-                        }
+                        $('#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', true);
+                        // if (parseInt(result.level) < 7) {
+                        //     $('#id_parent').prop('disabled',true);
+                        // }else{
+                        //     $('#id_parent').prop('disabled',false);
+                        // }
                     }
                     
                 },
