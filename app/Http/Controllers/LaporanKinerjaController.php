@@ -125,8 +125,6 @@ class LaporanKinerjaController extends BaseController
         $checkJabatan = $this->checkJabatanDefinitif($pegawai_params, $jabatan_req);
         $data = array();
 
-
-
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
             // if ($atasan) {
