@@ -284,7 +284,7 @@ class LaporanKinerjaController extends BaseController
         $golongan_atasan = '';
 
         $pegawai->golongan !== null ? $golongan_pegawai = $pegawai->golongan : $golongan_pegawai = '-';
-        $pegawai->golongan !== null ? $golongan_atasan = $atasan->golongan : $golongan_atasan = '-';
+        $atasan && $atasan->golongan !== null ? $golongan_atasan = $atasan->golongan : $golongan_atasan = '-';
 
         $sheet->setCellValue('A7', ' Pangkat / Gol Ruang')->mergeCells('A7:C7');
         $sheet->setCellValue('D7', ' ' . $golongan_pegawai)->mergeCells('D7:E7');
@@ -466,9 +466,9 @@ class LaporanKinerjaController extends BaseController
         $cell = $cell + 3;
         // $sheet->setCellValue('B' . ++$cell_pegawai, $pegawai->nama)->mergeCells('B' . $cell_pegawai . ':D' . $cell_pegawai);
 
-        $sheet->setCellValue('H' . ++$cell, $atasan->nama)->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->setCellValue('H' . ++$cell, $atasan ?  $atasan->nama : '')->mergeCells('H' . $cell . ':J' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->setCellValue('H' . ++$cell, $atasan->nip)->mergeCells('H' . $cell . ':J' . $cell);
+        $sheet->setCellValue('H' . ++$cell, $atasan ? $atasan->nip : '')->mergeCells('H' . $cell . ':J' . $cell);
         $sheet->getStyle('H' . $cell)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
         $sheet->setCellValue('B' . $cell - 1, $pegawai->nama)->mergeCells('B' . $cell - 1 . ':D' . $cell - 1);
