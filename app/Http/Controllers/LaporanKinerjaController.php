@@ -119,21 +119,24 @@ class LaporanKinerjaController extends BaseController
         $type = request('type');
         $pegawai_params = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $bulan = request('bulan');
+        $role = hasRole();
+        $role_check = 0;
+
+        if ($role['guard'] == 'web' && $role['role'] == '2') {
+            $role_check = 1; 
+        }
 
         $jabatan_req = request("status");
-        $pegawai = $this->findPegawai($pegawai_params, $jabatan_req);
-        $checkJabatan = $this->checkJabatanDefinitif($pegawai_params, $jabatan_req);
+        $pegawai = $this->findPegawai($pegawai_params, $jabatan_req,$role_check);
+        $checkJabatan = $this->checkJabatanDefinitif($pegawai_params, $jabatan_req,$role_check);
+
         $data = array();
 
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
-            // if ($atasan) {
             $data = $this->data_kinerja_pegawai($pegawai_params, $checkJabatan, $bulan);
             return $this->export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan);
 
-            // }else{
-            //    return redirect()->back()->withErrors(['error' => 'Belum bisa membuka laporan']); 
-            // }
         } else {
             return redirect()->back()->withErrors(['error' => 'Belum bisa membuka laporan, pegawai tersebut belum mempunyai jabatan']);
         }

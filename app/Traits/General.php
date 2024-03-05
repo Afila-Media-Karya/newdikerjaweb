@@ -117,7 +117,8 @@ trait General
         $query = DB::table('tb_pegawai')->select('tb_pegawai.id',DB::raw('CONCAT(tb_pegawai.nama, " - ", tb_pegawai.nip) as text'),'tipe_pegawai')
         ->join('tb_jabatan','tb_jabatan.id_pegawai','=','tb_pegawai.id')
         ->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
-        ->where('tb_pegawai.status','1');
+        ->where('tb_pegawai.status','1')
+        ->groupBy('tb_pegawai.id');
         
         if (isset($satuan_kerja)) {
             $query->where('tb_pegawai.id_satuan_kerja',$satuan_kerja);
@@ -234,7 +235,7 @@ trait General
         return $data;
     }
 
-    public function checkJabatanDefinitif($pegawai, $params = null){
+    public function checkJabatanDefinitif($pegawai, $params = null, $type = null){
         $status = '';
         $data = array();
 
@@ -256,16 +257,27 @@ trait General
        ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu','tb_master_jabatan.level_jabatan')
        ->where('tb_jabatan.status',$status)
        ->where('tb_pegawai.id',$pegawai);
-       
-       if (session('session_jabatan_kode')) {
-         $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+
+       if ($type) {
+            if ($type > 0) {
+                $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+            }
+       }else{
+            if (session('session_jabatan_kode')) {   
+                if (is_null($type) || $type > 0) {
+                    $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+                }
+            }
        }
+
 
        $data = $query->first();
 
        return $data;
        
     }
+
+
 
     public function checkJabatanAll($pegawai){
        return DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->get();
@@ -317,7 +329,7 @@ trait General
         ->get();
     }
 
-    public function findPegawai($params, $status_jabatan = null){
+    public function findPegawai($params, $status_jabatan = null, $role_check = null){
 
         $status = '';
         $data = array();
@@ -329,20 +341,21 @@ trait General
             }
         }
 
-        // dd($params);
         
         $query = DB::table('tb_pegawai')
             ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
             ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
             ->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
-            ->join('tb_satuan_kerja','tb_pegawai.id_satuan_kerja','=','tb_satuan_kerja.id')
+            ->join('tb_satuan_kerja','tb_jabatan.id_satuan_kerja','=','tb_satuan_kerja.id')
             ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
             ->where('tb_pegawai.id',$params);
             if ($status !== '') {
                 $query->where('tb_jabatan.status', $status);
                 if (!is_null(session('session_jabatan_kode'))) {
-                    $query->where('tb_jabatan.id',session('session_jabatan_kode'));
-                }  
+                    if (is_null($role_check) || $role_check > 0) {
+                       $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+                    }
+                } 
             }
             $data = $query->first();
 
@@ -350,7 +363,26 @@ trait General
     }
 
     public function findAtasan($params){
-      $jabatan = DB::table('tb_jabatan')->select('tb_jabatan.id_parent')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->where('id_pegawai',$params)->first();
+
+        $role = hasRole();
+        $role_check = 0;
+
+        if ($role['guard'] == 'web' && $role['role'] == '2') {
+            $role_check = 1; 
+        }
+
+
+      $jabatan = array();
+
+      $jabatan_query = DB::table('tb_jabatan')->select('tb_jabatan.id_parent')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->where('id_pegawai',$params);
+
+      if ($role_check > 0) {
+        $jabatan_query->where('tb_jabatan.id',session('session_jabatan_kode'));
+      }else{
+        $jabatan_query->where('tb_jabatan.status','definitif');
+      }
+
+      $jabatan = $jabatan_query->first();
 
       $data = DB::table('tb_pegawai')
       ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.id as id_jabatan','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja')
