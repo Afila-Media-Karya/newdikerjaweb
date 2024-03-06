@@ -248,58 +248,58 @@
             });
         })
 
-        dateConfig = () => {
-            const tanggalAbsenInput = document.getElementById("tanggal");
+        // dateConfig = () => {
+        //     const tanggalAbsenInput = document.getElementById("tanggal");
 
-            // Dapatkan tanggal hari ini
-            const today = new Date();
+        //     // Dapatkan tanggal hari ini
+        //     const today = new Date();
 
-            // Hitung tanggal 5 hari sebelum hari ini
-            const fiveDaysAgo = new Date(today);
-            fiveDaysAgo.setDate(today.getDate() - 5);
+        //     // Hitung tanggal 5 hari sebelum hari ini
+        //     const fiveDaysAgo = new Date(today);
+        //     fiveDaysAgo.setDate(today.getDate() - 5);
 
-            const UnlimitedDaysAgo = new Date(today);
-            UnlimitedDaysAgo.setDate(today.getDate() - 100);
+        //     const UnlimitedDaysAgo = new Date(today);
+        //     UnlimitedDaysAgo.setDate(today.getDate() - 100);
 
-            // Format tanggal ke dalam string YYYY-MM-DD
-            const todayString = today.toISOString().split("T")[0];
-            const fiveDaysAgoString = fiveDaysAgo.toISOString().split("T")[0];
-            const UnlimitedDaysAgoString = UnlimitedDaysAgo.toISOString().split("T")[0];
+        //     // Format tanggal ke dalam string YYYY-MM-DD
+        //     const todayString = today.toISOString().split("T")[0];
+        //     const fiveDaysAgoString = fiveDaysAgo.toISOString().split("T")[0];
+        //     const UnlimitedDaysAgoString = UnlimitedDaysAgo.toISOString().split("T")[0];
 
-            // Set nilai atribut min dan max pada elemen input tanggal
-            tanggalAbsenInput.min = fiveDaysAgoString; // 5 hari sebelum hari ini
-            tanggalAbsenInput.max = todayString; // Hari ini
+        //     // Set nilai atribut min dan max pada elemen input tanggal
+        //     tanggalAbsenInput.min = fiveDaysAgoString; // 5 hari sebelum hari ini
+        //     tanggalAbsenInput.max = todayString; // Hari ini
             
-            // Contoh: Menampilkan tanggal saat ini pada elemen input
-            tanggalAbsenInput.value = todayString;
+        //     // Contoh: Menampilkan tanggal saat ini pada elemen input
+        //     tanggalAbsenInput.value = todayString;
 
-            // Menambahkan listener untuk event change pada input tanggal
-            tanggalAbsenInput.addEventListener("change", function () {
-                const selectedDate = new Date(this.value);
-                const dayOfWeek = selectedDate.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
+        //     // Menambahkan listener untuk event change pada input tanggal
+        //     tanggalAbsenInput.addEventListener("change", function () {
+        //         const selectedDate = new Date(this.value);
+        //         const dayOfWeek = selectedDate.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
 
-                // Menonaktifkan tanggal pada hari Sabtu dan Minggu
-                if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    // Menonaktifkan opsi untuk tanggal yang dipilih
-                    const tanggalOptions = document.querySelectorAll("#tanggal_absen option");
-                    tanggalOptions.forEach(option => {
-                        const optionDate = new Date(option.value);
-                        if (optionDate.getDay() === dayOfWeek) {
-                            option.disabled = true;
-                        } else {
-                            option.disabled = false;
-                        }
-                    });
+        //         // Menonaktifkan tanggal pada hari Sabtu dan Minggu
+        //         if (dayOfWeek === 0 || dayOfWeek === 6) {
+        //             // Menonaktifkan opsi untuk tanggal yang dipilih
+        //             const tanggalOptions = document.querySelectorAll("#tanggal_absen option");
+        //             tanggalOptions.forEach(option => {
+        //                 const optionDate = new Date(option.value);
+        //                 if (optionDate.getDay() === dayOfWeek) {
+        //                     option.disabled = true;
+        //                 } else {
+        //                     option.disabled = false;
+        //                 }
+        //             });
 
-                    Swal.fire(
-                        "Anda tidak dapat memilih hari sabtu dan minggu",
-                        "Silahkan pilih hari yang lain",
-                        "warning"
-                    );
-                    this.value = ""; // Mengosongkan nilai input
-                }
-            });
-        };
+        //             Swal.fire(
+        //                 "Anda tidak dapat memilih hari sabtu dan minggu",
+        //                 "Silahkan pilih hari yang lain",
+        //                 "warning"
+        //             );
+        //             this.value = ""; // Mengosongkan nilai input
+        //         }
+        //     });
+        // };
 
 
         const element = document.getElementById("kt_docs_fullcalendar_basic");
@@ -457,7 +457,7 @@
 
 
             $(function () {
-                dateConfig();
+                // dateConfig();
                 calendar.render();
             })
 
