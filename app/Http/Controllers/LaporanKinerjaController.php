@@ -90,8 +90,6 @@ class LaporanKinerjaController extends BaseController
             ->orderBy('created_at', 'DESC')
             ->get();
 
-            dd($dataArray);
-
         $aktivitas = DB::table('tb_aktivitas')
             ->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'))
             ->where('id_pegawai', $pegawai)
@@ -135,7 +133,6 @@ class LaporanKinerjaController extends BaseController
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
             $data = $this->data_kinerja_pegawai($pegawai_params, $checkJabatan, $bulan);
-            return $data;
             return $this->export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan);
 
         } else {
