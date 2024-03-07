@@ -25,7 +25,6 @@ class AktivitasController extends BaseController
     }
     
     public function getAktivitasForCalender(){
-        // dd(Auth::user()->id);
         $data = DB::table('tb_aktivitas')->select('id','uuid','aktivitas as title','keterangan as description','tanggal as start')->where('id_pegawai',Auth::user()->id_pegawai)->get();
         return $data;
     }
