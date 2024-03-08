@@ -98,14 +98,17 @@ class LaporanKehadiranController extends Controller
 
     public function export_pegawai_bulan(){
         $bulan = request('bulan');
-        $tanggal_awal = date("Y-m-d", strtotime(session('tahun_penganggaran').'-' . $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime(session('tahun_penganggaran').'-' . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+        $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
+
+        $tanggal_awal = date("Y-m-d", strtotime($tahun.'-' . $bulan . '-01'));
+        $tanggal_akhir = date("Y-m-d", strtotime($tahun.'-' . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
 
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
 
         $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai);
+
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir);
