@@ -405,6 +405,20 @@ trait General
         return !empty($libur);
     }
 
+    function isRhamadan($tanggal)
+    {
+        // Ubah tanggal ke format yang sesuai untuk memeriksa bulan
+        $tanggal_awal_ramadan = '2024-03-12'; // Tanggal awal bulan Ramadan
+        $tanggal_akhir_ramadan = '2024-04-09'; // Tanggal akhir bulan Ramadan
+
+        // Periksa apakah tanggal berada dalam rentang bulan Ramadan
+        if ($tanggal >= $tanggal_awal_ramadan && $tanggal <= $tanggal_akhir_ramadan) {
+            return true; // Jika tanggal berada dalam rentang bulan Ramadan
+        } else {
+            return false; // Jika tanggal tidak berada dalam rentang bulan Ramadan
+        }
+    }
+
     public function data_kehadiran_pegawai($pegawai,$tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai){
         $result = array();
         $daftar_tanggal = [];
@@ -473,11 +487,11 @@ trait General
                     if ($tanggalCarbon->isMonday()) {
                         if (!in_array($tanggal, $this->getDateRange())) {
                                 if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar') {
-                                    if ($tipe_pegawai == 'pegawai_administratif') {
+                                    if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                         $jml_tidak_apel += 1;
                                     }elseif ($tipe_pegawai == 'tenaga_kesehatan') {
                                        
-                                        if ($absen_per_tanggal[$tanggal]['shift'] == 'pagi' && !$this->isTanggalLibur($tanggalCarbon->toDateString())) {
+                                        if ($absen_per_tanggal[$tanggal]['shift'] == 'pagi' && !$this->isTanggalLibur($tanggalCarbon->toDateString()) && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                              $jml_tidak_apel += 1;
                                         }
                                     }

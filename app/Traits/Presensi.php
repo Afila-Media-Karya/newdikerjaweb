@@ -4,9 +4,10 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\General;
 trait Presensi
 {
-
+    use General;
     public function jumlahHariKerja($bulan){
        $tahun = date('Y');
         $tanggalAwal = Carbon::create($tahun, $bulan, 1)->startOfMonth();
@@ -130,18 +131,26 @@ trait Presensi
 
         if ($waktu !== null) {
             if ($params == 'masuk') {
-                $waktu_tetap_absen = strtotime($waktu_default_absen);
+                $waktu_tetap_absen = '';
+                if (!$this->isRhamadan($tanggal)) {
+                    $waktu_tetap_absen = strtotime($waktu_default_absen);
+                }else {
+                    $waktu_tetap_absen = strtotime('08:00:00');
+                }
+
                 $waktu_absen = strtotime($waktu);
                 $diff = $waktu_absen - $waktu_tetap_absen;
             } else {
-                $waktu_checkout = $waktu_default_absen;
-                $arr = $this->getDateRange();
-                $key = array_search($waktu, $arr);
+                $waktu_checkout = '';
 
-                if ($key !== false) {
-                    $tipe_pegawai == 'pegawai_administratif' ? $waktu_checkout = '15:00:00' : $waktu_checkout = '13:00:00';
+                if (!$this->isRhamadan($tanggal)) {
+                    $waktu_checkout = $waktu_default_absen;
+                }else {
+                    $waktu_checkout = date('N') == 5 ? '15:30:00' : '15:00:00';
                 }
 
+                $arr = $this->getDateRange();
+                $key = array_search($waktu, $arr);                
 
                 if ($tipe_pegawai == 'pegawai_administratif') {
                     if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
