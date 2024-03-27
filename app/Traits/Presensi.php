@@ -146,7 +146,7 @@ trait Presensi
                 if (!$this->isRhamadan($tanggal)) {
                     $waktu_checkout = $waktu_default_absen;
                 }else {
-                    $waktu_checkout = date('N') == 5 ? '15:30:00' : '15:00:00';
+                    $waktu_checkout = '15:00:00';
                 }
 
                 $arr = $this->getDateRange();
