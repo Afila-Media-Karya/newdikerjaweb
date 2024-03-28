@@ -263,7 +263,7 @@ trait General
                 $query->where('tb_jabatan.id',session('session_jabatan_kode'));
             }
        }else{
-            if (session('session_jabatan_kode')) {   
+            if (session('session_jabatan_kode') && $path[0] !== 'review') {   
                 if (is_null($type) || $type > 0) {
                     $query->where('tb_jabatan.id',session('session_jabatan_kode'));
                 }

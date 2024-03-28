@@ -99,6 +99,7 @@ class AktivitasReviewController extends BaseController
         $bulan_params = request('bulan');
         $pegawai = DB::table('tb_pegawai')->select('id')->where('uuid',$params)->first()->id;
         $option_skp = $this->optionSkp($pegawai);
+        // dd($option_skp);
         $aktivitas = $this->getMasterAktivitas($pegawai);
         return view('review.aktivitas.review',compact('module','pegawai','option_skp','aktivitas','bulan_params'));
     }
