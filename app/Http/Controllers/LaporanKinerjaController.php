@@ -90,25 +90,67 @@ class LaporanKinerjaController extends BaseController
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        $aktivitas = DB::table('tb_aktivitas')
+
+            $aktivitas_sasaran_tanpa_jabatan = DB::table('tb_aktivitas')
+            ->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'))
+            ->where('id_pegawai', $pegawai)
+            ->where('id_sasaran','>', 0)
+            ->whereMonth('tanggal', $bulan)
+            ->where('tahun', $tahun)
+            ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
+            ->orderBy('tanggal', 'ASC')
+            ->get();
+
+            $aktivitas_tambahan = [];
+
+            foreach ($aktivitas_sasaran_tanpa_jabatan as $aktivitas) {
+                $id_sasaran = $aktivitas->id_sasaran;
+                $sasaranAda = false;
+                foreach ($dataArray as $skp) {
+                    foreach ($skp->aktivitas as $item) {
+                        if ($item->id_sasaran == $id_sasaran) {
+                            $sasaranAda = true;
+                            break 2;
+                        }
+                    }
+                }
+                if (!$sasaranAda) {
+                    $aktivitas_tambahan[] = $aktivitas;
+                }
+            }
+
+
+        $aktivitas_non_sasaran = DB::table('tb_aktivitas')
             ->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'))
             ->where('id_pegawai', $pegawai)
             ->where('id_sasaran', 0)
             ->whereMonth('tanggal', $bulan)
+            ->where('tahun', $tahun)
             ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
             ->orderBy('tanggal', 'ASC')
             ->get();
+
+            // dd($aktivitas_non_sasaran);
+
+       
+            // Konversi $aktivitas_tambahan menjadi objek Laravel Collection
+            $aktivitas_tambahan_collection = collect($aktivitas_tambahan);
+
+            // Gabungkan dua koleksi menggunakan metode merge()
+            $aktivitas_group_non_sasaran_jabatan = $aktivitas_non_sasaran->merge($aktivitas_tambahan_collection);
+
+
+
 
         $skp_tmt = [
             'id_satuan_kerja' => 0,
             'rencana' => '-',
             'id_jabatan' => 0,
             'tahun' => date('Y'),
-            'aktivitas' => $aktivitas
+            'aktivitas' => $aktivitas_group_non_sasaran_jabatan
         ];
 
         $dataArray[] = $skp_tmt;
-        // array_unshift($dataArray, $skp_tmt);
         return $dataArray;
     }
 
@@ -133,6 +175,7 @@ class LaporanKinerjaController extends BaseController
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
             $data = $this->data_kinerja_pegawai($pegawai_params, $checkJabatan, $bulan);
+   
             return $this->export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan);
 
         } else {
