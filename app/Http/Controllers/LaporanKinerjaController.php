@@ -73,16 +73,16 @@ class LaporanKinerjaController extends BaseController
         return view('laporan.kinerja.index_kabupaten', compact('module', 'satuan_kerja'));
     }
 
-    public function data_kinerja_pegawai($pegawai, $jabatan, $bulan)
-    {
-        $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
+   public function data_kinerja_pegawai($pegawai, $jabatan, $bulan){
+    $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
         $dataArray = SasaranKinerja::query()
             ->select('id', 'id_satuan_kerja', 'rencana', 'id_jabatan', 'tahun')
-            ->with(['aktivitas' => function ($query) use ($bulan, $jabatan,$tahun) {
+            ->with(['aktivitas' => function ($query) use ($bulan, $jabatan,$tahun, $pegawai) {
                 $query->select('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at', DB::raw('SUM(id) as total_id'), DB::raw('SUM(volume) as total_volume'), DB::raw('SUM(waktu) as total_waktu'));
                 $query->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at');
                 $query->whereMonth('tanggal', $bulan);
                 $query->where('tahun',$tahun);
+                $query->where('id_pegawai', $pegawai);
                 $query->orderBy('tanggal', 'ASC');
             }])
             ->where('tahun', $tahun)
@@ -140,8 +140,6 @@ class LaporanKinerjaController extends BaseController
             $aktivitas_group_non_sasaran_jabatan = $aktivitas_non_sasaran->merge($aktivitas_tambahan_collection);
 
 
-
-
         $skp_tmt = [
             'id_satuan_kerja' => 0,
             'rencana' => '-',
@@ -152,7 +150,9 @@ class LaporanKinerjaController extends BaseController
 
         $dataArray[] = $skp_tmt;
         return $dataArray;
-    }
+   }
+
+    
 
     public function export_pegawai()
     {
@@ -175,7 +175,7 @@ class LaporanKinerjaController extends BaseController
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
             $data = $this->data_kinerja_pegawai($pegawai_params, $checkJabatan, $bulan);
-   
+     
             return $this->export_kinerja_pegawai($data, $type, $pegawai, $atasan, $bulan);
 
         } else {
