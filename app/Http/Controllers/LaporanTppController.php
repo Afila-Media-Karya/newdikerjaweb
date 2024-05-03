@@ -666,21 +666,15 @@ class LaporanTppController extends BaseController
         $bulan = request('bulan');
         $jabatan_req = request("status");
 
-        
-        // dd($jabatan_req);
         $pegawai = $this->findPegawai($pegawai_params, $jabatan_req);
         $checkJabatan = $this->checkJabatanDefinitif($pegawai_params, $jabatan_req);
-
 
         $data = array();
         if ($checkJabatan) {
             $atasan = $this->findAtasan($pegawai_params);
-            // dd($atasan);
             // if ($atasan) {
                 $data = $this->data_tpp_pegawai($pegawai_params, $bulan);
-
                 return $this->export_tpp_pegawai($data,$type,$pegawai,$atasan,$bulan);
-
             // }else{
             //    return redirect()->back()->withErrors(['error' => 'Belum bisa membuka laporan']); 
             // }

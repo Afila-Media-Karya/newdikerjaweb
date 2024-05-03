@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Auth;
 trait General
 {
     public function option_golongan(){
@@ -364,13 +365,15 @@ trait General
 
     public function findAtasan($params){
 
-        $role = hasRole();
+        $check_role = Auth::check();
         $role_check = 0;
-
-        if ($role['guard'] == 'web' && $role['role'] == '2') {
-            $role_check = 1; 
+        $role = array();
+        if ($check_role) {
+            $role = hasRole();
+            if ($role['guard'] == 'web' && $role['role'] == '2') {
+                $role_check = 1; 
+            }
         }
-
 
       $jabatan = array();
 
