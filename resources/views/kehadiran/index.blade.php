@@ -468,7 +468,7 @@
             });
         };
 
-        $(document).on('click','.btn-validation', function () {
+        function validation(data_value, data_uuid) {
 
             $.ajaxSetup({
                 headers: {
@@ -477,34 +477,58 @@
             });
 
             $.ajax({
-            type: 'POST',
-            url: `${url_main}/validation`,
-            data: {
-                validation : $(this).attr('data-value'),
-                uuid : $(this).attr('data-uuid')
-            },
-            success: function (response) {
-                $(".text-danger").html("");
-                if (response.success == true) {
-                swal
-                    .fire({
-                    text: `Absen berhasil di validasi`,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500,
-                    })
-                    .then(function () {
-                        role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('#satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
-                    });
-                } else {
-                    Swal.fire("Gagal Memproses data!", `${response.message}`, "warning");
-                }
-            },
-            error: function (xhr) {
-               Swal.fire("Gagal Memproses data!", 'Gagal', "warning");
-            },
-            });
+                    type: 'POST',
+                    url: `${url_main}/validation`,
+                    data: {
+                        validation : data_value,
+                        uuid : data_uuid,
+                    },
+                    success: function (response) {
+                        $(".text-danger").html("");
+                        if (response.success == true) {
+                        swal
+                            .fire({
+                            text: `Absen berhasil di validasi`,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            })
+                            .then(function () {
+                                role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('#satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
+                            });
+                        } else {
+                            Swal.fire("Gagal Memproses data!", `${response.message}`, "warning");
+                        }
+                    },
+                    error: function (xhr) {
+                    Swal.fire("Gagal Memproses data!", 'Gagal', "warning");
+                    },
+                });
+        }
 
+        $(document).on('click','.btn-validation', function () {
+
+            let data_value = $(this).attr('data-value')
+            let data_uuid = $(this).attr('data-uuid');
+
+            if (role.guard !== 'web') {
+                validation(data_value,data_uuid)
+            }else{
+                let tanggalParams = $(this).attr('data-tanggal');
+                let tanggalAwal = new Date(tanggalParams);
+                // Tanggal hari ini
+                let tanggalHariIni = new Date();
+
+                // Hitung jarak hari
+                let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
+
+                if (jarakHari >= 5) {
+                    validation(data_value,data_uuid)
+                }else{
+                    Swal.fire("Gagal Memproses data!", 'Waktu sudah lewat dari 5 hari', "warning");
+                }
+                
+            }
         })
 
         $(document).on('click','#filter-btn', function (e) {
@@ -565,11 +589,11 @@
                 render: function(data, type, row, meta) {
                     console.log(data);
                     if (data === 1) {
-                        return `<a href="#" type="button" data-value="0" data-uuid="${row.uuid}" class="btn btn-success btn-validation btn-icon btn-sm"> 
+                        return `<a href="#" type="button" data-value="0" data-uuid="${row.uuid}" data-tanggal="${row.tanggal_absen}" class="btn btn-success btn-validation btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/checkmark.svg')}}" alt="" srcset="">
                             </a>`;
                     }else{
-                        return `<a href="#" type="button" data-value="1" data-uuid="${row.uuid}" class="btn btn-danger btn-validation btn-icon btn-sm"> 
+                        return `<a href="#" type="button" data-value="1" data-uuid="${row.uuid}" data-tanggal="${row.tanggal_absen}" class="btn btn-danger btn-validation btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/close.svg')}}" alt="" srcset="">
                             </a>`;
                     }

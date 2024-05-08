@@ -166,6 +166,18 @@ class KehadiranController extends BaseController
             $request->has('validation') ?  $validation = intval($request->validation) : $validation = 0;
 
             $data = Absen::where('uuid',$params)->first();
+
+            date_default_timezone_set('UTC');
+            $currentDate = date('Y-m-d');
+            $futureDate = date('Y-m-d', strtotime('-5 days', strtotime($currentDate)));
+
+            if (hasRole()['guard'] == 'web') {
+               if ($data->tanggal_absen <= $futureDate) {
+                    return $this->sendError('Anda tidak bisa mengubah data absen apabila sudah lewat dari 5 hari', 'Gagal', 200);
+                }
+            }
+
+            
             $data->waktu_masuk = $request->waktu_masuk;
             if (isset($request->waktu_keluar)) {
                 $data->waktu_keluar = $request->waktu_keluar;
