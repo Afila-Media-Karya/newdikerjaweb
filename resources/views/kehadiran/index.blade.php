@@ -515,14 +515,14 @@
                 validation(data_value,data_uuid)
             }else{
                 let tanggalParams = $(this).attr('data-tanggal');
+                console.log(tanggalParams);
                 let tanggalAwal = new Date(tanggalParams);
                 // Tanggal hari ini
                 let tanggalHariIni = new Date();
 
                 // Hitung jarak hari
                 let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
-
-                if (jarakHari >= 5) {
+                if (jarakHari <= 5) {
                     validation(data_value,data_uuid)
                 }else{
                     Swal.fire("Gagal Memproses data!", 'Waktu sudah lewat dari 5 hari', "warning");
