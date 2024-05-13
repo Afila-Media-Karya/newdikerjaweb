@@ -465,6 +465,7 @@ trait General
         $data = DB::table('tb_absen')
             ->select('tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar','shift')
             ->where('id_pegawai', $pegawai)
+            ->where('validation', 1)
             ->whereBetween('tanggal_absen', [$tanggal_awal, $tanggal_akhir])
             ->get();
 
