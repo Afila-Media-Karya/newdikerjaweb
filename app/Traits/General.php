@@ -341,7 +341,6 @@ trait General
                 $status = session('session_jabatan');
             }
         }
-
         
         $query = DB::table('tb_pegawai')
             ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
@@ -354,7 +353,9 @@ trait General
                 $query->where('tb_jabatan.status', $status);
                 if (!is_null(session('session_jabatan_kode'))) {
                     if (is_null($role_check) || $role_check > 0) {
-                       $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+                        if (auth()->user()->role !== "1") {
+                            $query->where('tb_jabatan.id',session('session_jabatan_kode'));
+                        }
                     }
                 } 
             }
