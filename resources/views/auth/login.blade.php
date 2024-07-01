@@ -151,7 +151,7 @@ License: For each use you must have a valid license purchased only from above li
                                 <img src="{{ asset('admin/assets/media/auth/playstore.svg') }}" alt=""
                                     srcset="">
                             </a>
-                            <a href="https://apps.apple.com/us/app/DIKERJA/id6474229039"
+                            <a href="https://apps.apple.com/app/dikerja-bulukumba/id6475056808"
                                 target="_blank">
                                 <img src="{{ asset('admin/assets/media/auth/appstore.svg') }}" alt=""
                                     srcset="">
