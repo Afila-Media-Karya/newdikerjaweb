@@ -464,7 +464,7 @@ trait General
 
         // Query untuk mengambil data absen
         $data = DB::table('tb_absen')
-            ->select('tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar','shift')
+            ->select('tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar','waktu_istirahat','waktu_masuk_istirahat','shift')
             ->where('id_pegawai', $pegawai)
             ->where('validation', 1)
             ->whereBetween('tanggal_absen', [$tanggal_awal, $tanggal_akhir])
@@ -478,6 +478,8 @@ trait General
                 'status' => $row->status,
                 'waktu_masuk' => $row->waktu_masuk,
                 'waktu_keluar' => $row->waktu_keluar,
+                'waktu_istirahat' => $row->waktu_istirahat,
+                'waktu_masuk_istirahat' => $row->waktu_masuk_istirahat,
                 'shift' => $row->shift,
             ];
         }
@@ -575,6 +577,8 @@ trait General
                     'status' => $absen_per_tanggal[$tanggal]['status'],
                     'waktu_masuk' => $absen_per_tanggal[$tanggal]['waktu_masuk'],
                     'waktu_keluar' => $waktu_pulang,
+                    'waktu_istirahat' => $absen_per_tanggal[$tanggal]['waktu_istirahat'],
+                    'waktu_masuk_istirahat' => $absen_per_tanggal[$tanggal]['waktu_masuk_istirahat'],
                     'keterangan_masuk' => $selisih_waktu_masuk > 0 ?  'Telat ' . $selisih_waktu_masuk . ' menit' : 'Tepat waktu',
                     'keterangan_pulang' =>  $keterangan_pulang,
                     'shift' => $absen_per_tanggal[$tanggal]['shift']
@@ -616,6 +620,8 @@ trait General
                     'status' => $status_,
                     'waktu_masuk' => '-',
                     'waktu_keluar' => '-',
+                    'waktu_istirahat' => '-',
+                    'waktu_masuk_istirahat' => '-',
                     'keterangan_masuk' => '-',
                     'keterangan_pulang' => '-',
                     'shift' => '-',

@@ -114,8 +114,6 @@ class LaporanKehadiranController extends Controller
         }else {
             return $this->export_rekap_pegawai_nakes($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir);
         }
-
-        
     }
 
     public function export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir)
@@ -149,13 +147,13 @@ class LaporanKehadiranController extends Controller
         $spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.5);
         $spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.3);
 
-        $sheet->setCellValue('A1', 'Laporan Rekapitulasi Absen Pegawai')->mergeCells('A1:G1');
-        $sheet->setCellValue('A2', '' . $pegawai_info->nama_unit_kerja)->mergeCells('A2:G2');
+        $sheet->setCellValue('A1', 'Laporan Rekapitulasi Absen Pegawai')->mergeCells('A1:I1');
+        $sheet->setCellValue('A2', '' . $pegawai_info->nama_unit_kerja)->mergeCells('A2:I2');
         // $sheet->setCellValue('A3', $pegawai_info->nama . ' / ' . $pegawai_info->nip)->mergeCells('A3:G3');
-        $sheet->getStyle('A1:G4')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('A1:G4')->getFont()->setSize(14);
+        $sheet->getStyle('A1:I4')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A1:I4')->getFont()->setSize(14);
 
-        $sheet->setCellValue('A7', ' ')->mergeCells('A10:G10');
+        $sheet->setCellValue('A7', ' ')->mergeCells('A10:I10');
 
         $sheet->setCellValue('A8', 'Nama')->mergeCells('A8' . ':B8');
         $sheet->setCellValue('C8', ': ' . $pegawai_info->nama)->mergeCells('C8' . ':G8');
@@ -170,26 +168,35 @@ class LaporanKehadiranController extends Controller
         $sheet->getColumnDimension('B')->setWidth(25);
         $sheet->setCellValue('C11', 'Status Absen')->mergeCells('C11:C12');
         $sheet->getColumnDimension('C')->setWidth(25);
+        
         $sheet->setCellValue('D11', 'Datang')->mergeCells('D11:E11');
         $sheet->setCellValue('D12', 'Waktu');
         $sheet->getColumnDimension('D')->setWidth(25);
         $sheet->setCellValue('E12', 'Keterangan');
         $sheet->getColumnDimension('E')->setWidth(25);
-        $sheet->setCellValue('F11', 'Pulang')->mergeCells('F11:G11');
-        $sheet->setCellValue('F12', 'Waktu');
+        
+        $sheet->setCellValue('F11', 'Istirahat')->mergeCells('F11:G11');
+        $sheet->setCellValue('F12', 'Keluar');
         $sheet->getColumnDimension('F')->setWidth(25);
-        $sheet->setCellValue('G12', 'Keterangan');
+        $sheet->setCellValue('G12', 'Masuk');
         $sheet->getColumnDimension('G')->setWidth(25);
+
+        $sheet->setCellValue('H11', 'Pulang')->mergeCells('H11:I11');
+        $sheet->setCellValue('H12', 'Waktu');
+        $sheet->getColumnDimension('H')->setWidth(25);
+        $sheet->setCellValue('I12', 'Keterangan');
+        $sheet->getColumnDimension('I')->setWidth(25);
+
 
         $sheet->setCellValue('B13', 'Nama')->mergeCells('B11:B12');
         $sheet->setCellValue('C11', 'Status Absen')->mergeCells('C11:C12');
 
-        $sheet->getStyle('A:G')->getAlignment()->setWrapText(true);
-        $sheet->getStyle('A1:G12')->getFont()->setBold(true);
+        $sheet->getStyle('A:I')->getAlignment()->setWrapText(true);
+        $sheet->getStyle('A1:I12')->getFont()->setBold(true);
         $sheet->getRowDimension(11)->setRowHeight(30);
         $sheet->getRowDimension(12)->setRowHeight(30);
 
-        $sheet->getStyle('A11:G12')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
+        $sheet->getStyle('A11:I12')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
 
 
         $cell = 13;
@@ -201,13 +208,15 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('C' . $cell, ucfirst($value['status']));
             $sheet->setCellValue('D' . $cell, $value['waktu_masuk']);
             $sheet->setCellValue('E' . $cell, $value['keterangan_masuk']);
-            $sheet->setCellValue('F' . $cell, $value['waktu_keluar']);
-            $sheet->setCellValue('G' . $cell, $value['keterangan_pulang']);
+            $sheet->setCellValue('F' . $cell, $value['waktu_istirahat']);
+            $sheet->setCellValue('G' . $cell, $value['waktu_masuk_istirahat']);
+            $sheet->setCellValue('H' . $cell, $value['waktu_keluar']);
+            $sheet->setCellValue('I' . $cell, $value['keterangan_pulang']);
             $cell++;
         }
 
 
-        $sheet->getStyle('A5:G9')->getFont()->setSize(12);
+        $sheet->getStyle('A5:I9')->getFont()->setSize(12);
 
         $border = [
             'borders' => [
@@ -219,11 +228,11 @@ class LaporanKehadiranController extends Controller
         ];
 
 
-        $sheet->getStyle('A11:G' . $cell)->applyFromArray($border);
-        $sheet->getStyle('A11:G' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
+        $sheet->getStyle('A11:I' . $cell)->applyFromArray($border);
+        $sheet->getStyle('A11:I' . $cell)->getAlignment()->setVertical('center')->setHorizontal('center');
 
         $cell++;
-        $sheet->setCellValue('A' . $cell, ' ')->mergeCells('A' . $cell . ':G' . $cell);
+        $sheet->setCellValue('A' . $cell, ' ')->mergeCells('A' . $cell . ':I' . $cell);
         $cell++;
 
         $cell_str = $cell;
