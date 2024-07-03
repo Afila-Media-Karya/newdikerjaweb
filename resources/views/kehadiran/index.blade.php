@@ -361,42 +361,42 @@
 
         });
 
-        $('#tanggal_absen').change(function() {
-            // Mendapatkan nilai hari dari tanggal yang dipilih
-            var selectedDate = new Date($(this).val());
-            // Menggunakan toLocaleDateString untuk mendapatkan nilai hari
-            var dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'numeric' });
+        // $('#tanggal_absen').change(function() {
+        //     // Mendapatkan nilai hari dari tanggal yang dipilih
+        //     var selectedDate = new Date($(this).val());
+        //     // Menggunakan toLocaleDateString untuk mendapatkan nilai hari
+        //     var dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'numeric' });
 
-            // Jika pengguna memilih "apel" dan tanggal bukan hari Senin, batalkan pilihan "apel"
-            if ($('#apel').is(':checked') && dayOfWeek !== '1') {
-                $('#apel').prop('checked', false);
-                Swal.fire(
-                    "Anda tidak dapat memilih Apel apabila bukan hari Senin",
-                    "Silahkan Pilih Status absen yang lain",
-                    "warning"
-                );
-            }
-        });
+        //     // Jika pengguna memilih "apel" dan tanggal bukan hari Senin, batalkan pilihan "apel"
+        //     if ($('#apel').is(':checked') && dayOfWeek !== '1') {
+        //         $('#apel').prop('checked', false);
+        //         Swal.fire(
+        //             "Anda tidak dapat memilih Apel apabila bukan hari Senin",
+        //             "Silahkan Pilih Status absen yang lain",
+        //             "warning"
+        //         );
+        //     }
+        // });
 
 
         // Fungsi untuk menangani perubahan pada input radio status
-        $('input[name="status"]').change(function() {
-            // Jika pengguna memilih "apel" dan tanggal bukan hari Senin, batalkan pilihan "apel"
-            if ($(this).val() === 'apel' && $('#tanggal_absen').val() !== '') {
-                var selectedDate = new Date($('#tanggal_absen').val());
-                var dayOfWeek = selectedDate.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
+        // $('input[name="status"]').change(function() {
+        //     // Jika pengguna memilih "apel" dan tanggal bukan hari Senin, batalkan pilihan "apel"
+        //     if ($(this).val() === 'apel' && $('#tanggal_absen').val() !== '') {
+        //         var selectedDate = new Date($('#tanggal_absen').val());
+        //         var dayOfWeek = selectedDate.getDay(); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
 
-                if (dayOfWeek !== 1) {
-                    $(this).prop('checked', false);
-                    // $('.status_error').text('Anda tidak dapat memilih "Apel" jika tanggal bukan hari Senin.');
-                    Swal.fire(
-                        "Anda tidak dapat memilih Apel apabila bukan hari Senin",
-                        "Silahkan Pilih Status absen yang lain",
-                        "warning"
-                    );
-                }
-            }
-        });
+        //         if (dayOfWeek !== 1) {
+        //             $(this).prop('checked', false);
+        //             // $('.status_error').text('Anda tidak dapat memilih "Apel" jika tanggal bukan hari Senin.');
+        //             Swal.fire(
+        //                 "Anda tidak dapat memilih Apel apabila bukan hari Senin",
+        //                 "Silahkan Pilih Status absen yang lain",
+        //                 "warning"
+        //             );
+        //         }
+        //     }
+        // });
 
         $(document).on('change','#id_pegawai',function () {
             // console.log();
