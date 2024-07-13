@@ -190,7 +190,7 @@
                         <small class="text-danger tanggal_absen_error"></small>
                     </div>
 
-                    <div class="row mb-10">
+                     <div class="row mb-10">
                         <div class="col-md-6">
                             <label class="form-label">Waktu Masuk</label>
                             <input type="time" id="waktu_masuk" class="form-control" name="waktu_masuk">
@@ -202,6 +202,20 @@
                             <small class="text-danger waktu_keluar_error"></small>
                         </div>
                     </div>
+
+                    <div class="row mb-10">
+                        <div class="col-md-6">
+                            <label class="form-label">Waktu Istirahat</label>
+                            <input type="time" id="waktu_istirahat" class="form-control" name="waktu_istirahat">
+                            <small class="text-danger waktu_istirahat_error"></small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Waktu Masuk Istirahat</label>
+                            <input type="time" id="waktu_masuk_istirahat" class="form-control" name="waktu_masuk_istirahat">
+                            <small class="text-danger waktu_masuk_istirahat_error"></small>
+                        </div>
+                    </div>
+                   
 
                     <div class="mb-10">
                         <label class="form-label">Status</label>

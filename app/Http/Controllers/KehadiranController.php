@@ -104,7 +104,6 @@ class KehadiranController extends BaseController
     public function store(AbsenRequest $request){
         $data = array();
         try {
-            // dd($request->all());
             $validation = 0;
             $request->has('validation') == true ?  $validation = intval($request->validation) : $validation = 0;
 
@@ -118,6 +117,12 @@ class KehadiranController extends BaseController
                 $data->id_pegawai = $request->id_pegawai;
                 $data->tanggal_absen = $request->tanggal_absen;
                 $data->waktu_masuk = $request->waktu_masuk;
+                if (isset($request->waktu_masuk_istirahat)) {
+                    $data->waktu_masuk_istirahat = $request->waktu_masuk_istirahat;
+                }
+                if (isset($request->waktu_istirahat)) {
+                    $data->waktu_istirahat = $request->waktu_istirahat;
+                }
                 $data->status = $request->status;
                 if ($request->status == 'cuti' || $request->status == 'dinas luar' || $request->status == 'sakit' || $request->status == 'izin') {
                     $data->waktu_keluar = '16:00:00';
@@ -182,6 +187,12 @@ class KehadiranController extends BaseController
             if (isset($request->waktu_keluar)) {
                 $data->waktu_keluar = $request->waktu_keluar;
             }
+            if (isset($request->waktu_masuk_istirahat)) {
+                $data->waktu_masuk_istirahat = $request->waktu_masuk_istirahat;
+            }
+            if (isset($request->waktu_istirahat)) {
+                $data->waktu_istirahat = $request->waktu_istirahat;
+            }
             $data->status = $request->status;
             $data->validation = $validation;
             $data->tahun = date('Y');
@@ -226,7 +237,7 @@ class KehadiranController extends BaseController
             ->join('tb_unit_kerja','tb_unit_kerja.id_satuan_kerja','=','tb_satuan_kerja.id')
             ->LeftJoin('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
             ->LeftJoin('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
-            ->select('tb_absen.id','tb_absen.uuid','tb_absen.id_pegawai','tb_absen.tanggal_absen','tb_absen.waktu_masuk','tb_absen.waktu_keluar','tb_absen.status','tb_absen.validation','tb_jabatan.id_unit_kerja as id_satuan_kerja','tb_unit_kerja.id as id_unit_kerja','tb_absen.shift')
+            ->select('tb_absen.id','tb_absen.uuid','tb_absen.id_pegawai','tb_absen.tanggal_absen','tb_absen.waktu_masuk','tb_absen.waktu_keluar','tb_absen.status','tb_absen.validation','tb_jabatan.id_unit_kerja as id_satuan_kerja','tb_unit_kerja.id as id_unit_kerja','tb_absen.shift','tb_absen.waktu_masuk_istirahat','tb_absen.waktu_istirahat')
             ->where('tb_absen.uuid',$params)
             ->first();
             
