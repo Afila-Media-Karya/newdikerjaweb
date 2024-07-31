@@ -565,7 +565,6 @@ class ListJabatanControlller extends BaseController
 
             if ($check_jabatan !== null) {
                 if ($check_jabatan->status === 'definitif' && $request->status === 'definitif') {
-                    // dd($check_jabatan->id .' | '. intval($request->id_pegawai));
                     if ($data->id_pegawai !== intval($request->id_pegawai)) {
                         return $this->sendError($check_jabatan->nama . ' mengisi jabatan ' . $check_jabatan->nama_jabatan . ' dan status ' . $check_jabatan->status . ', anda tidak bisa memilih jabatan definitif!', 'Gagal', 200);
                     }
@@ -606,7 +605,9 @@ class ListJabatanControlller extends BaseController
                 }
                 $data->status = $request->status;
                 $data->pembayaran = $request->pembayaran;
-                $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
+                if (isset($request->pagu_tpp)) {
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
+                }
                 $data->target_waktu = $request->target_waktu;  
                 $data->save();
             } else {
@@ -622,7 +623,9 @@ class ListJabatanControlller extends BaseController
                     $data->id_lokasi_kerja = $request->id_lokasi_kerja;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
-                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
+                    if (isset($request->pagu_tpp)) {
+                        $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
+                    }
                     $data->pembayaran = $request->pembayaran;
                     $data->target_waktu = $request->target_waktu;
                     $data->save();
@@ -634,7 +637,9 @@ class ListJabatanControlller extends BaseController
                     $data->id_pegawai = $pegawai_val;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
-                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
+                    if (isset($request->pagu_tpp)) {
+                        $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
+                    }
                     $data->pembayaran = $request->pembayaran;
                     $data->target_waktu = $request->target_waktu;
                     $data->save();
