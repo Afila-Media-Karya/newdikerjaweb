@@ -97,6 +97,7 @@ class LaporanKinerjaController extends BaseController
             ->where('id_sasaran','>', 0)
             ->whereMonth('tanggal', $bulan)
             ->where('tahun', $tahun)
+            ->where("validation",1)
             ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
             ->orderBy('tanggal', 'ASC')
             ->get();
@@ -126,6 +127,7 @@ class LaporanKinerjaController extends BaseController
             ->where('id_sasaran', 0)
             ->whereMonth('tanggal', $bulan)
             ->where('tahun', $tahun)
+            ->where("validation",1)
             ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
             ->orderBy('tanggal', 'ASC')
             ->get();
@@ -231,6 +233,7 @@ class LaporanKinerjaController extends BaseController
                 ->selectRaw('COALESCE(SUM(waktu), 0) as capaian_waktu')
                 ->where('id_pegawai', $item->id)
                 ->whereMonth('tanggal', $bulan)
+                ->where('validation',1)
                 ->where('tahun',session('tahun_penganggaran'))
                 ->limit(1)
                 ->first();
@@ -618,7 +621,7 @@ class LaporanKinerjaController extends BaseController
             $value->golongan !== null ? $golongan = $value->golongan : $golongan = '';
             $value->target_waktu !== null ? $target_nilai = $value->target_waktu : $target_nilai = 0;
 
-            if ($value->kelas_jabatan == 1 || $value->kelas_jabatan == 3 || $value->kelas_jabatan == 15) {
+            if ($value->kelas_jabatan == 1 || $value->kelas_jabatan == 3) {
                 $nilai_kinerja = 100;
             } else {
                 $target_nilai > 0 ? $nilai_kinerja = ($value->capaian_waktu / $target_nilai) * 100 : $nilai_kinerja = 0;

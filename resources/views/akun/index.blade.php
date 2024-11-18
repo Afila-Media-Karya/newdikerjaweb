@@ -48,8 +48,6 @@
                                         <small class="text-danger username_error"></small>
                                     </div>
 
-                                    
-                               
                             </div>
                             <div class="col-lg-6">
                                 

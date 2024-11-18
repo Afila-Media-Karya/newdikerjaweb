@@ -205,8 +205,12 @@
 
                     <div class="row mb-10">
                         <div class="col-md-6">
-                            <label class="form-label">Waktu Istirahat</label>
-                            <input type="time" id="waktu_istirahat" class="form-control" name="waktu_istirahat">
+                            <label class="form-label">Keterangan Istirahat</label>
+                            <select name="status_masuk_istirahat" class="form-control">
+                                <option selected disabled>Pilih</option>
+                                <option value="hadir">Hadir</option>
+                                <option value="tugas luar">Tugas Luar</option>
+                            </select>
                             <small class="text-danger waktu_istirahat_error"></small>
                         </div>
                         <div class="col-md-6">
@@ -228,14 +232,14 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <!-- <div class="col-lg-4">
                                 <div class="form-check form-check-custom form-check-solid">
                                     <input class="form-check-input" name="status" type="radio" value="izin" id="izin"/>
                                     <label class="form-check-label" for="izin">
                                         Izin
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-4">
                                 <div class="form-check form-check-custom form-check-solid">
                                     <input class="form-check-input" name="status" type="radio" value="sakit" id="sakit"/>

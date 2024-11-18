@@ -56,10 +56,10 @@
                                                 <label class="form-label">Pilih Bulan</label>
                                                 <select id="bulan" name="bulan" class="form-control">
                                                 @foreach (range(1, 12) as $bulan)
-                                                        <option value="{{ $bulan }}" {{ $bulan == date('n') ? 'selected' : '' }}>
-                                                            {{ \Carbon\Carbon::parse('2023-' . $bulan . '-01')->translatedFormat('F') }}
-                                                        </option>
-                                                    @endforeach
+                                                    <option value="{{ $bulan }}" {{ $bulan == date('n') ? 'selected' : '' }}>
+                                                        {{ \Carbon\Carbon::parse('2023-' . $bulan . '-01')->translatedFormat('F') }}
+                                                    </option>
+                                                @endforeach
                                                 </select>
                                                 <small class="text-danger bulan_error"></small>
                                             </div>

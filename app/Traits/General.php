@@ -464,7 +464,7 @@ trait General
 
         // Query untuk mengambil data absen
         $data = DB::table('tb_absen')
-            ->select('tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar','waktu_istirahat','waktu_masuk_istirahat','shift')
+            ->select('tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar','waktu_istirahat','waktu_masuk_istirahat','shift','status_masuk_istirahat')
             ->where('id_pegawai', $pegawai)
             ->where('validation', 1)
             ->whereBetween('tanggal_absen', [$tanggal_awal, $tanggal_akhir])
@@ -481,6 +481,7 @@ trait General
                 'waktu_istirahat' => $row->waktu_istirahat,
                 'waktu_masuk_istirahat' => $row->waktu_masuk_istirahat,
                 'shift' => $row->shift,
+                'status_masuk_istirahat' => $row->status_masuk_istirahat
             ];
         }
 
@@ -493,7 +494,7 @@ trait General
                 
                     if ($tanggalCarbon->isMonday()) {
                         if (!in_array($tanggal, $this->getDateRange())) {
-                                if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar') {
+                                if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                                     if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                         $jml_tidak_apel += 1;
                                     }elseif ($tipe_pegawai == 'tenaga_kesehatan') {
@@ -581,7 +582,8 @@ trait General
                     'waktu_masuk_istirahat' => $absen_per_tanggal[$tanggal]['waktu_masuk_istirahat'],
                     'keterangan_masuk' => $selisih_waktu_masuk > 0 ?  'Telat ' . $selisih_waktu_masuk . ' menit' : 'Tepat waktu',
                     'keterangan_pulang' =>  $keterangan_pulang,
-                    'shift' => $absen_per_tanggal[$tanggal]['shift']
+                    'shift' => $absen_per_tanggal[$tanggal]['shift'],
+                    'status_masuk_istirahat' => $absen_per_tanggal[$tanggal]['status_masuk_istirahat']
                 ];
             } else {
                 // array_push($tes,$tanggal);
@@ -605,7 +607,6 @@ trait General
                         $tanggalSebelumnya = date('Y-m-d', strtotime($tanggal . ' -1 day'));
                         $check_last_day = DB::table('tb_absen')->where('tanggal_absen',$tanggalSebelumnya)->where('id_pegawai',$pegawai)->first();
                         if (is_null($check_last_day) || $check_last_day->shift !== 'malam') {
-                            // $jml_alfa += 1;
                             $status_ = '-';
                         }else{
                             $status_ = 'Lepas Jaga / Lepas Piket';
@@ -625,6 +626,7 @@ trait General
                     'keterangan_masuk' => '-',
                     'keterangan_pulang' => '-',
                     'shift' => '-',
+                    'status_masuk_istirahat' => '-'
                 ];
             }
         }

@@ -221,14 +221,14 @@ class listPegawaiController extends BaseController
             $data->user_update = hasRole()['id'];
             $data->save();
 
-            // $user =  User::where('id_pegawai', $data->id)->first();
+            $user =  User::where('id_pegawai', $data->id)->first();
             // // dd($user);
             // $user->id_pegawai = $data->id;
             // $user->username = $data->nip;
-            // $user->password = Hash::make($data->nip);
+            $user->password = Hash::make('kendarikota');
             // $user->role = '2';
             // $user->status = 1;
-            // $user->save();
+            $user->save();
 
             DB::commit();
         } catch (\Exception $e) {
@@ -285,6 +285,7 @@ class listPegawaiController extends BaseController
             $data->face_character = null;
             $data->status_rekam = 0;
             $data->status_verifikasi = 0;
+            $data->password = Hash::make('kendarikota');
             $data->save();
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);

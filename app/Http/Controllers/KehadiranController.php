@@ -193,6 +193,11 @@ class KehadiranController extends BaseController
             if (isset($request->waktu_istirahat)) {
                 $data->waktu_istirahat = $request->waktu_istirahat;
             }
+
+            if (isset($request->status_masuk_istirahat)) {
+                $data->status_masuk_istirahat = $request->status_masuk_istirahat;
+            }
+
             $data->status = $request->status;
             $data->validation = $validation;
             $data->tahun = date('Y');
@@ -237,7 +242,7 @@ class KehadiranController extends BaseController
             ->join('tb_unit_kerja','tb_unit_kerja.id_satuan_kerja','=','tb_satuan_kerja.id')
             ->LeftJoin('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
             ->LeftJoin('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
-            ->select('tb_absen.id','tb_absen.uuid','tb_absen.id_pegawai','tb_absen.tanggal_absen','tb_absen.waktu_masuk','tb_absen.waktu_keluar','tb_absen.status','tb_absen.validation','tb_jabatan.id_unit_kerja as id_satuan_kerja','tb_unit_kerja.id as id_unit_kerja','tb_absen.shift','tb_absen.waktu_masuk_istirahat','tb_absen.waktu_istirahat')
+            ->select('tb_absen.id','tb_absen.uuid','tb_absen.id_pegawai','tb_absen.tanggal_absen','tb_absen.waktu_masuk','tb_absen.waktu_keluar','tb_absen.status','tb_absen.validation','tb_jabatan.id_unit_kerja as id_satuan_kerja','tb_unit_kerja.id as id_unit_kerja','tb_absen.shift','tb_absen.waktu_masuk_istirahat','tb_absen.waktu_istirahat','tb_absen.status_masuk_istirahat')
             ->where('tb_absen.uuid',$params)
             ->first();
             

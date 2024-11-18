@@ -176,9 +176,9 @@ class LaporanKehadiranController extends Controller
         $sheet->getColumnDimension('E')->setWidth(25);
         
         $sheet->setCellValue('F11', 'Istirahat')->mergeCells('F11:G11');
-        $sheet->setCellValue('F12', 'Keluar');
+        $sheet->setCellValue('F12', 'Waktu');
         $sheet->getColumnDimension('F')->setWidth(25);
-        $sheet->setCellValue('G12', 'Masuk');
+        $sheet->setCellValue('G12', 'Keterangan');
         $sheet->getColumnDimension('G')->setWidth(25);
 
         $sheet->setCellValue('H11', 'Pulang')->mergeCells('H11:I11');
@@ -208,7 +208,7 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('C' . $cell, ucfirst($value['status']));
             $sheet->setCellValue('D' . $cell, $value['waktu_masuk']);
             $sheet->setCellValue('E' . $cell, $value['keterangan_masuk']);
-            $sheet->setCellValue('F' . $cell, $value['waktu_istirahat']);
+            $sheet->setCellValue('F' . $cell, $value['status_masuk_istirahat']);
             $sheet->setCellValue('G' . $cell, $value['waktu_masuk_istirahat']);
             $sheet->setCellValue('H' . $cell, $value['waktu_keluar']);
             $sheet->setCellValue('I' . $cell, $value['keterangan_pulang']);
