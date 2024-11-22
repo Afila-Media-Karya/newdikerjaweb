@@ -41,7 +41,7 @@ class AktivitasReviewController extends BaseController
         ->selectRaw('COALESCE(SUM(waktu), 0) as capaian')
         ->whereMonth('tanggal',$bulan)
         ->where('id_pegawai',$pegawai)
-        ->where("validation",1)
+        // ->where("validation",1)
         ->first();
 
         if ($target_waktu > 0) {

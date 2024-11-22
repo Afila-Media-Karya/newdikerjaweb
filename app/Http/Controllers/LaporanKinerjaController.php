@@ -97,7 +97,7 @@ class LaporanKinerjaController extends BaseController
             ->where('id_sasaran','>', 0)
             ->whereMonth('tanggal', $bulan)
             ->where('tahun', $tahun)
-            ->where("validation",1)
+            // ->where("validation",1)
             ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
             ->orderBy('tanggal', 'ASC')
             ->get();
@@ -127,7 +127,7 @@ class LaporanKinerjaController extends BaseController
             ->where('id_sasaran', 0)
             ->whereMonth('tanggal', $bulan)
             ->where('tahun', $tahun)
-            ->where("validation",1)
+            // ->where("validation",1)
             ->groupBy('id_sasaran', 'tanggal', 'aktivitas', 'keterangan', 'volume', 'satuan', 'created_at')
             ->orderBy('tanggal', 'ASC')
             ->get();

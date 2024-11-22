@@ -298,8 +298,8 @@ class DashboardController extends BaseController
             ->join('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
             ->leftJoin('tb_aktivitas', function ($join) use ($bulan) {
                 $join->on('tb_aktivitas.id_pegawai', '=', 'tb_pegawai.id')
-                    ->whereMonth('tb_aktivitas.tanggal', $bulan)
-                    ->where("validation",1);
+                    ->whereMonth('tb_aktivitas.tanggal', $bulan);
+                    // ->where("validation",1);
             })
             ->where('tb_pegawai.status', '=', '1')
             ->groupBy(
