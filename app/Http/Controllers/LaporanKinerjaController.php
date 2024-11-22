@@ -233,7 +233,7 @@ class LaporanKinerjaController extends BaseController
                 ->selectRaw('COALESCE(SUM(waktu), 0) as capaian_waktu')
                 ->where('id_pegawai', $item->id)
                 ->whereMonth('tanggal', $bulan)
-                ->where('validation',1)
+                // ->where('validation',1)
                 ->where('tahun',session('tahun_penganggaran'))
                 ->limit(1)
                 ->first();
