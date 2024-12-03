@@ -392,8 +392,8 @@
                     targets: 6,
                     // width : '8rem',
                     render: function(data, type, full, meta) {
-                        console.log(data);
-                         let isChecked = data === '1' ? 'checked' : '';
+      
+                         let isChecked = data === 1 ? 'checked' : '';
                     return `
                         <input type="hidden" name="id_aktivitas[${meta.row}]" value="${full.id}">
                         <div class="form-check form-switch form-check-custom form-check-solid">
