@@ -121,7 +121,6 @@ class AktivitasReviewController extends BaseController
         ->select('id','uuid','tanggal','created_at as tanggal_input','aktivitas','keterangan','volume','waktu','validation')
         ->whereMonth('tanggal',$bulan)
         ->where('id_pegawai',$pegawai)
-        ->where('validation',1)
         ->get();
         $data = $data->map(function ($item) use ($target_waktu) {
             $item->target_waktu =  $target_waktu;

@@ -83,6 +83,7 @@ class LaporanKinerjaController extends BaseController
                 $query->whereMonth('tanggal', $bulan);
                 $query->where('tahun',$tahun);
                 $query->where('id_pegawai', $pegawai);
+                $query->where("validation",1);
                 $query->orderBy('tanggal', 'ASC');
             }])
             ->where('tahun', $tahun)
