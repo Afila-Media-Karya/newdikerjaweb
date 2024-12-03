@@ -133,7 +133,6 @@ class AktivitasReviewController extends BaseController
 
     public function postReviewAktivitas(Request $request){
         $data = array();
-        dd($request->all());
         try {
             foreach ($request->id_aktivitas as $key => $value) {
                 $data = Aktivitas::where('id',$value)->first();
