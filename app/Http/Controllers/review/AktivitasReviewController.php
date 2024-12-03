@@ -118,7 +118,7 @@ class AktivitasReviewController extends BaseController
 
 
         $data = DB::table('tb_aktivitas')
-        ->select('id','uuid','tanggal','created_at as tanggal_input','aktivitas','volume','waktu','validation')
+        ->select('id','uuid','tanggal','created_at as tanggal_input','aktivitas','keterangan','volume','waktu','validation')
         ->whereMonth('tanggal',$bulan)
         ->where('id_pegawai',$pegawai)
         ->where('validation',1)

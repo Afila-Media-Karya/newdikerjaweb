@@ -51,6 +51,7 @@
                                             <th>Tanggal</th>
                                             <th>Tanggal Input</th>
                                             <th>Aktivitas</th>
+                                            <th>Keterangan</th>
                                             <th>Hasil</th>
                                             <th>Waktu</th>
                                             <th> 
@@ -374,6 +375,9 @@
                     data: 'aktivitas',
                     className : 'text-center'
                 }, {
+                    data: 'keterangan',
+                    className : 'text-center'
+                }, {
                     data: 'volume',
                     className : 'text-center',
                 }, {
@@ -389,7 +393,7 @@
               ],
               columnDefs: [
                 {
-                    targets: 6,
+                    targets: 7,
                     // width : '8rem',
                     render: function(data, type, full, meta) {
       
