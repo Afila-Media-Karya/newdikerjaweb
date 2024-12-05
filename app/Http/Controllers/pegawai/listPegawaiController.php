@@ -285,7 +285,7 @@ class listPegawaiController extends BaseController
             $data->face_character = null;
             $data->status_rekam = 0;
             $data->status_verifikasi = 0;
-            $data->password = Hash::make('kendarikota');
+            $data->password = Hash::make($data->nip);
             $data->save();
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
