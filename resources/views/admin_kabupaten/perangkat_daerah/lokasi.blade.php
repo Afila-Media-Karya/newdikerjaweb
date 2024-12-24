@@ -32,6 +32,7 @@
                                             <th>No</th>
                                             <th>Nama Lokasi</th>
                                             <th>Satuan Kerja</th>
+                                            <th>Unit Kerja</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -165,6 +166,14 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA97drRATl2BEEoFPEqpF1o9Jk0wenosuU&callback=initMap&libraries=v=weekly,places&sensor=false" defer></script>
     <script>
         let control = new Control();
+        let role = {!! json_encode(auth()->user()->role) !!};
+
+        let path = '';
+        if (parseInt(role) > 0) {
+            path = 'perangkat-daerah-opd';
+        }else{
+            path = 'perangkat-daerah';
+        }
 
         $(document).on('click', '#button-side-form', function() {
             control.overlay_form('Tambah', 'Lokasi Kerja');
@@ -174,23 +183,23 @@
             e.preventDefault();
             let type = $(this).attr('data-type');
             if (type == 'add') {
-                control.submitFormMultipart('/perangkat-daerah/lokasi/store', 'Tambah', 'Lokasi Kerja','POST');
+                control.submitFormMultipart(`/${path}/lokasi/store`, 'Tambah', 'Lokasi Kerja','POST');
             } else {
                 let uuid = $("input[name='uuid']").val();
-                control.submitFormMultipart('/perangkat-daerah/lokasi/update/' + uuid, 'Update','Lokasi Kerja', 'POST');
+                control.submitFormMultipart(`/${path}/lokasi/update/` + uuid, 'Update','Lokasi Kerja', 'POST');
             }
         });
 
         $(document).on('change','#id_satuan_kerja', function () {
             if ($(this).val() !== '') {
                 let val = $(this).val();
-                control.push_select(`/perangkat-daerah/unit-kerja/option?satuan_kerja=${val}`,'#id_unit_kerja'); 
+                control.push_select(`/${path}/unit-kerja/option?satuan_kerja=${val}`,'#id_unit_kerja'); 
             }
         })
 
         $(document).on('click', '.button-update', function(e) {
             e.preventDefault();
-            let url = '/perangkat-daerah/lokasi/show/' + $(this).attr('data-uuid');
+            let url = `/${path}/lokasi/show/` + $(this).attr('data-uuid');
             control.overlay_form('Update', 'Perangkat Daerah', url);
             setTimeout(() => {
                var lat = $('#lat').val(); 
@@ -201,7 +210,7 @@
 
         $(document).on('click', '.button-delete', function(e) {
             e.preventDefault();
-            let url = '/perangkat-daerah/lokasi/delete/' + $(this).attr('data-uuid');
+            let url = `/${path}/lokasi/delete/` + $(this).attr('data-uuid');
             let label = $(this).attr('data-label');
             control.ajaxDelete(url, label)
         })
@@ -280,6 +289,9 @@
                 data: 'nama_satuan_kerja',
                 className : 'text-right',
             }, {
+                data: 'nama_unit_kerja',
+                className : 'text-right',
+            }, {
                 data: 'uuid',
                 className : 'text-center',
             }];
@@ -300,10 +312,10 @@
                             `;
                     },
             }];
-            control.initDatatable('/perangkat-daerah/lokasi/datatable', columns, columnDefs);
+            control.initDatatable(`/${path}/lokasi/datatable`, columns, columnDefs);
         }
 
-        $(function() {
+        $(function() {    
             initMap();
             datatable();
         })

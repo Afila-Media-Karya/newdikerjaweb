@@ -209,12 +209,17 @@ trait General
             )
             ->select('tb_master_jabatan.id as id', 'tb_master_jabatan.nama_jabatan as text')
             ->get();
-        }else{
+        }elseif($type == 'add'){
             $result = DB::table('tb_master_jabatan')
             // ->where('tb_master_jabatan.id_satuan_kerja', 0)
             ->where('tb_master_jabatan.nama_jabatan', '!=', 'BUPATI')
             ->orWhereIn('tb_master_jabatan.level_jabatan', [5, 8])
             ->distinct()
+            ->select('tb_master_jabatan.id as id', 'tb_master_jabatan.nama_jabatan as text')
+            ->get();
+        }elseif ($type == 'tenaga_pendidik') {
+            $result = DB::table('tb_master_jabatan')
+            ->where('tb_master_jabatan.id_satuan_kerja', $satuan_kerja)
             ->select('tb_master_jabatan.id as id', 'tb_master_jabatan.nama_jabatan as text')
             ->get();
         }

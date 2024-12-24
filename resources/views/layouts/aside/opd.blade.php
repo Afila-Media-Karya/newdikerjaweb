@@ -404,6 +404,20 @@
     </div>
 </div>
 
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'profil' ? 'active' : '' }}"
+        href="{{ route('opd.perangkat_daerah.lokasi.index') }}">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'profil' ? url('admin/assets/media/icons/aside/kehadiranact.svg') : url('/admin/assets/media/icons/aside/kehadirandef.svg') }}"
+                    alt="">
+            </span>
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'profil' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Lokasi Absen Unit Kerja</span>
+    </a>
+</div>
+
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'layanan-opd' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
         <span class="menu-icon">

@@ -56,7 +56,17 @@ class lokasiController extends BaseController
 
     public function datatable(){
         $data = array();
-        $data = DB::table('tb_lokasi')->join('tb_satuan_kerja','tb_lokasi.id_satuan_kerja','=','tb_satuan_kerja.id')->select('tb_lokasi.id','tb_lokasi.uuid','tb_lokasi.nama_lokasi','tb_satuan_kerja.nama_satuan_kerja')->orderBy('longitude','DESC')->get();
+        $role = auth()->user()->role;
+
+        $pegawai = DB::table('tb_pegawai')->select('id_satuan_kerja')->where('id',auth()->user()->id_pegawai)->first();
+
+        $data = DB::table('tb_lokasi')->join('tb_satuan_kerja','tb_lokasi.id_satuan_kerja','=','tb_satuan_kerja.id')->join('tb_unit_kerja','tb_lokasi.id_unit_kerja','=','tb_unit_kerja.id')->select('tb_lokasi.id','tb_lokasi.uuid','tb_lokasi.nama_lokasi','tb_satuan_kerja.nama_satuan_kerja','tb_unit_kerja.nama_unit_kerja');
+
+        if (intval($role) > 0) {
+            $data->where("tb_lokasi.id_satuan_kerja",$pegawai->id_satuan_kerja);
+        }
+        
+        $data = $data->orderBy('longitude','DESC')->get();
         return $this->sendResponse($data, 'Data Pegawai Pensiun Fetched Success');
     }
 

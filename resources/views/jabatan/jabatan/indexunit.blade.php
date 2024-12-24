@@ -6,6 +6,15 @@
 @section('button')
 <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
       
+        <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+            data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+            class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+            <!--begin::Title-->
+            <button class="btn btn-primary btn-sm " data-kt-drawer-show="true" data-kt-drawer-target="#side_form"
+                id="button-side-form"><i class="fa fa-plus-circle" style="color:#ffffff" aria-hidden="true"></i> Tambah
+                Data</button>
+            <!--end::Title-->
+        </div>
 
         <div class="d-flex align-items-center gap-2 gap-lg-3">
                         <a href="#" id="export-struktur" data-type="pdf" class="btn btn-sm btn-dark">
@@ -65,7 +74,7 @@
                     <!--begin::User-->
                     <div class="d-flex justify-content-center flex-column me-3">
                         <a href="#"
-                            class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1 title_side_form">Update Jabatan</a>
+                            class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1 title_side_form"></a>
                     </div>
                     <!--end::User-->
                 </div>
@@ -80,8 +89,7 @@
                                 width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g transform="translate(12.000000, 12.000000) rotate(-45.000000) translate(-12.000000, -12.000000) translate(4.000000, 4.000000)"
                                     fill="#000000">
-                                    <rect fill="#000000" x="0" y="7" width="16" height="2"
-                                        rx="1" />
+                                    <rect fill="#000000" x="0" y="7" width="16" height="2" rx="1" />
                                     <rect fill="#000000" opacity="0.5"
                                         transform="translate(8.000000, 8.000000) rotate(-270.000000) translate(-8.000000, -8.000000)"
                                         x="0" y="7" width="16" height="2" rx="1" />
@@ -102,44 +110,19 @@
                     <input type="hidden" name="id">
                     <input type="hidden" name="uuid">
 
-                    <div class="mb-10" style="display:none">
-                        <label class="form-label">Pilih Satuan Kerja</label>
-                        <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja" data-control="select2" data-placeholder="Pilih Satuan Kerja">
-                            <option></option>
-                            @foreach($satuan_kerja as $val)
-                                <option value="{{$val->value}}" @if($val->value == $satuan_kerja_user) selected @endif>{{$val->text}}</option>
-                            @endforeach
-                        </select>
-                        <small class="text-danger id_satuan_kerja_error"></small>
-                    </div>
 
-                    <div class="mb-10" style="display:none">
-                        <label class="form-label">Unit Kerja</label>
-                        <select class="form-select form-control" name="id_unit_kerja" id="id_unit_kerja" data-control="select2" data-placeholder="Pilih Unit Kerja">
-                            <option></option>
-                        </select>
-                        <small class="text-danger id_unit_kerja_error"></small>
-                    </div>
+                    <input type="hidden" name="type" value="{{ $role['guard'] }}">
 
-                    <div class="mb-10">
-                        <label class="form-label">Lokasi Kerja</label>
-                        <select class="form-select form-control" id="id_lokasi_kerja" name="id_lokasi_kerja" data-control="select2" data-placeholder="Pilih Kerja">
-                            <option></option>
-                        </select>
-                        <small class="text-danger id_lokasi_kerja_error"></small>
-                    </div>
-
-                    <div class="mb-10">
-                        <label class="form-label">Lokasi Apel</label>
-                        <select class="form-select form-control" id="id_lokasi_apel" name="id_lokasi_apel" data-control="select2" data-placeholder="Pilih Kerja">
-                            <option></option>
-                        </select>
-                        <small class="text-danger id_lokasi_apel_error"></small>
-                    </div>
+                    
+                    <input type="hidden" name="id_satuan_kerja" value="{{$satuan_kerja}}">
+                    <input type="hidden" name="id_unit_kerja" value="{{$unit_kerja}}">
+                    <input type="hidden" name="id_lokasi_kerja" value="{{$unit_kerja}}">
+                    <input type="hidden" name="id_lokasi_apel" value="{{$unit_kerja}}">
 
                     <div class="mb-10">
                         <label class="form-label">Jabatan</label>
-                        <select class="form-select form-control" id="id_master_jabatan" name="id_master_jabatan" data-control="select2" data-placeholder="Pilih Jabatan">
+                        <select class="form-select form-control" id="id_master_jabatan" name="id_master_jabatan"
+                            data-control="select2" data-placeholder="Pilih Jabatan">
                             <option></option>
                         </select>
                         <small class="text-danger id_master_jabatan_error"></small>
@@ -147,7 +130,8 @@
 
                     <div class="mb-10">
                         <label class="form-label">Jabatan Atasan Langsung</label>
-                        <select class="form-select form-control" id="id_parent" name="id_parent" data-control="select2" data-placeholder="Pilih Jabatan Atasan Langsung">
+                        <select class="form-select form-control" id="id_parent" name="id_parent" data-control="select2"
+                            data-placeholder="Pilih Jabatan Atasan Langsung">
                             <option></option>
                         </select>
                         <small class="text-danger id_parent_error"></small>
@@ -155,11 +139,9 @@
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Pegawai</label>
-                        <select class="form-select form-control" id="id_pegawai" name="id_pegawai" data-control="select2" data-placeholder="Pilih Pegawai">
+                        <select class="form-select form-control" id="id_pegawai" name="id_pegawai"
+                            data-control="select2" data-placeholder="Pilih Pegawai">
                             <option></option>
-                            @foreach($pegawai as $val)
-                                <option value="{{$val->id}}">{{$val->text}}</option>
-                            @endforeach
                         </select>
                         <small class="text-danger id_pegawai_error"></small>
                     </div>
@@ -169,17 +151,28 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="status" type="radio" value="definitif" id="definitif"/>
+                                    <input class="form-check-input" name="status" type="radio" value="definitif"
+                                        id="definitif" />
                                     <label class="form-check-label" for="L">
                                         Definitif
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" name="status" type="radio" value="plt" id="plt"/>
+                                    <input class="form-check-input" name="status" type="radio" value="plt"
+                                        id="plt" />
                                     <label class="form-check-label" for="P">
                                         Pelaksana Tugas
+                                    </label>
+                                </div>
+                            </div>
+                             <div class="col-lg-3">
+                                <div class="form-check form-check-custom form-check-solid">
+                                    <input class="form-check-input" name="status" type="radio" value="pj"
+                                        id="pj" />
+                                    <label class="form-check-label" for="M">
+                                        PJ
                                     </label>
                                 </div>
                             </div>
@@ -204,6 +197,7 @@
                         <select name="pembayaran" class="form-control">
                             <option selected disabled>Pilih Pembayaran</option>
                             <option value="100">100</option>
+                            <option value="80">80</option>
                             <option value="75">75</option>
                             <option value="25">25</option>
                             <option value="20">20</option>
@@ -234,6 +228,7 @@
         let role = {!! json_encode($role) !!};
         let satuan_kerja_user = {!! json_encode($satuan_kerja_user) !!};
         let unit_kerja = {!! json_encode($unit_kerja) !!};
+        let satuan_kerja = {!! json_encode($satuan_kerja) !!};
         let lokasi = {!! json_encode($lokasi) !!};
         let url_main = '/jabatan-opd/list-jabatan';
 
@@ -332,16 +327,6 @@
             }
         })
 
-        $(document).on('change','#id_satuan_kerja', function () {
-            if ($(this).val() !== '') {
-                control.push_select(`/perangkat-daerah-opd/unit-kerja/option?satuan_kerja=${$(this).val()}`,'#id_unit_kerja');
-                control.push_select(`/master-jabatan-opd/master-jabatan/option?satuan_kerja=${$(this).val()}&type=${$('.form-data').attr('data-type')}`,'#id_master_jabatan');
-
-                control.push_select(`/perangkat-daerah-opd/lokasi/option-lokasi/${$(this).val()}`,'#id_lokasi_kerja');
-                control.push_select(`/perangkat-daerah-opd/lokasi/option-lokasi-apel/${$(this).val()}`,'#id_lokasi_apel');
-            }
-        })
-
         datatable = (satuan_kerja) =>{
             let columns = [{
                 data: null,
@@ -408,7 +393,9 @@
         }
 
         $(function() {
-            datatable(unit_kerja)
+            datatable(unit_kerja);
+            control.push_select(`/master-jabatan-opd/master-jabatan/option?satuan_kerja=${satuan_kerja}&type=tenaga_pendidik`,'#id_master_jabatan');
+            control.push_select2(`/pegawai-opd/list-pegawai-opd/option?satuan_kerja=${satuan_kerja}`,'#id_pegawai')
         })
     </script>
 @endsection

@@ -15,7 +15,7 @@
                                     <form id="laporan-form">
                                         <div class="row laporan-konten">
                                             
-                                            <div class="col-lg-3 mb-10">
+                                            <div class="col-lg-4 mb-10">
                                                 <label class="form-label">Pilih Satuan Kerja</label>
                                                 <select class="form-select form-control" id="satuan_kerja" name="satuan_kerja" data-control="select2" data-placeholder="Pilih satuan kerja">
                                                     <option></option>
@@ -26,7 +26,7 @@
                                                 <small class="text-danger satuan_kerja_error"></small>
                                             </div>
 
-                                            <div class="col-lg-3 mb-10">
+                                            <div class="col-lg-4 mb-10">
                                                 <label class="form-label">Unit Kerja</label>
                                                 <select class="form-select form-control" name="id_unit_kerja" id="id_unit_kerja" data-control="select2" data-placeholder="Pilih Unit Kerja">
                                                     <option></option>
@@ -35,7 +35,7 @@
                                             </div>
 
 
-                                            <div class="col-lg-3 mb-10">
+                                            <div class="col-lg-4 mb-10">
                                                 <label class="form-label">Pilih Pegawai</label>
                                                 <select class="form-select form-control" id="pegawai" name="pegawai" data-control="select2" data-placeholder="Pilih Pegawai">
                                                     <option></option>
@@ -45,14 +45,9 @@
 
                                             <input type="hidden" name="nama_satuan_kerja" id="nama_satuan_kerja">
                                             <input type="hidden" name="nama_unit_kerja" id="nama_unit_kerja">
-                                            
-                                            <!-- <div class="col-lg-3 mb-10">                    
-                                                <label class="form-label">Tanggal</label>
-                                                <input class="form-control" name="tanggal" placeholder="Pilih range tanggal" id="kt_daterangepicker_1"/>
-                                                <small class="text-danger tanggal_error"></small>
-                                            </div> -->
+                                 
 
-                                            <div class="col-lg-3 mb-10">                    
+                                            <div class="col-lg-4 mb-10">                    
                                                 <label class="form-label">Pilih Bulan</label>
                                                 <select id="bulan" name="bulan" class="form-control">
                                                 @foreach (range(1, 12) as $bulan)
@@ -60,6 +55,16 @@
                                                         {{ \Carbon\Carbon::parse('2023-' . $bulan . '-01')->translatedFormat('F') }}
                                                     </option>
                                                 @endforeach
+                                                </select>
+                                                <small class="text-danger bulan_error"></small>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-10">                    
+                                                <label class="form-label">Status Kepegawaian</label>
+                                                <select id="status_kepegawaian" name="status_kepegawaian" class="form-control">
+                                                <option selected disabled>Pilih</option>
+                                                <option value="PNS">PNS</option>
+                                                <option value="PPPK">PPPK</option>
                                                 </select>
                                                 <small class="text-danger bulan_error"></small>
                                             </div>

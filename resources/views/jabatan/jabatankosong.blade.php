@@ -65,6 +65,7 @@
                                             <th>Jabatan</th>
                                             <th>Atasan Langsung</th>
                                             <th>Satuan Kerja</th>
+                                            <th>Unit Kerja</th>
                                             @if ($role['guard'] !== 'web')
                                                 <th>Aksi</th>
                                             @endif
@@ -303,6 +304,9 @@
                 className: 'text-right',
             }, {
                 data: 'nama_satuan_kerja',
+                className: 'text-right',
+            }, {
+                data: 'nama_unit_kerja',
                 className: 'text-right',
             }, {
                 data: 'uuid',

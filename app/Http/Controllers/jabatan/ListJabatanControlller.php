@@ -33,6 +33,8 @@ class ListJabatanControlller extends BaseController
     {
         $data = array();
         $satuan_kerja = intval(request('satuan_kerja'));
+        // dd($satuan_kerja);
+        // auth()->user()->role
 
         $query = DB::table('tb_jabatan as tb_jabatan1')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan1', 'tb_jabatan1.id_master_jabatan', '=', 'tb_master_jabatan1.id')
@@ -73,6 +75,8 @@ class ListJabatanControlller extends BaseController
             return view('jabatan.jabatan.indexopd',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja'));
         }else{
             $unit_kerja = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
+            $satuan_kerja = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
+            $group = $this->infoSatuanKerja(hasRole()['id_pegawai']);
             $lokasi = DB::table('tb_lokasi')->where('id_unit_kerja',$unit_kerja)->first()->id;
             $pegawai = $this->option_pegawaiBy_unit_kerja(null,$unit_kerja);
             return view('jabatan.jabatan.indexunit',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja','lokasi','pegawai'));

@@ -36,11 +36,12 @@ class JabatanKosongControlller extends BaseController
 
         $query = DB::table('tb_jabatan as tb_jabatan1')
             ->leftJoin('tb_satuan_kerja', 'tb_jabatan1.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
+            ->leftJoin('tb_unit_kerja', 'tb_jabatan1.id_unit_kerja', '=', 'tb_unit_kerja.id')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan1', 'tb_jabatan1.id_master_jabatan', '=', 'tb_master_jabatan1.id')
             ->leftJoin('tb_jabatan as tb_jabatan2', 'tb_jabatan1.id_parent', '=', 'tb_jabatan2.id')
             ->leftJoin('tb_pegawai', 'tb_jabatan1.id_pegawai', '=', 'tb_pegawai.id')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan2', 'tb_jabatan2.id_master_jabatan', '=', 'tb_master_jabatan2.id')
-            ->select('tb_jabatan1.id', 'tb_jabatan1.uuid', 'tb_master_jabatan1.nama_jabatan as jabatan', 'tb_master_jabatan2.nama_jabatan as atasan_langsung', 'tb_satuan_kerja.nama_satuan_kerja','tb_jabatan1.status as status_jabatan')
+            ->select('tb_jabatan1.id', 'tb_jabatan1.uuid', 'tb_master_jabatan1.nama_jabatan as jabatan', 'tb_master_jabatan2.nama_jabatan as atasan_langsung', 'tb_satuan_kerja.nama_satuan_kerja','tb_jabatan1.status as status_jabatan','tb_unit_kerja.nama_unit_kerja')
             ->orderBy('tb_jabatan2.id_parent', 'DESC')
             ->orderBy('tb_master_jabatan1.kelas_jabatan', 'ASC')
             ->whereNotNull('tb_jabatan1.id_parent')
