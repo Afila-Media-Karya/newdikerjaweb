@@ -8,6 +8,10 @@ use Auth;
 use App\Traits\General;
 use App\Traits\Presensi;
 use DB;
+use Hash;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Ramsey\Uuid\Uuid as Generator;
+
 class DashboardController extends BaseController
 {
      use General;
@@ -667,5 +671,54 @@ class DashboardController extends BaseController
         });
 
         return $this->sendResponse($data, 'Data Dashboard Fetched Success');
+    }
+
+    public function tambah_user($params){
+        if ($params == 'tenaga_pendidik') {
+            $data = DB::table('tb_pegawai')->where('tipe_pegawai',$params)->get();
+
+            foreach ($data as $key => $value) {
+                DB::table('users')->insert([
+                    'uuid' => Generator::uuid4()->toString(),
+                    'id_pegawai' => $value->id,
+                    'username' => $value->nip,
+                    'password' => Hash::make('dikerja'),
+                    'role' => '2',
+                    'status' => 1,
+                    'user_insert' => $value->id,
+                    'user_update' => $value->id
+                ]);
+            }
+        }elseif ($params == 'tenaga_pendidik_non_guru') {
+            $data = DB::table('tb_pegawai')->where('tipe_pegawai',$params)->get();
+
+            foreach ($data as $key => $value) {
+                DB::table('users')->insert([
+                    'uuid' => Generator::uuid4()->toString(),
+                    'id_pegawai' => $value->id,
+                    'username' => $value->nip,
+                    'password' => Hash::make('dikerja'),
+                    'role' => '2',
+                    'status' => 1,
+                    'user_insert' => $value->id,
+                    'user_update' => $value->id
+                ]);
+            }
+        }elseif ($params == 'PPPK') {
+            $data = DB::table('tb_pegawai')->where('status_kepegawaian',$params)->get();
+
+            foreach ($data as $key => $value) {
+                DB::table('users')->insert([
+                    'uuid' => Generator::uuid4()->toString(),
+                    'id_pegawai' => $value->id,
+                    'username' => $value->nip,
+                    'password' => Hash::make('dikerja'),
+                    'role' => '2',
+                    'status' => 1,
+                    'user_insert' => $value->id,
+                    'user_update' => $value->id
+                ]);
+            }
+        }
     }
 }
