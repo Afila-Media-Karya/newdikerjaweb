@@ -128,7 +128,7 @@
                         <select name="role" class="form-control">
                             <option selected disabled>Pilih Role</option>
                             <option value="1">Admin SKPD</option>
-                            <option value="3">Admin Unit Kerja</option>
+                            <option value="3">Sub Admin</option>
                             <option value="2">Pegawai</option>
                         </select>
                         <small class="text-danger role_error"></small>
@@ -269,7 +269,7 @@
                     if (data == '1') {
                         role = 'Admin SKPD';
                     }else if (data == '3'){
-                        role = 'Admin Unit Kerja'
+                        role = 'Sub Admin'
                     }else{
                         role = 'Pegawai'
                     }
