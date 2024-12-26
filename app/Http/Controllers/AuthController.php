@@ -25,13 +25,15 @@ class AuthController extends BaseController
          $value_session_nama_jabatan = '';
          $value_session_foto = '';
          $value_session_satuan_kerja = '';
+         $value_session_tipe_pegawai = '';
+
         $user = DB::table('users')
         ->join('tb_pegawai','users.id_pegawai','=','tb_pegawai.id')
         ->join('tb_satuan_kerja','tb_pegawai.id_satuan_kerja','=','tb_satuan_kerja.id')
         ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
         ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
         ->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
-        ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_pegawai.nama as nama_pegawai','tb_pegawai.foto','tb_satuan_kerja.nama_satuan_kerja','tb_unit_kerja.nama_unit_kerja')
+        ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_pegawai.nama as nama_pegawai','tb_pegawai.foto','tb_satuan_kerja.nama_satuan_kerja','tb_unit_kerja.nama_unit_kerja','tb_pegawai.tipe_pegawai')
         ->where('users.username',$request->username)
         ->get();
 
@@ -44,6 +46,7 @@ class AuthController extends BaseController
                 $value_session_nama_jabatan = $userData->nama_jabatan;
                 $value_session_satuan_kerja = $userData->nama_unit_kerja;
                 $userData->foto !== null && $userData->foto !== ""   ? $value_session_foto = url('/profil/get-image-profil') : $value_session_foto = '/admin/assets/media/avatars/blank.png';
+                $value_session_tipe_pegawai = $userData->tipe_pegawai;
                 
                 
                 break;
@@ -55,6 +58,7 @@ class AuthController extends BaseController
                     $value_session_nama_jabatan = $userData->status.' '.$userData->nama_jabatan;
                     $value_session_foto = $userData->foto;
                     $value_session_satuan_kerja = $userData->nama_unit_kerja;
+                    $value_session_tipe_pegawai = $userData->tipe_pegawai;
                 }
             }
             
@@ -76,6 +80,7 @@ class AuthController extends BaseController
             Session::put('session_nama_jabatan',$value_session_nama_jabatan);
             Session::put('session_foto',$value_session_foto);
             Session::put('session_satuan_kerja',$value_session_satuan_kerja);
+            Session::put('session_tipe_pegawai',$value_session_tipe_pegawai);
             return $this->authenticated($request, 'pegawai',$user);
         }
 

@@ -62,6 +62,8 @@ class ListJabatanControlller extends BaseController
         $unit_kerja = $this->option_unit_kerja();
         $satuan_kerja_user = '';
 
+     
+
         if(hasRole()['guard'] == 'web'){
             $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
         }
@@ -79,6 +81,7 @@ class ListJabatanControlller extends BaseController
             $group = $this->infoSatuanKerja(hasRole()['id_pegawai']);
             $lokasi = DB::table('tb_lokasi')->where('id_unit_kerja',$unit_kerja)->first()->id;
             $pegawai = $this->option_pegawaiBy_unit_kerja(null,$unit_kerja);
+            
             return view('jabatan.jabatan.indexunit',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja','lokasi','pegawai'));
         }
     }

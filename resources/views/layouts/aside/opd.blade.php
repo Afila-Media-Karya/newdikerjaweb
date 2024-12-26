@@ -37,6 +37,8 @@
     </a>
 </div>
 
+@if(session('session_tipe_pegawai') == 'pegawai_administratif')
+
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'aktivitas' ? 'active' : '' }}"
         href="{{ route('pegawai.aktivitas.index') }}">
@@ -106,6 +108,8 @@
             style="{{ $path[0] == 'profil' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Realisasi</span>
     </a>
 </div>
+
+@endif
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan-pegawai' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
@@ -318,6 +322,8 @@
     </div>
 </div>
 
+@if(session('session_tipe_pegawai') == 'pegawai_administratif')
+
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'aktivitas-opd' ? 'active' : '' }}"
         href="{{ route('opd.aktivitas.index') }}">
@@ -333,6 +339,8 @@
             style="{{ $path[0] == 'aktivitas-opd' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Aktivitas</span>
     </a>
 </div>
+
+@endif
 
 
 <div class="menu-item">
@@ -377,6 +385,7 @@
                 <span class="menu-title" style="color:#ffffff;">Kehadiran</span>
             </a>
         </div>
+        @if(session('session_tipe_pegawai') == 'pegawai_administratif')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-opd' && $path[1] == 'kinerja' ? 'active' : '' }}"  href="{{ route('opd.laporan.kinerja.index') }}">
                 <span class="menu-bullet">
@@ -393,6 +402,7 @@
                 <span class="menu-title" style="color:#ffffff;">TPP</span>
             </a>
         </div>
+        @endif
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-opd' && $path[1] == 'profil' ? 'active' : '' }}"  href="{{ route('opd.laporan.profil.index') }}">
                 <span class="menu-bullet">
@@ -400,9 +410,11 @@
                 </span>
                 <span class="menu-title" style="color:#ffffff;">Pegawai</span>
             </a>
-        </div>
+        </div> 
     </div>
 </div>
+
+@if(auth()->user()->role == '1' && session('session_satuan_kerja') == 'Dinas Pendidikan dan Kebudayaan')
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'profil' ? 'active' : '' }}"
@@ -417,6 +429,8 @@
             style="{{ $path[0] == 'profil' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Lokasi Absen Unit Kerja</span>
     </a>
 </div>
+
+@endif
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'layanan-opd' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">

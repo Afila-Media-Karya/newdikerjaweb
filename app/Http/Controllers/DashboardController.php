@@ -674,11 +674,13 @@ class DashboardController extends BaseController
     }
 
     public function tambah_user($params){
+        DB::beginTransaction();
+        set_time_limit(320);
         if ($params == 'tenaga_pendidik') {
-            $data = DB::table('tb_pegawai')->where('tipe_pegawai',$params)->get();
-
+            $data = DB::table('tb_pegawai')->where('tipe_pegawai', $params)->get();
+            $batchInsert = [];
             foreach ($data as $key => $value) {
-                DB::table('users')->insert([
+                $batchInsert[] = [
                     'uuid' => Generator::uuid4()->toString(),
                     'id_pegawai' => $value->id,
                     'username' => $value->nip,
@@ -686,9 +688,34 @@ class DashboardController extends BaseController
                     'role' => '2',
                     'status' => 1,
                     'user_insert' => $value->id,
-                    'user_update' => $value->id
-                ]);
+                    'user_update' => $value->id,
+                ];
             }
+
+            // Lakukan insert secara batch
+            DB::table('users')->insert($batchInsert);
+            // dd(count($data));
+            // DB::table('tb_pegawai')
+            // ->where('tipe_pegawai', $params)
+            // ->orderBy('id') // Pastikan Anda menggunakan kolom yang unik dan dapat diurutkan
+            // ->chunk(500, function ($data) {
+            //     $batchInsert = [];
+            //     foreach ($data as $value) {
+            //         $batchInsert[] = [
+            //             'uuid' => Generator::uuid4()->toString(),
+            //             'id_pegawai' => $value->id,
+            //             'username' => $value->nip,
+            //             'password' => Hash::make('dikerja'),
+            //             'role' => '2',
+            //             'status' => 1,
+            //             'user_insert' => $value->id,
+            //             'user_update' => $value->id,
+            //         ];
+            //     }
+            //     DB::table('users')->insert($batchInsert);
+            // });
+
+
         }elseif ($params == 'tenaga_pendidik_non_guru') {
             $data = DB::table('tb_pegawai')->where('tipe_pegawai',$params)->get();
 
@@ -720,5 +747,6 @@ class DashboardController extends BaseController
                 ]);
             }
         }
+        DB::commit();
     }
 }
