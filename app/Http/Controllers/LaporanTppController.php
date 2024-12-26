@@ -559,7 +559,11 @@ class LaporanTppController extends BaseController
         $golongan = '';
 
 
-            $data->golongan !== null ? $golongan = explode("/",$data->golongan)[1] : $golongan = '-';
+            $golongan = '-';
+            if ($data->golongan !== null && str_contains($data->golongan, '/')) {
+                $golonganParts = explode("/", $data->golongan);
+                $golongan = isset($golonganParts[1]) ? $golonganParts[1] : '-';
+            }
             $data->target_waktu !== null ? $target_nilai = $data->target_waktu : $target_nilai = 0;
             // if ($data->kelas_jabatan == 1 || $data->kelas_jabatan == 3 || $data->kelas_jabatan == 15) {
             //     $nilai_kinerja = 100;
