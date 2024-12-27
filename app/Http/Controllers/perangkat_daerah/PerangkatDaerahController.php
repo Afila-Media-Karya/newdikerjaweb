@@ -37,7 +37,6 @@ class PerangkatDaerahController extends BaseController
     public function index(){
         $module = $this->breadcumb();
         $satuan_kerja = $this->option_satuan_kerja();
-
         return view('admin_kabupaten.perangkat_daerah.perangkat_daerah',compact('module','satuan_kerja'));
     }
 

@@ -56,13 +56,12 @@ class lokasiController extends BaseController
 
     public function datatable(){
         $data = array();
-        $role = auth()->user()->role;
-
-        $pegawai = DB::table('tb_pegawai')->select('id_satuan_kerja')->where('id',auth()->user()->id_pegawai)->first();
+        $role = hasRole();
 
         $data = DB::table('tb_lokasi')->join('tb_satuan_kerja','tb_lokasi.id_satuan_kerja','=','tb_satuan_kerja.id')->join('tb_unit_kerja','tb_lokasi.id_unit_kerja','=','tb_unit_kerja.id')->select('tb_lokasi.id','tb_lokasi.uuid','tb_lokasi.nama_lokasi','tb_satuan_kerja.nama_satuan_kerja','tb_unit_kerja.nama_unit_kerja');
 
-        if (intval($role) > 0) {
+        if (intval($role['role']) > 0 && $role['guard'] == 'web') {
+            $pegawai = DB::table('tb_pegawai')->select('id_satuan_kerja')->where('id',auth()->user()->id_pegawai)->first();
             $data->where("tb_lokasi.id_satuan_kerja",$pegawai->id_satuan_kerja);
         }
         
@@ -73,7 +72,9 @@ class lokasiController extends BaseController
     public function index(){
         $module = $this->breadcumb();
         $satuan_kerja = $this->option_satuan_kerja();
-        return view('admin_kabupaten.perangkat_daerah.lokasi',compact('module','satuan_kerja'));
+        $guard = hasRole()['guard'];
+        $role = hasRole()['role'];
+        return view('admin_kabupaten.perangkat_daerah.lokasi',compact('module','satuan_kerja','role','guard'));
     }
 
     public function store(LokasiRequest $request){

@@ -166,15 +166,21 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA97drRATl2BEEoFPEqpF1o9Jk0wenosuU&callback=initMap&libraries=v=weekly,places&sensor=false" defer></script>
     <script>
         let control = new Control();
-        let role = {!! json_encode(auth()->user()->role) !!};
+        let role = {!! json_encode($role) !!};
+        let guard = {!! json_encode($guard) !!};
+        console.log(role);
+        console.log(guard);
 
         let path = '';
-        if (parseInt(role) > 0) {
-            path = 'perangkat-daerah-opd';
-        }else{
-            path = 'perangkat-daerah';
-        }
+            if (parseInt(role) > 0 && guard == 'web') {
+                path = 'perangkat-daerah-opd';
+            }else{
+                path = 'perangkat-daerah';
+            }
+        
 
+
+        
         $(document).on('click', '#button-side-form', function() {
             control.overlay_form('Tambah', 'Lokasi Kerja');
         })
