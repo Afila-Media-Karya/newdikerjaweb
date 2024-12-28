@@ -311,7 +311,7 @@
                     control.push_select_atasan_langsung(`/master-jabatan-opd/master-jabatan/option-atasan-langsung?level=${result.level}&satuan_kerja=${$('#id_satuan_kerja').val()}`,'#id_parent');   
 
                     if ($('.form-data').attr('data-type') !== 'add') {
-                        $('#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', true);
+                        // $('#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', true);
                         // if (parseInt(result.level) < 7) {
                         //     $('#id_parent').prop('disabled',true);
                         // }else{
