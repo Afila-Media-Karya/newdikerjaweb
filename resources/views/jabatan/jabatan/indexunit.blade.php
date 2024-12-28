@@ -281,7 +281,7 @@
                     if ($('.form-data').attr('data-type') !== 'add') {
                         if (parseInt(result.level) < 7) {
                             $('#id_parent').prop('disabled', true);
-                            $('#id_satuan_kerja,#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', true);
+                            // $('#id_satuan_kerja,#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', true);
                         }else{
                            $('#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', false);
                             $('#id_parent').prop('disabled', false);
