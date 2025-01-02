@@ -415,7 +415,7 @@
     </div>
 </div>
 
-@if(auth()->user()->role == '1' && session('session_satuan_kerja') == 'Dinas Pendidikan dan Kebudayaan')
+@if(auth()->user()->role == '1' && session('session_satuan_kerja') == 'Dinas Pendidikan dan Kebudayaan' || session('session_satuan_kerja') == 'Dinas Kesehatan')
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'profil' ? 'active' : '' }}"
