@@ -19,17 +19,20 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container">
             <div class="row">
-                <div class="box-tpp">
-                    <span>TPP Anda Bulan ini</span>
-                    <h1>Rp 0</h1>
-                    <div class="progress-bar__wrapper">
-                        <label class="progress-bar__value" htmlFor="progress-bar"></label>
-                        <progress id="progress-bar" value="40" max="100"></progress>
+                @if($role['guard'] == 'web' && $role['role'] !== '3' && $tipe_pegawai !== 'tenaga_pendidik' && $tipe_pegawai !== 'tenaga_kesehatan')
+                    <div class="box-tpp">
+                        <span>TPP Anda Bulan ini</span>
+                        <h1>Rp 0</h1>
+                        <div class="progress-bar__wrapper">
+                            <label class="progress-bar__value" htmlFor="progress-bar"></label>
+                            <progress id="progress-bar" value="40" max="100"></progress>
+                        </div>
+                        <p></p>
                     </div>
-                    <p></p>
-                </div>
+                @endif
             </div>
             <div class="row">
+                @if($role['guard'] == 'web' && $role['role'] !== '3' && $tipe_pegawai !== 'tenaga_pendidik' && $tipe_pegawai !== 'tenaga_kesehatan')
                 <div class="col-lg-6">
                     <div class="row">
                         
@@ -134,6 +137,7 @@
                         
                     </div>
                 </div>
+                @endif
                 <div class="col-lg-6">
                     <div class="card card-xl-stretch box-widget mb-5">
                         <div class="d-flex justify-content-between">

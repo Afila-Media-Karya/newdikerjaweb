@@ -35,8 +35,9 @@ class DashboardController extends BaseController
     // Users
     public function pegawai(){
         $module = $this->breadcumb();
-        // dd(session('session_nama'));
-        return view('dashboard.users.index',compact('module'));
+        $role = hasRole();
+        $tipe_pegawai = session('session_tipe_pegawai');
+        return view('dashboard.users.index',compact('module','role','tipe_pegawai'));
     }
 
     public function admin_opd(){
