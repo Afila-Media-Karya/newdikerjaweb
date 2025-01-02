@@ -118,12 +118,13 @@ class listPegawaiController extends BaseController
         $jenis_jabatan = $this->option_jenis_jabatan_all();
         $eselon = $this->option_eselon();
         $satuan_kerja_user = '';
+        $tipe_pegawai = session('session_tipe_pegawai');
 
         if (hasRole()['guard'] == 'web') {
             hasRole()['role'] == '1' ? $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja : $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
         }
 
-        return view('pegawai.listpegawai', compact('module', 'golongan', 'pendidikan', 'satuan_kerja', 'satuan_kerja_user', 'agama', 'jenis_jabatan', 'eselon'));
+        return view('pegawai.listpegawai', compact('module', 'golongan', 'pendidikan', 'satuan_kerja', 'satuan_kerja_user', 'agama', 'jenis_jabatan', 'eselon','tipe_pegawai'));
     }
 
     public function detail($params)

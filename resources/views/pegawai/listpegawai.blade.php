@@ -456,6 +456,7 @@
         let control = new Control();
         let role = {!! json_encode($role) !!};
         let satuan_kerja_user = {!! json_encode($satuan_kerja_user) !!};
+        let tipe_pegawai = {!! json_encode($tipe_pegawai) !!};
         let url_main = '';
         role.guard !== 'web' ? url_main = '/pegawai/list-pegawai' : url_main = '/pegawai-opd/list-pegawai-opd';
 
@@ -633,8 +634,8 @@
                         button_more = `
                         <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
                                 <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
-                            </a>
-                        <a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
+                            </a>`;
+                        button_more = `<a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
                             </a>`;
                     }        

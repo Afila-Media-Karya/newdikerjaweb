@@ -43,7 +43,7 @@ class KehadiranController extends BaseController
                 $join->on('tb_absen.user_update', '=', 'admin.id')
                     ->where('tb_absen.user_type', '<>', 0);
             })
-            ->where('tb_absen.tahun', date('Y'))
+            ->where('tb_absen.tahun', session('tahun_penganggaran'))
             ->where('tb_absen.tanggal_absen', $tanggal)
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'ASC')
             ->orderBy('tb_jabatan.id', 'ASC')
