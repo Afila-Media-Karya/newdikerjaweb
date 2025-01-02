@@ -20,6 +20,7 @@
     </a>
 </div>
 
+@if(session('session_tipe_pegawai') == 'pegawai_administratif')
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'sasaran-kinerja' ? 'active' : '' }}"
@@ -36,8 +37,6 @@
             style="{{ $path[0] == 'sasaran-kinerja' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Sasaran Kinerja</span>
     </a>
 </div>
-
-@if(session('session_tipe_pegawai') == 'pegawai_administratif')
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'aktivitas' ? 'active' : '' }}"
@@ -369,6 +368,7 @@
         <span class="menu-arrow"></span>
     </span>
     <div class="menu-sub menu-sub-accordion menu-active-bg">
+         @if(session('session_tipe_pegawai') == 'pegawai_administratif')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-opd' && $path[1] == 'sasaran-kinerja' ? 'active' : '' }}"  href="{{ route('opd.laporan.index') }}">
                 <span class="menu-bullet">
@@ -377,6 +377,7 @@
                 <span class="menu-title" style="color:#ffffff;">Sasaran Kinerja</span>
             </a>
         </div>
+        @endif
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-opd' && $path[1] == 'kehadiran' ? 'active' : '' }}"  href="{{ route('opd.laporan.kehadiran.index') }}">
                 <span class="menu-bullet">
