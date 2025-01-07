@@ -660,6 +660,8 @@
                 $('#nama').attr('readonly',true);
                 
                 $('input[name="status_kepegawaian"]').prop('disabled', true);
+                $('#pendidikan_struktural').attr('readonly',true);
+                $('#pendidikan_struktural_lulus').attr('readonly',true);
                 $('#golongan').attr('readonly',true);
                 $('#tipe_pegawai_').hide();
             }
