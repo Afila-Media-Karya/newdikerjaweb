@@ -86,7 +86,7 @@
     </div>
     <div class="col-lg-6">
         <label class="form-label">Pendidikan Lulus</label>
-        <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data->pendidikan_lulus)->format('j F Y') }}" disabled>
+        <input type="text" class="form-control form-control-sm" value="{{ $data->pendidikan_lulus && $data->pendidikan_lulus !== 'NULL' ? \Carbon\Carbon::parse($data->pendidikan_lulus)->format('j F Y') : '' }}" disabled>
         <small class="text-danger asal_daerah_error"></small>
     </div>
 </div>
@@ -98,7 +98,7 @@
     </div>
     <div class="col-lg-6">
         <label class="form-label">Pendidikan Struktural Lulus</label>
-        <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data->pendidikan_struktural_lulus)->format('j F Y') }}" disabled>
+        <input type="text" class="form-control form-control-sm" value="{{ $data->pendidikan_struktural_lulus && $data->pendidikan_struktural_lulus !== 'NULL' ? \Carbon\Carbon::parse($data->pendidikan_struktural_lulus)->format('j F Y') : '' }}" disabled>
         <small class="text-danger asal_daerah_error"></small>
     </div>
 </div>
