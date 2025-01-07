@@ -354,11 +354,12 @@ trait General
             ->join('tb_satuan_kerja','tb_jabatan.id_satuan_kerja','=','tb_satuan_kerja.id')
             ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
             ->where('tb_pegawai.id',$params);
+            
             if ($status !== '') {
                 $query->where('tb_jabatan.status', $status);
                 if (!is_null(session('session_jabatan_kode'))) {
                     if (is_null($role_check) || $role_check > 0) {
-                        if (auth()->user()->role !== "1") {
+                        if (auth()->user()->role !== "1" && auth()->user()->role !== "3") {
                             $query->where('tb_jabatan.id',session('session_jabatan_kode'));
                         }
                     }

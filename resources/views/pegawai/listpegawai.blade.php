@@ -663,6 +663,8 @@
                 $('#pendidikan_struktural').attr('readonly',true);
                 $('#pendidikan_struktural_lulus').attr('readonly',true);
                 $('#golongan').attr('readonly',true);
+                $('#tmt_jabatan').attr('readonly',true);
+                
                 $('#tipe_pegawai_').hide();
             }
         })
