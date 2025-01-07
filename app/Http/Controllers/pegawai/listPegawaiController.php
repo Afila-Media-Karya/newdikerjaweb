@@ -217,8 +217,12 @@ class listPegawaiController extends BaseController
             $data->pendidikan_lulus = $request->pendidikan_lulus;
             $data->pendidikan_struktural = $request->pendidikan_struktural;
             $data->pendidikan_struktural_lulus = $request->pendidikan_struktural_lulus;
-            $data->status_kepegawaian = $request->status_kepegawaian;
-            $data->tipe_pegawai = $request->tipe_pegawai;
+            if ($request->status_kepegawaian) {
+                $data->status_kepegawaian = $request->status_kepegawaian;
+            }
+            if ($request->tipe_pegawai) {
+                $data->tipe_pegawai = $request->tipe_pegawai;
+            }
             $data->user_update = hasRole()['id'];
             $data->save();
 

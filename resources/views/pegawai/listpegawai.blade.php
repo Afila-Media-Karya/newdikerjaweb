@@ -408,9 +408,9 @@
                         <small class="text-danger status_kepegawaian_error"></small>
                     </div>
 
-                    <div class="mb-10">
+                    <div class="mb-10" id="tipe_pegawai_">
                         <label class="form-label">Tipe Pegawai</label>
-                        <select name="tipe_pegawai" class="form-control">
+                        <select name="tipe_pegawai" id="tipe_pegawai" class="form-control">
                             <option selected disabled>Pilih Status Perkawinan</option>
                             <option value="pegawai_administratif">Pegawai Administratif</option>
                             <option value="tenaga_pendidik">Tenaga Pendidik</option>
@@ -621,7 +621,7 @@
                 width: '15rem',
                 orderable: false,
                 render: function(data, type, full, meta) {
-
+                    console.log(role.role)
                     let button_more = `<a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
                                 <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
                             </a>
@@ -632,14 +632,13 @@
 
                     if (role.guard === 'web' && role.role === '1' || role.role === '3') {
                         button_more = `
-                        <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
                                 <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
-                            </a>`;
-                        button_more = `<a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
+                            </a>
+                            <a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
                             </a>`;
                     }        
-
 
                     return `
                            ${button_more} 
@@ -655,6 +654,15 @@
         $(function() {
             // role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja) : datatable($('#satuan_kerja_filter').val());
             datatable($('.filter-table').serialize());
+
+            if (role.role === '3') {
+                $('#nip').attr('readonly',true);
+                $('#nama').attr('readonly',true);
+                
+                $('input[name="status_kepegawaian"]').prop('disabled', true);
+                $('#golongan').attr('readonly',true);
+                $('#tipe_pegawai_').hide();
+            }
         })
     </script>
 @endsection

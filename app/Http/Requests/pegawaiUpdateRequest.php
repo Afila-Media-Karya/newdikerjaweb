@@ -32,8 +32,8 @@ class pegawaiUpdateRequest extends FormRequest
                 'pendidikan_lulus' => 'required|date',
                 'pendidikan_struktural' => 'required',
                 'pendidikan_struktural_lulus' => 'required|date',
-                'status_kepegawaian' => 'required',
-                'tipe_pegawai' => 'required',
+                'status_kepegawaian' => 'nullable',
+                'tipe_pegawai' => 'nullable',
             ];
     }
 
@@ -58,8 +58,8 @@ class pegawaiUpdateRequest extends FormRequest
                 'pendidikan_lulus.required' => 'kolom pendidikan tidak boleh kosong.',
                 'pendidikan_struktural.required' => 'kolom pendidikan tidak boleh kosong.',
                 'pendidikan_struktural_lulus.required' => 'kolom pendidikan tidak boleh kosong.', 
-                'status_kepegawaian.required' => 'kolom status kepegawaian tidak boleh kosong.', 
-                'tipe_pegawai.required' => 'kolom tipe pegawai tidak boleh kosong.', 
+                // 'status_kepegawaian.required' => 'kolom status kepegawaian tidak boleh kosong.', 
+                // 'tipe_pegawai.required' => 'kolom tipe pegawai tidak boleh kosong.', 
             ]; 
         
     }
