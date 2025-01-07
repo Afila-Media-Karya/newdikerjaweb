@@ -62,7 +62,7 @@
     </div>
     <div class="col-lg-6">
         <label class="form-label">TMT Pegawai</label>
-        <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data->tmt_pegawai)->format('j F Y') }}" disabled>
+        <input type="text" class="form-control form-control-sm" value="{{ $data->tmt_pegawai && $data->tmt_pegawai !== 'NULL' ? \Carbon\Carbon::parse($data->tmt_pegawai)->format('j F Y') : '' }}" disabled>
         <small class="text-danger asal_daerah_error"></small>
     </div>
 </div>
