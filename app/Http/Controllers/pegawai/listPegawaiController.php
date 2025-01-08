@@ -216,7 +216,9 @@ class listPegawaiController extends BaseController
             // $data->eselon = $request->eselon;
             $data->pendidikan_lulus = $request->pendidikan_lulus;
             $data->pendidikan_struktural = $request->pendidikan_struktural;
-            $data->pendidikan_struktural_lulus = $request->pendidikan_struktural_lulus;
+            if ($request->pendidikan_struktural_lulus) {
+                $data->pendidikan_struktural_lulus = $request->pendidikan_struktural_lulus;
+            }
             if ($request->status_kepegawaian) {
                 $data->status_kepegawaian = $request->status_kepegawaian;
             }

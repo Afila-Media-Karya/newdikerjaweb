@@ -31,7 +31,7 @@ class pegawaiUpdateRequest extends FormRequest
                 'pendidikan' => 'required',
                 'pendidikan_lulus' => 'required|date',
                 'pendidikan_struktural' => 'required',
-                'pendidikan_struktural_lulus' => 'required|date',
+                'pendidikan_struktural_lulus' => 'nullable|date',
                 'status_kepegawaian' => 'nullable',
                 'tipe_pegawai' => 'nullable',
             ];
