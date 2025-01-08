@@ -115,7 +115,7 @@
         </td>
         <td style="padding-left:20px; padding-right:20px">
             <label class="form-label">TMT Pegawai</label>
-            <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data_pribadi->tmt_pegawai)->format('j F Y') }}" disabled>
+            <input type="text" class="form-control form-control-sm" value="{{ $data_pribadi->tmt_pegawai && $data_pribadi->tmt_pegawai !== 'NULL' ? \Carbon\Carbon::parse($data_pribadi->tmt_pegawai)->format('j F Y') : '' }}" disabled>
         </td>
     </tr>
     <tr style="line-height: 3;">
@@ -125,7 +125,7 @@
         </td>
         <td style="padding-left:20px; padding-right:20px">
             <label class="form-label">TMT Golongan</label>
-            <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data_pribadi->tmt_golongan)->format('j F Y') }}" disabled>
+            <input type="text" class="form-control form-control-sm" value="{{ $data_pribadi->tmt_golongan && $data_pribadi->tmt_golongan !== 'NULL' ? \Carbon\Carbon::parse($data_pribadi->tmt_golongan)->format('j F Y') : '' }}" disabled>
         </td>
     </tr>
     <tr style="line-height: 3;">
@@ -135,7 +135,7 @@
         </td>
         <td style="padding-left:20px; padding-right:20px">
            <label class="form-label">Pendidikan Lulus</label>
-            <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data_pribadi->pendidikan_lulus)->format('j F Y') }}" disabled>
+            <input type="text" class="form-control form-control-sm" value="{{ $data_pribadi->pendidikan_lulus && $data_pribadi->pendidikan_lulus !== 'NULL' ? \Carbon\Carbon::parse($data_pribadi->pendidikan_lulus)->format('j F Y') : '' }}" disabled>
         </td>
     </tr>
     <tr style="line-height: 3;">
@@ -145,7 +145,7 @@
         </td>
         <td style="padding-left:20px; padding-right:20px">
            <label class="form-label">Pendidikan Struktural Lulus</label>
-            <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data_pribadi->pendidikan_struktural_lulus)->format('j F Y') }}" disabled>
+            <input type="text" class="form-control form-control-sm" value="{{ $data_pribadi->pendidikan_struktural_lulus && $data_pribadi->pendidikan_struktural_lulus !== 'NULL' ? \Carbon\Carbon::parse($data_pribadi->pendidikan_struktural_lulus)->format('j F Y') : '' }}" disabled>
         </td>
     </tr>
 </table>
