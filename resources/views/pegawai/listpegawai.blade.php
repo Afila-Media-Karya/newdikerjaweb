@@ -628,24 +628,41 @@
 
                             <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nip}" class="btn btn-danger button-delete btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" data-toggle="tooltip" title="hapus">
-                            </a>`;
+                            </a>
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn button-reset btn-icon btn-sm" data-toggle="tooltip" title="reset biometrik perangkat" style="background:#8F9BB3"> 
+                                <img src="{{ asset('admin/assets/media/icons/device.png')}}" data-toggle="tooltip" title="Biometrik">
+                            </a>
+                            `;
 
                     if (role.guard === 'web' && role.role === '1' || role.role === '3') {
-                        button_more = `
+                        if (role.role === '1') {
+                            button_more = `
                             <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
                                 <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
                             </a>
                             <a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
-                            </a>`;
-                    }        
-
-                    return `
-                           ${button_more} 
+                            </a>
                             <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn button-reset btn-icon btn-sm" data-toggle="tooltip" title="reset biometrik perangkat" style="background:#8F9BB3"> 
                                 <img src="{{ asset('admin/assets/media/icons/device.png')}}" data-toggle="tooltip" title="Biometrik">
                             </a>
                             `;
+                        }else{
+                            button_more = `
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm" data-toggle="tooltip" title="edit"> 
+                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
+                            </a>
+                            <a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
+                                <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
+                            </a>
+                            `;
+                        }
+                        
+                    }        
+
+                    return `
+                           ${button_more} 
+                    `;
                     },
             }];
             control.initDatatable(`${url_main}/datatable?${serialize}`, columns, columnDefs);
