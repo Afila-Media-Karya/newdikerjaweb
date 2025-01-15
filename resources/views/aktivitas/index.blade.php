@@ -455,7 +455,7 @@
 
 
             $(function () {
-                dateConfig();
+                // dateConfig();
                 calendar.render();
             })
 
