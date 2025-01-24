@@ -42,6 +42,7 @@ class AktivitasReviewController extends BaseController
         ->whereMonth('tanggal',$bulan)
         ->where('id_pegawai',$pegawai)
         ->where("validation",1)
+        ->where('tahun',session('tahun_penganggaran'))
         ->first();
 
         if ($target_waktu > 0) {
@@ -121,6 +122,7 @@ class AktivitasReviewController extends BaseController
         ->select('id','uuid','tanggal','created_at as tanggal_input','aktivitas','keterangan','volume','waktu','validation')
         ->whereMonth('tanggal',$bulan)
         ->where('id_pegawai',$pegawai)
+        ->where('tahun',session('tahun_penganggaran'))
         ->get();
         $data = $data->map(function ($item) use ($target_waktu) {
             $item->target_waktu =  $target_waktu;

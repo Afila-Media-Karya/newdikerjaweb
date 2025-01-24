@@ -316,7 +316,7 @@ trait General
 
     public function optionSkp($pegawai){
         $jabatan = $this->checkJabatanDefinitif($pegawai);
-        return DB::table('tb_skp')->select('id','rencana as text')->where('id_jabatan',$jabatan->id_jabatan)->get();
+        return DB::table('tb_skp')->select('id','rencana as text')->where('id_jabatan',$jabatan->id_jabatan)->where('tahun',session('tahun_penganggaran'))->get();
     }
 
     public function getMasterAktivitas($pegawai){

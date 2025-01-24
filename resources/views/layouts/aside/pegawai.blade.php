@@ -112,7 +112,7 @@
         <span class="menu-arrow"></span>
     </span>
     <div class="menu-sub menu-sub-accordion menu-active-bg">
-        @if(auth()->user()->role == '1')
+        @if(auth()->user()->role == '2')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-pegawai' && $path[1] == 'sasaran-kinerja' ? 'active' : '' }}"  href="{{ route('pegawai.laporan.index') }}">
                 <span class="menu-bullet">
@@ -130,7 +130,7 @@
                 <span class="menu-title" style="color:#ffffff;">Kehadiran</span>
             </a>
         </div>
-        @if(auth()->user()->role == '1')
+        @if(auth()->user()->role == '2')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-pegawai' && $path[1] == 'kinerja' ? 'active' : '' }}"  href="{{ route('pegawai.laporan.kinerja.index') }}">
                 <span class="menu-bullet">
