@@ -257,7 +257,7 @@
 
         $(document).on('click', '#button-side-form', function() {
             $('#pagu_tpp_konten').show();
-            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', false);
+            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel').prop('disabled', false);
             control.overlay_form('Tambah', 'Jabatan');
             $('#id_satuan_kerja').val(satuan_kerja_user);
             $('#id_satuan_kerja').trigger('change')
@@ -334,7 +334,7 @@
                     if ($('.form-data').attr('data-type') !== 'add') {
                         // if (parseInt(result.level) < 7) {
                             // $('#id_parent').prop('disabled', true);
-                            $('#id_satuan_kerja,#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', true);
+                            $('#id_satuan_kerja,#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel').prop('disabled', true);
                         // }else{
                         //    $('#id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan,#id_parent').prop('disabled', false);
                         //     $('#id_parent').prop('disabled', false);
