@@ -499,7 +499,7 @@ class LaporanTppController extends BaseController
     }
 
     public function data_tpp_pegawai($pegawai,$bulan){
-        $tahun = date('Y'); 
+        $tahun = session('tahun_penganggaran'); 
         $tanggal_awal = date("$tahun-$bulan-01");
         $tanggal_akhir = date("Y-m-t", strtotime($tanggal_awal));
 
@@ -519,7 +519,7 @@ class LaporanTppController extends BaseController
             tb_jabatan.pembayaran,
             tb_unit_kerja.waktu_masuk,
             tb_unit_kerja.waktu_keluar,
-            (SELECT SUM(waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND tb_aktivitas.validation = 1 AND MONTH(tanggal) = ? LIMIT 1) as capaian_waktu', [$bulan])
+            (SELECT SUM(waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND tb_aktivitas.validation = 1 AND tahun = ? AND  MONTH(tanggal) = ? LIMIT 1) as capaian_waktu', [$tahun,$bulan])
         ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
         ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
         ->join('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
