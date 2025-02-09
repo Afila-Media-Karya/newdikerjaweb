@@ -743,7 +743,7 @@ trait General
     }
 
     public function persentase_kinerja($bulan,$pegawai){
-        
+            $tahun = session("tahun_penganggaran");
             $persentase = 0;
             $jabatan = DB::table('tb_jabatan')->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')->select("tb_jabatan.target_waktu")->where('id_pegawai',$pegawai)->first();
 
@@ -754,6 +754,7 @@ trait General
             )
             ->where('id_pegawai', $pegawai)
             ->whereMonth('tanggal',$bulan)
+            ->where('tahun',$tahun)
             ->first();
 
             if ($jabatan->target_waktu > 0) {
