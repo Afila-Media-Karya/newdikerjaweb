@@ -325,143 +325,117 @@
         });
 
         datatable = async (bulan) => {
-       
-            $('#kt_table_data').DataTable().clear().destroy();
-            await $('#kt_table_data').dataTable().fnClearTable();
-            await $('#kt_table_data').dataTable().fnDraw();
-            await $('#kt_table_data').dataTable().fnDestroy();
-            $("#kt_table_data").DataTable({
-              responsive: true,
-              paging: false,
-              order: [[0, "asc"]],
-              processing: true,
-              ajax: `/review/aktivitas/data-review-aktivitas?pegawai=${pegawai}&bulan=${bulan}`,
-              columns: [
-                {
-                data: null,
-                className : 'text-center',
-                render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                }, {
-                    data: 'tanggal',
-                    className : 'text-center',
-                    width: '8rem',
-                    render: function(data, type, row, meta) {
-                        var tanggalAwal = data;
-                        var tanggalObjek = new Date(tanggalAwal);
-                        var tanggal = tanggalObjek.getDate();
-                        var bulan = tanggalObjek.toLocaleString('default', { month: 'long' }); // Menampilkan nama bulan dalam bahasa default
-                        var tahun = tanggalObjek.getFullYear();
+                // **1. Hapus DataTable sebelum reload**
+                $('#kt_table_data').DataTable().clear().destroy();
 
-                        var tanggalAkhir = tanggal + " " + bulan + " " + tahun;
-                        return tanggalAkhir;
-                    }
-                }, {
-                    data: 'tanggal_input',
-                    className : 'text-center',
-                    width: '8rem',
-                    render: function(data, type, row, meta) {
-                        var tanggalAwal = data;
-                        var tanggalObjek = new Date(tanggalAwal);
-                        var tanggal = tanggalObjek.getDate();
-                        var bulan = tanggalObjek.toLocaleString('default', { month: 'long' }); // Menampilkan nama bulan dalam bahasa default
-                        var tahun = tanggalObjek.getFullYear();
+                // **2. Kosongkan tfoot sebelum mengupdate**
+                let tfoot = $('#kt_table_data tfoot');
+                tfoot.find('tr:eq(0) td:eq(1)').html('-');
+                tfoot.find('tr:eq(1) td:eq(1)').html('-');
+                tfoot.find('tr:eq(2) td:eq(1)').html('-');
 
-                        var tanggalAkhir = tanggal + " " + bulan + " " + tahun;
-                        return tanggalAkhir;
-                    }
-                }, {
-                    data: 'aktivitas',
-                    className : 'text-center'
-                }, {
-                    data: 'keterangan',
-                    className : 'text-center'
-                }, {
-                    data: 'volume',
-                    className : 'text-center',
-                }, {
-                    data: 'waktu',
-                    className : 'text-center',
-                }, {
-                    data: 'validation',
-                    className : 'text-center',
-                }, {
-                    data: 'uuid',
-                    className : 'text-center',
-                }
-              ],
-              columnDefs: [
-                {
-                    targets: 7,
-                    // width : '8rem',
-                    render: function(data, type, full, meta) {
-      
-                         let isChecked = data === 1 ? 'checked' : '';
-                    return `
-                        <input type="hidden" name="id_aktivitas[${meta.row}]" value="${full.id}">
-                        <div class="form-check form-switch form-check-custom form-check-solid">
-                            <input class="form-check-input" type="checkbox" name="validation[${meta.row}]" value="1" id="flexSwitchDefault${meta.row}" ${isChecked} />
-                        </div>
-                        `;
-                    },
-                },
-                {
-                    targets: -1,
-                    title: 'Aksi',
-                    width: '9rem',
-                    orderable: false,
-                    render: function(data, type, full, meta) {
-                        return `
-                                <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
-                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
-                            </a>
-
-                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.aktivitas}" class="btn btn-danger button-delete btn-icon btn-sm"> 
-                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
-                            </a>
-                                `;
+                $("#kt_table_data").DataTable({
+                    responsive: true,
+                    paging: false,
+                    order: [[0, "asc"]],
+                    processing: true,
+                    ajax: `/review/aktivitas/data-review-aktivitas?pegawai=${pegawai}&bulan=${bulan}`,
+                    columns: [
+                        {
+                            data: null,
+                            className: 'text-center',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
                         },
-                }
-              ],
-              footerCallback: function (row, data, start, end, display) {
-                    console.log(data);
-                    let capaian_prod_kinerja = 0;
-                    $.each(data, function (x,y) {
-                        capaian_prod_kinerja += y.waktu;
-                    })
-
-                    var lastData = data[end - 1];
-                    
-
-                   if (lastData) {
-                        let nilai_produktivitas_kerja = 0;
-                        var tfoot = $(this).closest('table').find('tfoot');
-                        var firstRow = $(tfoot).find('tr:eq(0)');
-                        var secondRow = $(tfoot).find('tr:eq(1)'); 
-                        var thirdRow = $(tfoot).find('tr:eq(2)'); 
-                        var cellsFirstRow = firstRow.find('td');
-    
-                        cellsFirstRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${capaian_prod_kinerja}</span>`);
-
-                        var cellsSecondRow = secondRow.find('td');
-                        cellsSecondRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${lastData.target_waktu}</span>`);
-
-                        var cellsThirdRow = thirdRow.find('td');
-
-                        if (lastData.target_waktu > 0) {
-                            nilai_produktivitas_kerja = (capaian_prod_kinerja / lastData.target_waktu) * 100;
+                        {
+                            data: 'tanggal',
+                            className: 'text-center',
+                            width: '8rem',
+                            render: function (data, type, row, meta) {
+                                let tanggalObjek = new Date(data);
+                                let tanggal = tanggalObjek.getDate();
+                                let bulan = tanggalObjek.toLocaleString('default', { month: 'long' });
+                                let tahun = tanggalObjek.getFullYear();
+                                return `${tanggal} ${bulan} ${tahun}`;
+                            }
+                        },
+                        {
+                            data: 'tanggal_input',
+                            className: 'text-center',
+                            width: '8rem',
+                            render: function (data, type, row, meta) {
+                                let tanggalObjek = new Date(data);
+                                let tanggal = tanggalObjek.getDate();
+                                let bulan = tanggalObjek.toLocaleString('default', { month: 'long' });
+                                let tahun = tanggalObjek.getFullYear();
+                                return `${tanggal} ${bulan} ${tahun}`;
+                            }
+                        },
+                        {
+                            data: 'aktivitas',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'keterangan',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'volume',
+                            className: 'text-center',
+                        },
+                        {
+                            data: 'waktu',
+                            className: 'text-center',
+                        },
+                        {
+                            data: 'validation',
+                            className: 'text-center',
+                        },
+                        {
+                            data: 'uuid',
+                            className: 'text-center',
                         }
+                    ],
+                    footerCallback: function (row, data, start, end, display) {
+                        console.log("Data di footerCallback:", data);
 
-                        if (nilai_produktivitas_kerja > 100) {
+                        let capaian_prod_kinerja = 0;
+                        $.each(data, function (x, y) {
+                            capaian_prod_kinerja += y.waktu;
+                        });
+
+                        let lastData = data[end - 1];
+                        if (lastData) {
+                            let nilai_produktivitas_kerja = 0;
+                            var tfoot = $(this).closest('table').find('tfoot');
+                            var firstRow = $(tfoot).find('tr:eq(0)');
+                            var secondRow = $(tfoot).find('tr:eq(1)');
+                            var thirdRow = $(tfoot).find('tr:eq(2)');
+                            var cellsFirstRow = firstRow.find('td');
+
+                            // **Update capaian_prod_kinerja**
+                            cellsFirstRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${capaian_prod_kinerja}</span>`);
+
+                            var cellsSecondRow = secondRow.find('td');
+                            cellsSecondRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${lastData.target_waktu}</span>`);
+
+                            var cellsThirdRow = thirdRow.find('td');
+
+                            if (lastData.target_waktu > 0) {
+                                nilai_produktivitas_kerja = (capaian_prod_kinerja / lastData.target_waktu) * 100;
+                            }
+
+                            if (nilai_produktivitas_kerja > 100) {
                                 nilai_produktivitas_kerja = 100;
-                        }
+                            }
 
-                        cellsThirdRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${nilai_produktivitas_kerja.toFixed(2)}</span>`);
+                            cellsThirdRow.eq(1).addClass('text-center').html(`<span class="badge badge-primary">${nilai_produktivitas_kerja.toFixed(2)}</span>`);
+                        }
                     }
-                }
-            });
-        }
+                });
+            };
+
 
         $(function() {
             datatable($('#filter-bulan').val());
