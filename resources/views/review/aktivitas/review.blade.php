@@ -437,13 +437,18 @@
                     console.log("Data di footerCallback:", data);
 
                     let capaian_prod_kinerja = 0;
+                    let nilai_produktivitas_kerja = 0;
+                    let target_waktu = 0;
                     $.each(data, function (x, y) {
-                      capaian_prod_kinerja += y.waktu;
+                        if (y.validation > 0) {
+                            capaian_prod_kinerja += y.waktu;
+                        }
+                      
                     });
 
                     let lastData = data[end - 1];
                     if (lastData) {
-                      let nilai_produktivitas_kerja = 0;
+                      
                       var tfoot = $(this).closest("table").find("tfoot");
                       var firstRow = $(tfoot).find("tr:eq(0)");
                       var secondRow = $(tfoot).find("tr:eq(1)");
@@ -458,12 +463,14 @@
                           `<span class="badge badge-primary">${capaian_prod_kinerja}</span>`
                         );
 
+                        target_waktu = lastData.target_waktu
+
                       var cellsSecondRow = secondRow.find("td");
                       cellsSecondRow
                         .eq(1)
                         .addClass("text-center")
                         .html(
-                          `<span class="badge badge-primary">${lastData.target_waktu}</span>`
+                          `<span class="badge badge-primary">${target_waktu}</span>`
                         );
 
                       var cellsThirdRow = thirdRow.find("td");
