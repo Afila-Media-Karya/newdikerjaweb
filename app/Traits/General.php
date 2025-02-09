@@ -754,6 +754,7 @@ trait General
             )
             ->where('id_pegawai', $pegawai)
             ->whereMonth('tanggal',$bulan)
+            ->where('validation',1)
             ->where('tahun',$tahun)
             ->first();
 
