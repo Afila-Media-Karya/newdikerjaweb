@@ -33,6 +33,7 @@ class RealisasiSkpController extends BaseController
             ->groupBy('tb_aspek_skp.id', 'tb_skp.id') // Tambahkan tb_skp.id ke dalam GROUP BY
             ->orderBy('tb_skp.jenis', 'ASC')
             ->where('tb_skp.id_jabatan',$jabatan->id_jabatan)
+            ->where('tb_skp.tahun', session('tahun_penganggaran'))
             ->get();
 
         return $this->sendResponse($data, 'Sasaran Kinerja Fetched Success');
