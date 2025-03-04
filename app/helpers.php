@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Pegawai;
+use DB;
 
 function hasRole(){
     if (Auth::guard('administrator')->check()) {
@@ -10,11 +11,13 @@ function hasRole(){
             'id' => Auth::guard('administrator')->user()->id
         ];
     } else {
+        $pegawai =  DB::table("tb_pegawai")->where('id',Auth::user()->id_pegawai)->first();
         return [
             'guard' => 'web',
             'role' => Auth::user()->role,
             'id' => Auth::user()->id,
             'id_pegawai' => Auth::user()->id_pegawai,
+            'tipe_pegawai' => $pegawai->tipe_pegawai
         ];
     }
 }
