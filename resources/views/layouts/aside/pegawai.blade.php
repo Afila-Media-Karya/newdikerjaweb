@@ -113,7 +113,7 @@
     </span>
     <div class="menu-sub menu-sub-accordion menu-active-bg">
 
-    @if($role['tipe_pegawai'] == 'pegawai_administratif')
+    @if($role['tipe_pegawai'] == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-pegawai' && $path[1] == 'sasaran-kinerja' ? 'active' : '' }}"  href="{{ route('pegawai.laporan.index') }}">
                 <span class="menu-bullet">
@@ -131,7 +131,7 @@
                 <span class="menu-title" style="color:#ffffff;">Kehadiran</span>
             </a>
         </div>
-    @if($role['tipe_pegawai'] == 'pegawai_administratif')
+    @if($role['tipe_pegawai'] == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-pegawai' && $path[1] == 'kinerja' ? 'active' : '' }}"  href="{{ route('pegawai.laporan.kinerja.index') }}">
                 <span class="menu-bullet">
@@ -140,6 +140,8 @@
                 <span class="menu-title" style="color:#ffffff;">Kinerja</span>
             </a>
         </div>
+    @endif
+    @if($role['tipe_pegawai'] == 'pegawai_administratif')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-pegawai' && $path[1] == 'tpp' ? 'active' : '' }}"  href="{{ route('pegawai.laporan.tpp.index') }}">
                 <span class="menu-bullet">

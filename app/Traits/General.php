@@ -452,6 +452,7 @@ trait General
         $count_cuti = 0;
 
         $jml_tidak_apel = 0;
+        $jml_tidak_apel_hari_senin = 0;
         $jml_tidak_hadir_berturut_turut = 0;
 
 
@@ -512,6 +513,15 @@ trait General
                                 }
                         } 
                     }
+
+                    if (in_array($tanggalCarbon->format('l'), ['Tuesday', 'Wednesday', 'Thursday', 'Friday'])) {
+                        if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
+                            if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
+                                $jml_tidak_apel_hari_senin += 1;
+                            }
+                        }
+                    }
+                    
 
         
                 if ($absen_per_tanggal[$tanggal]['status'] == 'hadir' || $absen_per_tanggal[$tanggal]['status'] == 'apel') {
@@ -679,7 +689,8 @@ trait General
         $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
         $potongan_tanpa_keterangan = $jml_alfa * 3;
         $potongan_apel = $jml_tidak_apel * 2;
-        $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel;
+        $potongan_apel_selasa_jumat = $jml_tidak_apel_hari_senin * 0.25;
+        $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel + $potongan_apel_selasa_jumat;
 
         return [
             'data' => $hasil_akhir,
@@ -690,6 +701,7 @@ trait General
             'potongan_masuk_kerja' => $potongan_masuk_kerja,
             'potongan_pulang_kerja' => $potongan_pulang_kerja,
             'potongan_apel' => $potongan_apel,
+            'potongan_apel_selasa_jumat' => $potongan_apel_selasa_jumat,
             'jml_potongan_kehadiran_kerja' => $jml_potongan_kehadiran_kerja,
             'jml_hadir' => $count_hadir,
             'jml_sakit' => $count_sakit,
@@ -705,6 +717,7 @@ trait General
             'cpk_90' => $cpk_90,
             'cpk_90_keatas' => $cpk_90_keatas,
             'jml_tidak_apel' => $jml_tidak_apel,
+            'jml_tidak_apel_selasa_jumat' => $jml_tidak_apel_hari_senin,
             'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut
         ];
     }

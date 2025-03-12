@@ -280,6 +280,11 @@ class LaporanKehadiranController extends Controller
         $sheet->setCellValue('D' . $cell, '%');
         $sheet->getRowDimension($cell)->setRowHeight(20);
         $cell = $cell + 1;
+        $sheet->setCellValue('A' . $cell, 'Potongan apel selasa - jumat')->mergeCells('A' . $cell . ':B' . $cell);
+        $sheet->setCellValue('C' . $cell, $data['potongan_apel_selasa_jumat']);
+        $sheet->setCellValue('D' . $cell, '%');
+        $sheet->getRowDimension($cell)->setRowHeight(20);
+        $cell = $cell + 1;
         $sheet->setCellValue('A' . $cell, 'Total potongan')->mergeCells('A' . $cell . ':B' . $cell);
         $sheet->setCellValue('C' . $cell, $data['jml_potongan_kehadiran_kerja']);
         $sheet->setCellValue('D' . $cell, '%');
@@ -627,6 +632,7 @@ class LaporanKehadiranController extends Controller
     }
 
    public function export_rekapitulasi_absen($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
+    // dd('tes');
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
@@ -699,7 +705,7 @@ class LaporanKehadiranController extends Controller
         $sheet->setCellValue('K8', 'WAKTU TMK (MENIT)')->mergeCells('K8:R8');
         $sheet->setCellValue('S8', 'TOTAL POTONGAN (%)')->mergeCells('S8:S10');
 
-        $sheet->setCellValue('T7', 'CEPAT PULANG KERJA')->mergeCells('T7:AB7');
+        $sheet->setCellValue('T7', 'CEPAT PULANG nKERJA')->mergeCells('T7:AB7');
         $sheet->setCellValue('T8', 'WAKTU CPK (MENIT)')->mergeCells('T8:AA8');
         $sheet->setCellValue('AB8', 'TOTAL POTONGAN (%)')->mergeCells('AB8:AB10');
 
