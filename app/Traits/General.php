@@ -418,8 +418,8 @@ trait General
     function isRhamadan($tanggal)
     {
         // Ubah tanggal ke format yang sesuai untuk memeriksa bulan
-        $tanggal_awal_ramadan = '2025-02-03'; // Tanggal awal bulan Ramadan
-        $tanggal_akhir_ramadan = '2025-31-03'; // Tanggal akhir bulan Ramadan
+        $tanggal_awal_ramadan = '2025-03-01'; // Tanggal awal bulan Ramadan
+        $tanggal_akhir_ramadan = '2025-03-31'; // Tanggal akhir bulan Ramadan
 
         // Periksa apakah tanggal berada dalam rentang bulan Ramadan
         if ($tanggal >= $tanggal_awal_ramadan && $tanggal <= $tanggal_akhir_ramadan) {
@@ -500,7 +500,7 @@ trait General
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
                 
                     if ($tanggalCarbon->isMonday()) {
-                        if (!in_array($tanggal, $this->getDateRange())) {
+                        // if (!in_array($tanggal, $this->getDateRange())) {
                                 if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                                     if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                         $jml_tidak_apel += 1;
@@ -511,13 +511,14 @@ trait General
                                         }
                                     }
                                 }
-                        } 
+                        // } 
                     }
 
                     if (in_array($tanggalCarbon->format('l'), ['Tuesday', 'Wednesday', 'Thursday', 'Friday'])) {
                         if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                             if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                 $jml_tidak_apel_hari_senin += 1;
+                                
                             }
                         }
                     }
