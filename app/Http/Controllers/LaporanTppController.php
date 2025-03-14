@@ -137,6 +137,7 @@ class LaporanTppController extends BaseController
             $item->jml_potongan_kehadiran_kerja = $child['jml_potongan_kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];
             $item->jml_tidak_hadir_berturut_turut = $child['jml_tidak_hadir_berturut_turut'];
+            $item->potongan_apel = $child['potongan_apel'];
             return $item;
         });
 
@@ -352,7 +353,7 @@ class LaporanTppController extends BaseController
             $sheet->setCellValue('N' . $cell, number_format($jumlahKehadiran));
 
             $bpjs = 1 * $nilaiPaguTpp / 100;
-            $value->tanpa_keterangan > 3  ? $keterangan = 'TMS'  : $keterangan = 'MS';
+            $value->tanpa_keterangan > 3 || $value->potongan_apel > 40  ? $keterangan = 'TMS'  : $keterangan = 'MS';
             
 
             $tppBruto = 0;
@@ -537,6 +538,7 @@ class LaporanTppController extends BaseController
         $data->jml_cuti = $child['jml_cuti'];
         $data->jml_dinas_luar = $child['jml_dinas_luar'];
         $data->jml_tidak_apel = $child['jml_tidak_apel'];
+        $data->potongan_apel = $child['potongan_apel'];
 
         $jmlPaguTpp = 0;
         $jmlNilaiKinerja = 0;
@@ -599,7 +601,7 @@ class LaporanTppController extends BaseController
             $nilaiKehadiran = $persentaseKehadiran * $data->jml_potongan_kehadiran_kerja / 100;
             $jumlahKehadiran = $persentaseKehadiran - $nilaiKehadiran;
             $bpjs = 1 * $nilaiPaguTpp / 100;
-            $data->tanpa_keterangan > 3  ? $keterangan = 'TMS'  : $keterangan = 'MS';
+            $data->tanpa_keterangan > 3 || $data->potongan_apel > 40 ? $keterangan = 'TMS'  : $keterangan = 'MS';
             $tppBruto = 0;
             $iuran = 4 * $nilaiPaguTpp / 100;
             if ($keterangan === 'TMS') {
@@ -650,6 +652,7 @@ class LaporanTppController extends BaseController
             'jml_cuti' => $data->jml_cuti,
             'jml_dinas_luar' => $data->jml_dinas_luar,
             'jml_tidak_apel' => $data->jml_tidak_apel,
+            'potongan_apel' => $potongan_apel,
             'tanpa_keterangan' => $data->tanpa_keterangan,
             'pembagi_nilai_kehadiran' => $pembagi_nilai_kehadiran,
             'pembagi_nilai_kinerja' => $pembagi_nilai_kinerja,

@@ -689,9 +689,8 @@ trait General
         $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5); 
         $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
         $potongan_tanpa_keterangan = $jml_alfa * 3;
-        $potongan_apel = $jml_tidak_apel * 2;
-        $potongan_apel_selasa_jumat = $jml_tidak_apel_hari_senin * 0.25;
-        $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel + $potongan_apel_selasa_jumat;
+        $potongan_apel = ($jml_tidak_apel * 2) + ($jml_tidak_apel_hari_senin * 0.25);
+        $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel;
 
         return [
             'data' => $hasil_akhir,
@@ -702,7 +701,6 @@ trait General
             'potongan_masuk_kerja' => $potongan_masuk_kerja,
             'potongan_pulang_kerja' => $potongan_pulang_kerja,
             'potongan_apel' => $potongan_apel,
-            'potongan_apel_selasa_jumat' => $potongan_apel_selasa_jumat,
             'jml_potongan_kehadiran_kerja' => $jml_potongan_kehadiran_kerja,
             'jml_hadir' => $count_hadir,
             'jml_sakit' => $count_sakit,
@@ -718,7 +716,7 @@ trait General
             'cpk_90' => $cpk_90,
             'cpk_90_keatas' => $cpk_90_keatas,
             'jml_tidak_apel' => $jml_tidak_apel,
-            'jml_tidak_apel_selasa_jumat' => $jml_tidak_apel_hari_senin,
+            'jml_tidak_apel_hari_senin' => $jml_tidak_apel_hari_senin,
             'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut
         ];
     }
