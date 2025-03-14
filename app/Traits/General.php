@@ -283,8 +283,6 @@ trait General
        
     }
 
-
-
     public function checkJabatanAll($pegawai){
        return DB::table('tb_pegawai')->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu')->where('tb_pegawai.id',$pegawai)->get();
     }
@@ -784,4 +782,9 @@ trait General
             return $data;
     }
 
+    public function CheckOpd($unit_kerja){
+        $unit_kerja = DB::table('tb_unit_kerja')->select('')->join('tb_satuan_kerja','tb_unit_kerja.id_satuan_kerja','tb_satuan_kerja.id')->where('tb_unit_kerja.id',$unit_kerja)->first();
+
+        return $unit_kerja;
+    }
 }
