@@ -108,7 +108,6 @@ class LaporanKehadiranController extends Controller
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
         $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai);
 
-        dd('tes');
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir);
@@ -623,8 +622,7 @@ class LaporanKehadiranController extends Controller
         }
 
         $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir);
-        return $this->CheckOpd($unit_kerja);
-        return $data;
+        // return $data;
         $type = request('type');
         return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
     }
