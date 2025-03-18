@@ -158,6 +158,17 @@ trait Presensi
                     }
                 }
 
+                if ($tipe_pegawai == 'tenaga_pendidik') {
+                        $waktu_checkout = '14:00:00';
+                }
+
+                if ($tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                    $waktu_checkout = '16:00:00';
+                    if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                        $waktu_checkout = '15:30:00';
+                    }
+                }
+
                 $waktu_tetap_absen = strtotime($waktu_checkout);
                 $waktu_absen = strtotime($waktu);
                 $diff = $waktu_tetap_absen - $waktu_absen;

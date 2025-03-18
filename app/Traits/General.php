@@ -547,7 +547,7 @@ trait General
                     $count_cuti += 1;
                 }
 
-                if ($tipe_pegawai == 'pegawai_administratif') {
+                if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
                     $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$waktu_tetap_masuk,$tipe_pegawai);
                     $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$waktu_tetap_keluar,$tipe_pegawai);
                 }else{
