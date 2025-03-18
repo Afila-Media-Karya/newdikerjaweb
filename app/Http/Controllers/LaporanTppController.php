@@ -652,7 +652,7 @@ class LaporanTppController extends BaseController
             'jml_cuti' => $data->jml_cuti,
             'jml_dinas_luar' => $data->jml_dinas_luar,
             'jml_tidak_apel' => $data->jml_tidak_apel,
-            'potongan_apel' => $potongan_apel,
+            'potongan_apel' => $data->potongan_apel,
             'tanpa_keterangan' => $data->tanpa_keterangan,
             'pembagi_nilai_kehadiran' => $pembagi_nilai_kehadiran,
             'pembagi_nilai_kinerja' => $pembagi_nilai_kinerja,
