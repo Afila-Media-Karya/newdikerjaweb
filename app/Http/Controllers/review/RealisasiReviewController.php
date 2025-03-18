@@ -92,7 +92,7 @@ class RealisasiReviewController extends BaseController
                             $jumlah_data++;
                         }
                     }
-                    $nilai_utama = round($sum_nilai_iki / $jumlah_data, 1);
+                    $nilai_utama = $jumlah_data > 0 ? round($sum_nilai_iki / $jumlah_data, 1) : 0;
                 } else {
                     $nilai_utama = 0;
                 }
