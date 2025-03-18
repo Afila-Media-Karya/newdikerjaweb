@@ -443,6 +443,7 @@ trait General
         $cpk_90 = 0;
         $cpk_90_keatas = 0;
 
+        $count_apel = 0;
         $count_hadir = 0;
         $count_sakit = 0;
         $count_izin_cuti = 0;
@@ -453,6 +454,8 @@ trait General
         $jml_tidak_apel_hari_senin = 0;
         $jml_tidak_hadir_berturut_turut = 0;
 
+        $jml_menit_terlambat_masuk_kerja = 0;
+        $jml_menit_terlambat_pulang_kerja = 0;
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
             if ($tipe_pegawai == 'pegawai_administratif') {
@@ -509,6 +512,11 @@ trait General
                                         }
                                     }
                                 }
+
+                                if ($absen_per_tanggal[$tanggal]['status'] == 'apel') {
+                                    $count_apel += 1;
+                                }
+
                         // } 
                     }
 
@@ -546,6 +554,9 @@ trait General
                     $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk',$absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_masuk);
                     $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar',$absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_keluar);
                 }
+
+                $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;
+                $jml_menit_terlambat_pulang_kerja += $selisih_waktu_pulang;
 
                 if ($absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                     if ($selisih_waktu_masuk >= 1 && $selisih_waktu_masuk <= 30) {
@@ -700,6 +711,7 @@ trait General
             'potongan_pulang_kerja' => $potongan_pulang_kerja,
             'potongan_apel' => $potongan_apel,
             'jml_potongan_kehadiran_kerja' => $jml_potongan_kehadiran_kerja,
+            'jml_apel' => $count_apel,
             'jml_hadir' => $count_hadir,
             'jml_sakit' => $count_sakit,
             'jml_cuti' => $count_cuti,
@@ -715,7 +727,9 @@ trait General
             'cpk_90_keatas' => $cpk_90_keatas,
             'jml_tidak_apel' => $jml_tidak_apel,
             'jml_tidak_apel_hari_senin' => $jml_tidak_apel_hari_senin,
-            'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut
+            'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut,
+            'jml_menit_terlambat_masuk_kerja' => $jml_menit_terlambat_masuk_kerja,
+            'jml_menit_terlambat_pulang_kerja' => $jml_menit_terlambat_pulang_kerja
         ];
     }
 
@@ -783,8 +797,27 @@ trait General
     }
 
     public function CheckOpd($unit_kerja){
-        $unit_kerja = DB::table('tb_unit_kerja')->select('')->join('tb_satuan_kerja','tb_unit_kerja.id_satuan_kerja','tb_satuan_kerja.id')->where('tb_unit_kerja.id',$unit_kerja)->first();
+        $data = DB::table('tb_unit_kerja')
+            ->select('tb_unit_kerja.nama_unit_kerja', 'tb_satuan_kerja.nama_satuan_kerja')
+            ->join('tb_satuan_kerja', 'tb_unit_kerja.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
+            ->where('tb_unit_kerja.id', $unit_kerja)
+            ->first();
 
-        return $unit_kerja;
+        if (!$data) {
+            return false; // Jika tidak ada data, langsung return false
+        }
+
+        $unitKerjaContains = stripos($data->nama_unit_kerja, 'dinas pendidikan') !== false;
+        $satuanKerjaContains = stripos($data->nama_satuan_kerja, 'dinas pendidikan') !== false;
+
+        // Jika nama_unit_kerja tidak ada "dinas pendidikan" dan nama_satuan_kerja ada "dinas pendidikan", maka true
+        if (!$unitKerjaContains && $satuanKerjaContains) {
+            return true;
+        }
+
+        // Jika nama_unit_kerja ada "dinas pendidikan" dan nama_satuan_kerja ada "dinas pendidikan", maka false
+        // Jika nama_unit_kerja tidak ada "dinas pendidikan" dan nama_satuan_kerja tidak ada "dinas pendidikan", maka false
+        return false;
     }
+
 }

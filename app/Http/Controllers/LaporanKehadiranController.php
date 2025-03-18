@@ -547,6 +547,7 @@ class LaporanKehadiranController extends Controller
             $item->potongan_apel = $child['potongan_apel'];
             $item->jml_potongan_kehadiran_kerja = $child['jml_potongan_kehadiran_kerja'];
             $item->jml_hadir = $child['jml_hadir'];
+            $item->jml_apel = $child['jml_apel'];
             $item->jml_sakit = $child['jml_sakit'];
             $item->jml_cuti = $child['jml_cuti'];
             $item->jml_izin_cuti = $child['jml_izin_cuti'];
@@ -562,6 +563,8 @@ class LaporanKehadiranController extends Controller
             $item->jml_tidak_apel = $child['jml_tidak_apel'];
             $item->jml_tidak_apel_hari_senin = $child['jml_tidak_apel_hari_senin'];
             $item->jml_tidak_hadir_berturut_turut = $child['jml_tidak_hadir_berturut_turut'];
+            $item->jml_menit_terlambat_masuk_kerja = $child['jml_menit_terlambat_masuk_kerja'];
+            $item->jml_menit_terlambat_pulang_kerja = $child['jml_menit_terlambat_pulang_kerja'];
             return $item;
         });
 
@@ -620,15 +623,22 @@ class LaporanKehadiranController extends Controller
             $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
             $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
         }
-
+        
         $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir);
-        // return $data;
         $type = request('type');
-        return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
+
+        if ($this->CheckOpd($unit_kerja)) {
+            return $this->export_rekapitulasi_absen_guru($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
+            
+        }else {
+            return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
+        }
+
+        
     }
 
    public function export_rekapitulasi_absen($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
-    // dd('tes');
+
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
@@ -813,6 +823,145 @@ class LaporanKehadiranController extends Controller
         $sheet->getStyle('A:AI')->getAlignment()->setVertical('center');
         $sheet->getStyle('B7:B' . $cell)->getAlignment()->setHorizontal('rigth');
         $sheet->getStyle('A3:AI4')->getAlignment()->setHorizontal('rigth');
+
+        $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
+        if ($type == 'excel') {
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
+            $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
+            header("Content-Disposition: attachment;filename=\"$filename\"");
+        } else {
+            $spreadsheet->getActiveSheet()->getHeaderFooter()
+                ->setOddHeader('&C&H' . url()->current());
+            $spreadsheet->getActiveSheet()->getHeaderFooter()
+                ->setOddFooter('&L&B &RPage &P of &N');
+            $class = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf::class;
+            \PhpOffice\PhpSpreadsheet\IOFactory::registerWriter('Pdf', $class);
+            header('Content-Type: application/pdf');
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Pdf');
+        }
+
+        $writer->save('php://output');
+    }
+
+    public function export_rekapitulasi_absen_guru($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
+
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
+            ->setLastModifiedBy('BKPSDM BULUKUMBA')
+            ->setTitle('Laporan Rekapitulasi Absen Pegawai')
+            ->setSubject('Laporan Rekapitulasi Absen Pegawai')
+            ->setDescription('Laporan Rekapitulasi Absen Pegawai')
+            ->setKeywords('pdf php')
+            ->setCategory('LAPORAN ABSEN');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_FOLIO);
+        $sheet->getRowDimension(3)->setRowHeight(17);
+        $spreadsheet->getDefaultStyle()->getFont()->setName('Times New Roman');
+        $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
+        $spreadsheet->getActiveSheet()->getPageSetup()->setHorizontalCentered(true);
+        $spreadsheet->getActiveSheet()->getPageSetup()->setVerticalCentered(false);
+
+        $spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.3);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.3);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.5);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.3);
+
+        $sheet->setCellValue('A1', 'REKAPITULASI CAPAIAN DISIPLIN / KEHADIRAN KERJA');
+        $sheet->mergeCells('A1:M1');
+
+        $sheet->setCellValue('A3', 'PERANGKAT DAERAH');
+        $sheet->mergeCells('A3:B3');
+        $sheet->setCellValue('C3', ': ');
+        $sheet->setCellValue('D3', $satuan_kerja)->mergeCells('D3:G3');
+
+        $sheet->setCellValue('A4', 'PERIODE');
+        $sheet->mergeCells('A4:B4');
+        $sheet->setCellValue('C4', ':');
+        $sheet->setCellValue('D4', strtoupper(konvertBulan($tanggal_awal)))->mergeCells('D4:G4');
+
+        $sheet->setCellValue('A5', ' ');
+
+        
+        
+        $sheet->getStyle('A1:M1')->getFont()->setSize(16);
+        $sheet->getStyle('A3:M4')->getFont()->setSize(12);
+
+        $sheet->getColumnDimension('B')->setWidth(35);
+       
+
+        $sheet->getStyle('A6:M10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
+
+        // konten
+        $sheet->setCellValue('A6', 'No')->mergeCells('A6:A10');
+        $sheet->setCellValue('B6', 'NAMA/NIP')->mergeCells('B6:B10');
+        $sheet->setCellValue('C6', 'JML HARI KERJA')->mergeCells('C6:C10');
+
+        $sheet->setCellValue('D6', 'KEHADIRAN KERJA')->mergeCells('D6:I6');
+
+        $sheet->setCellValue('D7', 'APEL')->mergeCells('D7:D10');
+        $sheet->setCellValue('E7', 'HADIR')->mergeCells('E7:E10');
+        $sheet->setCellValue('F7', 'SAKIT')->mergeCells('F7:F10');
+        $sheet->setCellValue('G7', 'CUTI')->mergeCells('G7:G10');
+        $sheet->setCellValue('H7', 'DINAS LUAR')->mergeCells('H7:H10');
+        $sheet->setCellValue('I7', 'TANPA KETERANGAN')->mergeCells('I7:I10');
+        $sheet->setCellValue('J6', 'JUMLAH KEHADIRAN KERJA')->mergeCells('J6:J10');
+
+        $sheet->setCellValue('K6', 'KETERANGAN KEHADIRAN KERJA')->mergeCells('K6:M6');
+        $sheet->setCellValue('K7', 'JUMLAH MENIT KETERLAMBATAN MASUK KERJA')->mergeCells('K7:K10');
+        $sheet->getColumnDimension('K')->setWidth(20);
+        $sheet->setCellValue('L7', 'JUMLAH MENIT CEPAT PULANG KERJA')->mergeCells('L7:L10');
+        $sheet->getColumnDimension('L')->setWidth(20);
+        $sheet->setCellValue('M7', 'TOTAL (MENIT)')->mergeCells('M7:M10');
+
+        $cell = 11;
+
+        foreach ($data as $key => $value) {
+            $sheet->setCellValue('A' . $cell, $key + 1);
+            $sheet->setCellValue('B' . $cell, $value->nama . ' ' . PHP_EOL . ' ' . $value->nip);
+            $sheet->setCellValue('C' . $cell, $value->jml_hari_kerja);
+            $sheet->setCellValue('D' . $cell, $value->jml_apel);
+            $sheet->setCellValue('E' . $cell, $value->jml_hadir);
+            $sheet->setCellValue('F' . $cell, $value->jml_sakit);
+            $sheet->setCellValue('G' . $cell, $value->jml_izin_cuti);
+            $sheet->setCellValue('H' . $cell, $value->jml_dinas_luar);
+            $sheet->setCellValue('I' . $cell, $value->tanpa_keterangan);
+            $sheet->setCellValue('J' . $cell, ($value->jml_hadir + $value->jml_dinas_luar));
+            $sheet->setCellValue('K' . $cell, $value->jml_menit_terlambat_masuk_kerja);
+            $sheet->setCellValue('L' . $cell, $value->jml_menit_terlambat_pulang_kerja);
+            $sheet->setCellValue('M' . $cell, ($value->jml_menit_terlambat_masuk_kerja + $value->jml_menit_terlambat_pulang_kerja));
+            $cell++;
+        }
+
+
+        $border = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '0000000'],
+                ],
+            ],
+        ];
+
+        $sheet->getStyle('D7:H' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('ECF1DF');
+        $sheet->getStyle('I7:I' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E6B8B7');
+        $sheet->getStyle('K7:M' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F5D6B7');
+        $sheet->getStyle('J7:J' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
+        // $sheet->getStyle('T7:AB' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F9EADB');
+        // $sheet->getStyle('AC7:AF' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('BCCBE2');
+        // $sheet->getStyle('AH7:AH' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('4EAD5A');
+
+        // $sheet->getStyle('K7:AG7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
+        // $sheet->getStyle('AG8:AG'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
+        
+        $sheet->getStyle('A6:M' . $cell)->applyFromArray($border);
+        $sheet->getStyle('A:M')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('A:M')->getAlignment()->setVertical('center');
 
         $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
         if ($type == 'excel') {
