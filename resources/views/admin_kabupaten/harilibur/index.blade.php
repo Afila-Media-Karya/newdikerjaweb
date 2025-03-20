@@ -117,6 +117,15 @@
                         </div>
                     </div>
 
+                    <div class="mb-10">
+                        <label class="form-label">Tipe</label>
+                        <select class="form-control" name="tipe">
+                            <option selected disabled> Pilih </option>
+                            <option value="pegawai_administratif">Pegawai Administratif</option>
+                            <option value="tenaga_pendidik">Tenaga Pendidik</option>
+                        </select>
+                        <small class="text-danger tipe_error"></small>
+                    </div>
 
                     <div class="separator separator-dashed mt-8 mb-5"></div>
                     <div class="d-flex gap-5">

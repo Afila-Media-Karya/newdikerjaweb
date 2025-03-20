@@ -36,6 +36,7 @@ class HariLiburController extends BaseController
             $data->nama_libur = $request->nama_libur;
             $data->tanggal_mulai = $request->tanggal_mulai;
             $data->tanggal_selesai = $request->tanggal_selesai;
+            $data->tipe = $request->tipe;
             $data->tahun = date('Y');
             $data->save();
         } catch (\Throwable $e) {
@@ -51,6 +52,7 @@ class HariLiburController extends BaseController
             $data->nama_libur = $request->nama_libur;
             $data->tanggal_mulai = $request->tanggal_mulai;
             $data->tanggal_selesai = $request->tanggal_selesai;
+            $data->tipe = $request->tipe;
             $data->save();
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);

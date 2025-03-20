@@ -20,6 +20,7 @@ class HariLiburRequest extends FormRequest
                 'nama_libur' => 'required',
                 'tanggal_mulai' => 'required|date',
                 'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+                'tipe' => 'required',
             ];
     }
 

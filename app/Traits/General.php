@@ -404,11 +404,19 @@ trait General
       return $data;
     }
 
-    function isTanggalLibur($tanggal)
+    function isTanggalLibur($tanggal,$tipe_pegawai)
     {
+
+        if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan') {
+            $tipe_pegawai = 'pegawai_administratif';
+        }else {
+            $tipe_pegawai = 'tenaga_pendidik';
+        }
+
         $libur = DB::table('tb_libur')
             ->where('tanggal_mulai', '<=', $tanggal)
             ->where('tanggal_selesai', '>=', $tanggal)
+            ->where('tipe',$tipe_pegawai)
             ->first();
         return !empty($libur);
     }
@@ -460,7 +468,7 @@ trait General
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
             if ($tipe_pegawai == 'pegawai_administratif') {
                 if ($current_date->dayOfWeek !== 6 && $current_date->dayOfWeek !== 0) {
-                    if (!$this->isTanggalLibur($current_date->toDateString())) {
+                    if (!$this->isTanggalLibur($current_date->toDateString(),$tipe_pegawai)) {
                         $daftar_tanggal[] = $current_date->toDateString();
                     }
                 }
@@ -507,7 +515,7 @@ trait General
                                         $jml_tidak_apel += 1;
                                     }elseif ($tipe_pegawai == 'tenaga_kesehatan') {
                                        
-                                        if ($absen_per_tanggal[$tanggal]['shift'] == 'pagi' && !$this->isTanggalLibur($tanggalCarbon->toDateString()) && !$this->isRhamadan($tanggalCarbon->toDateString())) {
+                                        if ($absen_per_tanggal[$tanggal]['shift'] == 'pagi' && !$this->isTanggalLibur($tanggalCarbon->toDateString(),$tipe_pegawai) && !$this->isRhamadan($tanggalCarbon->toDateString())) {
                                              $jml_tidak_apel += 1;
                                         }
                                     }
@@ -614,7 +622,7 @@ trait General
             } else {
                 // array_push($tes,$tanggal);
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
-                if ($tanggalCarbon->isWeekday() && !$tanggalCarbon->isTomorrow() && !$this->isTanggalLibur($tanggalCarbon->toDateString())) {
+                if ($tanggalCarbon->isWeekday() && !$tanggalCarbon->isTomorrow() && !$this->isTanggalLibur($tanggalCarbon->toDateString(),$tipe_pegawai)) {
                     $jml_tidak_hadir_berturut_turut += 1;
                 }else {
                     $jml_tidak_hadir_berturut_turut = 0;

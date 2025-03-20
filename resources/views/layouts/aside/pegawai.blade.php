@@ -31,6 +31,7 @@
 </div>
 
 
+@if($role['tipe_pegawai'] == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'aktivitas' ? 'active' : '' }}"
         href="{{ route('pegawai.aktivitas.index') }}">
@@ -46,7 +47,9 @@
             style="{{ $path[0] == 'aktivitas' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Aktivitas</span>
     </a>
 </div>
+@endif
 
+@if($role['tipe_pegawai'] == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru' || preg_match('/Kepala UPT SPF/i', session('session_nama_jabatan')))
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'review' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
         <span class="menu-icon">
@@ -85,7 +88,9 @@
         </div>
     </div>
 </div>
+@endif
 
+@if($role['tipe_pegawai'] == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'realisasi' ? 'active' : '' }}"
         href="{{ route('pegawai.realisasi.index') }}">
@@ -99,6 +104,8 @@
             style="{{ $path[0] == 'profil' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Realisasi</span>
     </a>
 </div>
+@endif
+
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan-pegawai' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
