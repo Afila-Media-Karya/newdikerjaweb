@@ -59,12 +59,20 @@
                                                 <small class="text-danger bulan_error"></small>
                                             </div>
 
-                                            <div class="col-lg-4 mb-10">                    
+                                            <div class="col-lg-4 mb-10 status_kepegawai_form">                    
                                                 <label class="form-label">Status Kepegawaian</label>
                                                 <select id="status_kepegawaian" name="status_kepegawaian" class="form-control">
                                                 <option selected disabled>Pilih</option>
                                                 <option value="PNS">PNS</option>
                                                 <option value="PPPK">PPPK</option>
+                                                </select>
+                                                <small class="text-danger bulan_error"></small>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-10 tipe_kepegawai_form">                    
+                                                <label class="form-label">Tipe Pegawai</label>
+                                                <select id="tipe_pegawai" name="tipe_pegawai" class="form-control">
+
                                                 </select>
                                                 <small class="text-danger bulan_error"></small>
                                             </div>
@@ -160,6 +168,13 @@
                 control.push_select_laporan(`/perangkat-daerah/unit-kerja/option?satuan_kerja=${$(this).val()}`,'#id_unit_kerja'); 
             //    control.push_select_laporan(`/pegawai/list-pegawai/option/${$(this).val()}`,'#pegawai');
                $('#nama_satuan_kerja').val(selectedText);
+
+               if (selectedText == 'Dinas Pendidikan dan Kebudayaan' || selectedText == 'Dinas Kesehatan') {
+                    $('.tipe_kepegawai_form').show();
+                    optionTipepegawai(selectedText);
+               }else{
+                    $('.tipe_kepegawai_form').hide();
+               }
             }
         
         })
@@ -172,6 +187,53 @@
                $('#nama_unit_kerja').val(selectedText);
             }
         })
+
+        $(document).on('change','#pegawai', function (e) {
+            e.preventDefault();
+            let val = $(this).val();
+            var selectedText = $('#satuan_kerja').find(":selected").text();
+
+            if (val !== 'all') {
+                $('.status_kepegawai_form').hide();   
+                $('.tipe_kepegawai_form').hide();   
+            }else{
+                $('.status_kepegawai_form').show();
+                if (selectedText == 'Dinas Pendidikan dan Kebudayaan' || selectedText == 'Dinas Kesehatan') {
+                    optionTipepegawai(selectedText);
+                    $('.tipe_kepegawai_form').show();
+                }else{
+                    $('.tipe_kepegawai_form').hide();   
+                }
+            }
+        })
+
+        optionTipepegawai = (params) => {
+            var options = [];
+
+            if (params == 'Dinas Pendidikan dan Kebudayaan') {
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_pendidik', text: 'Tenaga Pendidik' },
+                    { value: 'tenaga_pendidik_non_guru', text: 'Tenaga Pendidik non Guru' }
+                ]
+            }else{
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_kesehatan', text: 'Tenaga Kesehatan' }
+                ]
+            }
+
+
+            var selectElement = $('#tipe_pegawai');
+            
+            // Mengosongkan select element jika ada option sebelumnya
+            selectElement.empty();
+
+            // Menambahkan option ke dalam select
+            options.forEach(function(option) {
+                selectElement.append(new Option(option.text, option.value));
+            });
+        }
 
         $('#export-excel,#export-pdf,#export-backup').click(function(e){
             e.preventDefault();
@@ -194,6 +256,7 @@
         })
 
         $(function () {
+            $('.tipe_kepegawai_form').hide();   
             // $("#kt_daterangepicker_1").daterangepicker();
         })
     </script>

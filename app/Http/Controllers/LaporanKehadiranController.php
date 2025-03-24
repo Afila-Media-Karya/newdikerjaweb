@@ -527,7 +527,7 @@ class LaporanKehadiranController extends Controller
         $writer->save('php://output');
     }
 
-    public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir)
+    public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir,$status_kepegawaian, $tipe_pegawai)
     {
         $data = array();
         $query = DB::table('tb_pegawai')
@@ -552,6 +552,14 @@ class LaporanKehadiranController extends Controller
             if ($unit_kerja !== 'all') {
                 $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);    
             }
+        }
+
+        if (!is_null($status_kepegawaian)) {
+            $query->where('status_kepegawaian',$status_kepegawaian);
+        }
+
+        if (!is_null($tipe_pegawai)) {
+            $query->where('tipe_pegawai',$tipe_pegawai);
         }
 
         $data = $query->get();
@@ -600,6 +608,8 @@ class LaporanKehadiranController extends Controller
         $bulan = request('bulan');
         $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
         $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-'. cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+
+
         if (request('satuan_kerja')) {
             $satuan_kerja = request('satuan_kerja');
             $nama_satuan_kerja = request('nama_satuan_kerja');
@@ -631,6 +641,9 @@ class LaporanKehadiranController extends Controller
         $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
         $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
 
+    
+        $status_kepegawaian = request('status_kepegawaian');
+        $tipe_pegawai = request('tipe_pegawai');
 
         if (request('satuan_kerja')) {
             $satuan_kerja = request('satuan_kerja');
@@ -644,7 +657,7 @@ class LaporanKehadiranController extends Controller
             $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
         }
         
-        $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir);
+        $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai);
         $type = request('type');
 
         if ($this->CheckOpd($unit_kerja)) {
