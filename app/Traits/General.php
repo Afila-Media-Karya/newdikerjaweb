@@ -472,6 +472,12 @@ trait General
                         $daftar_tanggal[] = $current_date->toDateString();
                     }
                 }
+            }elseif($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru'){
+                if ($current_date->dayOfWeek !== 0) {
+                    if (!$this->isTanggalLibur($current_date->toDateString(),$tipe_pegawai)) {
+                        $daftar_tanggal[] = $current_date->toDateString();
+                    }
+                }
             }else{
                 $daftar_tanggal[] = $current_date->toDateString();
             }
