@@ -19,7 +19,6 @@
             style="{{ $path[0] == 'dashboard-pegawai' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Dashboard</span>
     </a>
 </div>
-
 @if(session('session_tipe_pegawai') == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
 
 <div class="menu-item">
@@ -92,7 +91,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'realisasi' ? 'active' : '' }}"
