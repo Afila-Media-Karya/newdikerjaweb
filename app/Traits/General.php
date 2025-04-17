@@ -314,7 +314,14 @@ trait General
 
     public function optionSkp($pegawai){
         $jabatan = $this->checkJabatanDefinitif($pegawai);
-        return DB::table('tb_skp')->select('id','rencana as text')->where('id_jabatan',$jabatan->id_jabatan)->where('tahun',session('tahun_penganggaran'))->get();
+
+        $result = [];
+        
+        if ($jabatan) {
+            $result = DB::table('tb_skp')->select('id','rencana as text')->where('id_jabatan',$jabatan->id_jabatan)->where('tahun',session('tahun_penganggaran'))->get();
+        }
+
+        return $result;
     }
 
     public function getMasterAktivitas($pegawai){
@@ -537,8 +544,7 @@ trait General
                     if (in_array($tanggalCarbon->format('l'), ['Tuesday', 'Wednesday', 'Thursday', 'Friday'])) {
                         if ($absen_per_tanggal[$tanggal]['status'] !== 'apel' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                             if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRhamadan($tanggalCarbon->toDateString())) {
-                                $jml_tidak_apel_hari_senin += 1;
-                                
+                                $jml_tidak_apel_hari_senin += 1;   
                             }
                         }
                     }
