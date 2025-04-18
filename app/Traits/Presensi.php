@@ -159,14 +159,18 @@ trait Presensi
                 }
 
                 if ($tipe_pegawai == 'tenaga_pendidik') {
+                    
                         $waktu_checkout = '14:00:00';
-                        
-                        if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
-                            $waktu_checkout = '11:30:00';
-                        }
 
                         if ($this->isRhamadan($tanggal)) {
                             $waktu_checkout = '13:30:00';
+                            if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                                $waktu_checkout = '11:30:00';
+                            }
+                        }
+
+                        if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                            $waktu_checkout = '11:30:00';
                         }
                 }
 

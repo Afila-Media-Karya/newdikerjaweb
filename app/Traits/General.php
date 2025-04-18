@@ -517,6 +517,7 @@ trait General
         // Buat hasil akhir dengan semua tanggal dalam rentang
         $hasil_akhir = [];
         $hari_tidak_hadir_nakes = [];
+        // dd($daftar_tanggal);
         foreach ($daftar_tanggal as $tanggal) {
             if (isset($absen_per_tanggal[$tanggal])) {
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
@@ -570,6 +571,7 @@ trait General
                 if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
                     $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$waktu_tetap_masuk,$tipe_pegawai);
                     $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$waktu_tetap_keluar,$tipe_pegawai);
+                    // dd($tanggal);
                 }else{
                     $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk',$absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_masuk);
                     $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar',$absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_keluar);
