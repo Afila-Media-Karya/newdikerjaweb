@@ -134,9 +134,7 @@
                             <input type="time" id="waktu_apel" class="form-control" name="waktu_apel" placeholder="Masukkan Nama Satuan Kerja">
                             <small class="text-danger waktu_apel_error"></small>
                         </div>
-                    </div>
-
-                    <div class="row mb-10">
+                        <div class="col-lg-6">
                             <label class="form-label">Jumlah Shift (hanya untuk opd kesehatan)</label>
                             <select name="jumlah_shift" class="form-control">
                                 <option selected disabled>Pilih Jumlah Shift</option>
@@ -145,6 +143,9 @@
                             </select>
                             <small class="text-danger jumlah_shift_error"></small>
                     </div>
+                    </div>
+
+                    
 
                     <div class="separator separator-dashed mt-8 mb-5"></div>
                     <div class="d-flex gap-5">
