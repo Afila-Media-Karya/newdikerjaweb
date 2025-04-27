@@ -86,7 +86,7 @@ class LaporanKehadiranController extends Controller
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
-        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai);
+        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai,$pegawai_info->jumlah_shift);
         $type = request('type');
         
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif') {
@@ -107,7 +107,7 @@ class LaporanKehadiranController extends Controller
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
 
-        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai);
+        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai,$pegawai_info->jumlah_shift);
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir,$pegawai_info->tipe_pegawai);
@@ -531,7 +531,7 @@ class LaporanKehadiranController extends Controller
     {
         $data = array();
         $query = DB::table('tb_pegawai')
-            ->select('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
+            ->select('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai','tb_unit_kerja.jumlah_shift')
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
@@ -565,7 +565,7 @@ class LaporanKehadiranController extends Controller
         $data = $query->get();
 
         $data = $data->map(function ($item) use ($tanggal_awal, $tanggal_akhir) {
-            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir,$item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai);
+            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir,$item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];

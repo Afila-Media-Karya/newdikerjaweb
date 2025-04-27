@@ -94,6 +94,7 @@ class LaporanTppController extends BaseController
             tb_jabatan.status as status_jabatan,
             tb_unit_kerja.waktu_masuk,
             tb_unit_kerja.waktu_keluar,
+            tb_unit_kerja.jumlah_shift,
             (SELECT SUM(tb_aktivitas.waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND tb_aktivitas.validation = 1 AND MONTH(tb_aktivitas.tanggal) = ? AND tb_aktivitas.id_pegawai IS NOT NULL) as capaian_waktu', [$bulan])
         ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
         ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
@@ -133,7 +134,7 @@ class LaporanTppController extends BaseController
         $data = $query->get();
 
         $data = $data->map(function ($item) use ($tanggal_awal,$tanggal_akhir) {
-            $child = $this->data_kehadiran_pegawai($item->id,$tanggal_awal,$tanggal_akhir,$item->waktu_masuk,$item->waktu_keluar,$item->tipe_pegawai);
+            $child = $this->data_kehadiran_pegawai($item->id,$tanggal_awal,$tanggal_akhir,$item->waktu_masuk,$item->waktu_keluar,$item->tipe_pegawai,$item->jumlah_shift);
             $item->jml_potongan_kehadiran_kerja = $child['jml_potongan_kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];
             $item->jml_tidak_hadir_berturut_turut = $child['jml_tidak_hadir_berturut_turut'];
@@ -520,6 +521,7 @@ class LaporanTppController extends BaseController
             tb_jabatan.pembayaran,
             tb_unit_kerja.waktu_masuk,
             tb_unit_kerja.waktu_keluar,
+            tb_unit_kerja.jumlah_shift,
             (SELECT SUM(waktu) FROM tb_aktivitas WHERE tb_aktivitas.id_pegawai = tb_pegawai.id AND tb_aktivitas.validation = 1 AND tahun = ? AND  MONTH(tanggal) = ? LIMIT 1) as capaian_waktu', [$tahun,$bulan])
         ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
         ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
@@ -529,7 +531,7 @@ class LaporanTppController extends BaseController
         ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar')
         ->first();
 
-        $child = $this->data_kehadiran_pegawai($data->id,$tanggal_awal,$tanggal_akhir,$data->waktu_masuk,$data->waktu_keluar,$data->tipe_pegawai);
+        $child = $this->data_kehadiran_pegawai($data->id,$tanggal_awal,$tanggal_akhir,$data->waktu_masuk,$data->waktu_keluar,$data->tipe_pegawai,$data->jumlah_shift);
         $data->jml_potongan_kehadiran_kerja = $child['jml_potongan_kehadiran_kerja'];
         $data->tanpa_keterangan = $child['tanpa_keterangan'];
         $data->jml_hari_kerja = $child['jml_hari_kerja'];

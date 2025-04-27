@@ -353,7 +353,7 @@ trait General
         }
         
         $query = DB::table('tb_pegawai')
-            ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai')
+            ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai','tb_unit_kerja.jumlah_shift')
             ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
             ->join("tb_master_jabatan",'tb_jabatan.id_master_jabatan','=','tb_master_jabatan.id')
             ->join('tb_satuan_kerja','tb_jabatan.id_satuan_kerja','=','tb_satuan_kerja.id')
@@ -442,7 +442,7 @@ trait General
         }
     }
 
-    public function data_kehadiran_pegawai($pegawai,$tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai){
+    public function data_kehadiran_pegawai($pegawai,$tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai, $jumlah_shift){
         $result = array();
         $daftar_tanggal = [];
         $current_date = new Carbon($tanggal_awal);
@@ -573,8 +573,8 @@ trait General
                     $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$waktu_tetap_keluar,$tipe_pegawai);
                     // dd($tanggal);
                 }else{
-                    $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk',$absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_masuk);
-                    $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar',$absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_keluar);
+                    $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk',$absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_masuk,$jumlah_shift);
+                    $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar',$absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_keluar,$jumlah_shift);
                 }
 
                 $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;

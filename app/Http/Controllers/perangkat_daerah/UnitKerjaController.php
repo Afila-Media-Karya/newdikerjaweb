@@ -54,6 +54,9 @@ class UnitKerjaController extends BaseController
                 $data->waktu_masuk = $request->waktu_masuk;
                 $data->waktu_keluar = $request->waktu_keluar;
                 $data->waktu_apel = $request->waktu_apel;
+                if ($request->jumlah_shift) {
+                    $data->jumlah_shift = intval($request->jumlah_shift);
+                }
                 $data->tahun = session('tahun_penganggaran');
                 $data->save(); 
 
@@ -75,6 +78,9 @@ class UnitKerjaController extends BaseController
                 $data->waktu_masuk = $request->waktu_masuk;
                 $data->waktu_keluar = $request->waktu_keluar;
                 $data->waktu_apel = $request->waktu_apel;
+                if ($request->jumlah_shift) {
+                    $data->jumlah_shift = intval($request->jumlah_shift);
+                }
                 $data->tahun = session('tahun_penganggaran');
                 $data->save(); 
 

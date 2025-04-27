@@ -63,7 +63,7 @@ trait Presensi
         return $dates;
     }
 
-    public function konvertWaktuNakes($params, $waktu, $tanggal,$shift,$waktu_tetap)
+    public function konvertWaktuNakes($params, $waktu, $tanggal,$shift,$waktu_tetap,$jumlah_shift)
     {
         $diff = '';
         $selisih_waktu = '';
@@ -74,22 +74,22 @@ trait Presensi
 
         if ($shift == 'pagi') {
             
-            $waktu_absen_datang = '08:00:00';
-            $waktu_absen_pulang = '14:00:00';
+            $waktu_absen_datang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
+            $waktu_absen_pulang = $jumlah_shift == 3 ? '14:00:00' : '17:00:00';
 
             $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
 
             if ($tanggalCarbon->isMonday()) {
                 if ($params == 'masuk') {
-                    $waktu_absen_datang = $waktu_tetap;
+                    $waktu_absen_datang = $jumlah_shift == 3 ? $waktu_tetap : '07:30:00';
                 }
             }
         }elseif ($shift == 'siang') {
             $waktu_absen_datang = '14:00:00';
             $waktu_absen_pulang = '21:00:00';
         }else {
-            $waktu_absen_datang = '21:00:00';
-            $waktu_absen_pulang = '08:00:00';
+            $waktu_absen_datang = $jumlah_shift == 3 ? '21:00:00' : '17:00:00';
+            $waktu_absen_pulang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
         }
 
         if ($waktu !== null) {
@@ -101,10 +101,6 @@ trait Presensi
                 $waktu_checkout = $waktu_absen_pulang;
                 $arr = $this->getDateRange();
                 $key = array_search($waktu, $arr);
-
-                // if ($key !== false) {
-                //     $waktu_checkout = '15:00:00';
-                // }
 
                 $waktu_tetap_absen = strtotime($waktu_checkout);
                 $waktu_absen = strtotime($waktu);
