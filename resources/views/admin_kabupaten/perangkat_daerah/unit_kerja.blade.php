@@ -137,7 +137,6 @@
                     </div>
 
                     <div class="row mb-10">
-                        <div class="col-lg-6">
                             <label class="form-label">Jumlah Shift (hanya untuk opd kesehatan)</label>
                             <select name="jumlah_shift" class="form-control">
                                 <option selected disabled>Pilih Jumlah Shift</option>
@@ -145,7 +144,6 @@
                                 <option value="3">Tiga Shift</option>
                             </select>
                             <small class="text-danger jumlah_shift_error"></small>
-                        </div>
                     </div>
 
                     <div class="separator separator-dashed mt-8 mb-5"></div>
