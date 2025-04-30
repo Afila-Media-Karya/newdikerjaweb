@@ -20,7 +20,7 @@
     </a>
 </div>
 
-@if(session("session_nama_jabatan") == 'Guru Ahli Muda (Kepala UPT SPF)')
+@if(str_contains(session('session_nama_jabatan'), 'Kepala UPT SPF'))
 <div class="menu-item">
     <a class="menu-link  {{ $path[0] == 'sasaran-kinerja' ? 'active' : '' }}"
         href="{{ route('pegawai.skp.index') }}">
