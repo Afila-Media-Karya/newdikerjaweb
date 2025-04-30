@@ -19,6 +19,41 @@
             style="{{ $path[0] == 'dashboard-pegawai' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Dashboard</span>
     </a>
 </div>
+
+@if(session("session_nama_jabatan") == 'Guru Ahli Muda (Kepala UPT SPF)')
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'sasaran-kinerja' ? 'active' : '' }}"
+        href="{{ route('pegawai.skp.index') }}">
+        <span class="menu-icon">
+            <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'sasaran-kinerja' ? url('admin/assets/media/icons/aside/skpact.svg') : url('/admin/assets/media/icons/aside/skpdef.svg') }}"
+                    alt="">
+            </span>
+            <!--end::Svg Icon-->
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'sasaran-kinerja' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Sasaran Kinerja</span>
+    </a>
+</div>
+
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'aktivitas' ? 'active' : '' }}"
+        href="{{ route('pegawai.aktivitas.index') }}">
+        <span class="menu-icon">
+            <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'aktivitas' ? url('admin/assets/media/icons/aside/aktivitasact.svg') : url('/admin/assets/media/icons/aside/aktivitasdef.svg') }}"
+                    alt="">
+            </span>
+            <!--end::Svg Icon-->
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'aktivitas' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Aktivitas</span>
+    </a>
+</div>
+@endif
+
 @if(session('session_tipe_pegawai') == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
 
 <div class="menu-item">
@@ -144,7 +179,7 @@
                 <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                 </span>
-                <span class="menu-title" style="color:#ffffff;">Kinerja</span>
+                <span class="menu-title" style="color:#ffffff;">Kinerja </span>
             </a>
         </div>
         @endif
@@ -389,7 +424,7 @@
                 <span class="menu-title" style="color:#ffffff;">Kehadiran</span>
             </a>
         </div>
-        @if(session('session_tipe_pegawai') == 'pegawai_administratif')
+        @if(session('session_tipe_pegawai') == 'pegawai_administratif' || auth()->user()->role == '3')
         <div class="menu-item">
             <a class="menu-link {{ $path[0] == 'laporan-opd' && $path[1] == 'kinerja' ? 'active' : '' }}"  href="{{ route('opd.laporan.kinerja.index') }}">
                 <span class="menu-bullet">
