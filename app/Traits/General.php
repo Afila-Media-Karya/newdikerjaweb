@@ -519,7 +519,7 @@ trait General
             $jml_menit_terlambat_masuk_kerja = 0;
         $jml_menit_terlambat_pulang_kerja = 0;
         $selisih_waktu_masuk = 0;
-        $$selisih_waktu_pulang = 0;
+        $selisih_waktu_pulang = 0;
         foreach ($daftar_tanggal as $tanggal) {
             if (isset($absen_per_tanggal[$tanggal])) {
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
