@@ -469,8 +469,6 @@ trait General
         $jml_tidak_apel_hari_senin = 0;
         $jml_tidak_hadir_berturut_turut = 0;
 
-        $jml_menit_terlambat_masuk_kerja = 0;
-        $jml_menit_terlambat_pulang_kerja = 0;
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
             if ($tipe_pegawai == 'pegawai_administratif') {
@@ -518,6 +516,8 @@ trait General
         $hasil_akhir = [];
         $hari_tidak_hadir_nakes = [];
         // dd($daftar_tanggal);
+            $jml_menit_terlambat_masuk_kerja = 0;
+        $jml_menit_terlambat_pulang_kerja = 0;
         foreach ($daftar_tanggal as $tanggal) {
             if (isset($absen_per_tanggal[$tanggal])) {
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
