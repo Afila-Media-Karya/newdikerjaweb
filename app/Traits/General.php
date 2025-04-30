@@ -512,14 +512,14 @@ trait General
             ];
         }
 
-        // Buat hasil akhir dengan semua tanggal dalam rentang
         $hasil_akhir = [];
         $hari_tidak_hadir_nakes = [];
-        // dd($daftar_tanggal);
+
             $jml_menit_terlambat_masuk_kerja = 0;
         $jml_menit_terlambat_pulang_kerja = 0;
         $selisih_waktu_masuk = 0;
         $selisih_waktu_pulang = 0;
+        $tes = [];
         foreach ($daftar_tanggal as $tanggal) {
             if (isset($absen_per_tanggal[$tanggal])) {
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
@@ -574,14 +574,21 @@ trait General
                     $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$waktu_tetap_masuk,$tipe_pegawai);
                     $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$waktu_tetap_keluar,$tipe_pegawai);
                     // dd($tanggal);
+                    
                 }else{
                     $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk',$absen_per_tanggal[$tanggal]['waktu_masuk'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_masuk,$jumlah_shift);
                     $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar',$absen_per_tanggal[$tanggal]['waktu_keluar'],$tanggal,$absen_per_tanggal[$tanggal]['shift'],$waktu_tetap_keluar,$jumlah_shift);
                 }
 
-                $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;
-                $jml_menit_terlambat_pulang_kerja += $selisih_waktu_pulang;
+                if ($absen_per_tanggal[$tanggal]['waktu_masuk'] !== null) {
+                    $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;
+                }
 
+                if ($absen_per_tanggal[$tanggal]['waktu_keluar'] !== null) {
+                    $jml_menit_terlambat_pulang_kerja += $selisih_waktu_pulang;
+
+                }
+                
                 if ($absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
                     if ($selisih_waktu_masuk >= 1 && $selisih_waktu_masuk <= 30) {
                         $kmk_30 += 1;
@@ -718,6 +725,8 @@ trait General
         // } else {
         //     $potongan_sakit = 0;
         // }
+
+        // return $tes;
 
         $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5); 
         $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
