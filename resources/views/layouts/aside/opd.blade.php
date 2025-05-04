@@ -52,6 +52,46 @@
             style="{{ $path[0] == 'aktivitas' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Aktivitas</span>
     </a>
 </div>
+
+<div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'review' ? 'show' : '' }} menu-accordion">
+    <span class="menu-link">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'review' ? url('admin/assets/media/icons/aside/jabatanact.svg') : url('/admin/assets/media/icons/aside/jabatandef.svg') }}"
+                    alt="">
+            </span>
+        </span>
+        <span class="menu-title" style="color:#ffffff;">Review</span>
+        <span class="menu-arrow"></span>
+    </span>
+    <div class="menu-sub menu-sub-accordion menu-active-bg">
+        <div class="menu-item">
+            <a class="menu-link {{ $path[0] == 'review' && $path[1] == 'sasaran-kinerja' ? 'active' : '' }}"  href="{{ route('pegawai.review.sasaran_kinerja.index') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title" style="color:#ffffff;">Sasaran Kinerja</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link {{ $path[0] == 'review' && $path[1] == 'aktivitas' ? 'active' : '' }}"  href="{{ route('pegawai.review.aktivitas.index') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title" style="color:#ffffff;">Aktivitas</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link {{ $path[0] == 'review' && $path[1] == 'realisasi-skp' ? 'active' : '' }}"  href="{{ route('pegawai.review.realisasi.index') }}">
+                <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title" style="color:#ffffff;">Realisasi</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 @endif
 
 @if(session('session_tipe_pegawai') == 'pegawai_administratif' || $role['tipe_pegawai'] == 'tenaga_pendidik_non_guru')
@@ -142,6 +182,7 @@
 </div>
 
 @endif
+
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan-pegawai' ? 'show' : '' }} menu-accordion">
     <span class="menu-link">
