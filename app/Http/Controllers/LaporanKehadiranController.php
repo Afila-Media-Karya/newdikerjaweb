@@ -660,8 +660,7 @@ class LaporanKehadiranController extends Controller
         
         $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai);
         $type = request('type');
-
-        if ($this->CheckOpd($unit_kerja)) {
+        if ($this->CheckOpd($unit_kerja) && $tipe_pegawai == 'tenaga_pendidik') {
             return $this->export_rekapitulasi_absen_guru($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
             
         }else {

@@ -584,9 +584,8 @@ trait General
                     $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;
                 }
 
-                if ($absen_per_tanggal[$tanggal]['waktu_keluar'] !== null) {
+                if ($tanggal !== date('Y-m-d')) {
                     $jml_menit_terlambat_pulang_kerja += $selisih_waktu_pulang;
-
                 }
                 
                 if ($absen_per_tanggal[$tanggal]['status'] !== 'cuti' && $absen_per_tanggal[$tanggal]['status'] !== 'dinas luar' && $absen_per_tanggal[$tanggal]['status'] !== 'sakit') {
