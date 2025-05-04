@@ -40,6 +40,7 @@ class LaporanKinerjaController extends BaseController
     {
         $module = $this->breadcumb();
         $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
+        $nama_satuan_kerja = $satuan_kerja->nama_satuan_kerja;
         $pegawai = array();
         $role = hasRole();
         $satuan_kerja_user = '';
@@ -62,7 +63,7 @@ class LaporanKinerjaController extends BaseController
         if ($role['role'] == '1') {
             return view('laporan.kinerja.index_opd', compact('module', 'pegawai','satuan_kerja_user','nama_satuan_kerja'));
         } else {
-            return view('laporan.kinerja.index_unit', compact('module', 'pegawai'));
+            return view('laporan.kinerja.index_unit', compact('module', 'pegawai','nama_satuan_kerja'));
         }
     }
 
@@ -186,7 +187,7 @@ class LaporanKinerjaController extends BaseController
         }
     }
 
-    public function data_kinerja_pegawai_by_opd($satuan_kerja, $unit_kerja, $bulan)
+    public function data_kinerja_pegawai_by_opd($satuan_kerja, $unit_kerja, $bulan, $tipe_pegawai)
     {
         $result = array();
         $query = DB::table('tb_pegawai')
@@ -227,6 +228,10 @@ class LaporanKinerjaController extends BaseController
             }
         }
 
+        if ($tipe_pegawai) {
+            $query->where('tb_pegawai.tipe_pegawai', $tipe_pegawai);
+        }
+
         $result = $query->get();
 
         $result = $result->map(function ($item) use ($bulan) {
@@ -252,6 +257,7 @@ class LaporanKinerjaController extends BaseController
         $unit_kerja = '';
         $nama_unit_kerja = '';
         $bulan = request('bulan');
+        $tipe_pegawai = request('tipe_pegawai');
         if (request('satuan_kerja')) {
             $satuan_kerja = request('satuan_kerja');
             $nama_satuan_kerja = request('nama_satuan_kerja');
@@ -264,7 +270,7 @@ class LaporanKinerjaController extends BaseController
             $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
         }
 
-        $data = $this->data_kinerja_pegawai_by_opd($satuan_kerja, $unit_kerja, $bulan);
+        $data = $this->data_kinerja_pegawai_by_opd($satuan_kerja, $unit_kerja, $bulan, $tipe_pegawai);
         $type = request('type');
         return $this->export_kinerja_rekapitulasi($data, $type, $nama_satuan_kerja, $nama_unit_kerja, $bulan);
     }

@@ -57,6 +57,14 @@
                                                 <small class="text-danger bulan_error"></small>
                                             </div>
 
+                                            <div class="col-lg-4 mb-10 tipe_kepegawai_form">                    
+                                                <label class="form-label">Tipe Pegawai</label>
+                                                <select id="tipe_pegawai" name="tipe_pegawai" class="form-control">
+
+                                                </select>
+                                                <small class="text-danger bulan_error"></small>
+                                            </div>
+
                                             <div class="d-flex align-items-center gap-2 gap-lg-3">
                                                 <a href="#" id="export-excel" data-type="excel" class="btn btn-sm btn-success">
                                                     <img src="{{asset('admin/assets/media/icons/excel.svg')}}" style="position: relative; bottom: 1px;" alt="" srcset="">
@@ -106,6 +114,53 @@
         return result;
     }
 
+    $(document).on('change','#pegawai', function (e) {
+            e.preventDefault();
+            let val = $(this).val();
+            var selectedText = $('#satuan_kerja').find(":selected").text();
+
+            if (val !== 'all') {
+                $('.status_kepegawai_form').hide();   
+                $('.tipe_kepegawai_form').hide();   
+            }else{
+                $('.status_kepegawai_form').show();
+                if (selectedText == 'Dinas Pendidikan dan Kebudayaan' || selectedText == 'Dinas Kesehatan') {
+                    optionTipepegawai(selectedText);
+                    $('.tipe_kepegawai_form').show();
+                }else{
+                    $('.tipe_kepegawai_form').hide();   
+                }
+            }
+        })
+
+        optionTipepegawai = (params) => {
+            var options = [];
+
+            if (params == 'Dinas Pendidikan dan Kebudayaan') {
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_pendidik', text: 'Tenaga Pendidik' },
+                    { value: 'tenaga_pendidik_non_guru', text: 'Tenaga Pendidik non Guru' }
+                ]
+            }else{
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_kesehatan', text: 'Tenaga Kesehatan' }
+                ]
+            }
+
+
+            var selectElement = $('#tipe_pegawai');
+            
+            // Mengosongkan select element jika ada option sebelumnya
+            selectElement.empty();
+
+            // Menambahkan option ke dalam select
+            options.forEach(function(option) {
+                selectElement.append(new Option(option.text, option.value));
+            });
+        }
+
     validation = (parsedData) =>{
 
         let result = true;
@@ -147,6 +202,13 @@
             if ($(this).val() !== '') {
                 control.push_select_laporan(`/perangkat-daerah/unit-kerja/option?satuan_kerja=${$(this).val()}`,'#id_unit_kerja'); 
                $('#nama_satuan_kerja').val(selectedText);
+
+               if (selectedText == 'Dinas Pendidikan dan Kebudayaan' || selectedText == 'Dinas Kesehatan') {
+                    $('.tipe_kepegawai_form').show();
+                    optionTipepegawai(selectedText);
+               }else{
+                    $('.tipe_kepegawai_form').hide();
+               }
             }
         
         })
