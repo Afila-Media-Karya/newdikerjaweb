@@ -40,7 +40,8 @@ class LaporanKinerjaController extends BaseController
     {
         $module = $this->breadcumb();
         $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
-        $nama_satuan_kerja = $satuan_kerja->nama_satuan_kerja;
+        
+        
         $pegawai = array();
         $role = hasRole();
         $satuan_kerja_user = '';
@@ -58,6 +59,7 @@ class LaporanKinerjaController extends BaseController
             $query->where('tb_jabatan.id_unit_kerja', $satuan_kerja->id_unit_kerja);
         }
 
+        $nama_satuan_kerja = $satuan_kerja->nama_satuan_kerja;
         $pegawai = $query->get();
 
         if ($role['role'] == '1') {
