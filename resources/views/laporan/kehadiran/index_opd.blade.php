@@ -142,6 +142,34 @@
             }
         })
 
+        optionTipepegawai = (params) => {
+            var options = [];
+
+            if (params == 'Dinas Pendidikan dan Kebudayaan') {
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_pendidik', text: 'Tenaga Pendidik' },
+                    { value: 'tenaga_pendidik_non_guru', text: 'Tenaga Pendidik non Guru' }
+                ]
+            }else{
+                options = [
+                    { value: 'pegawai_administratif', text: 'Pegawai Administratif' },
+                    { value: 'tenaga_kesehatan', text: 'Tenaga Kesehatan' }
+                ]
+            }
+
+
+            var selectElement = $('#tipe_pegawai');
+            
+            // Mengosongkan select element jika ada option sebelumnya
+            selectElement.empty();
+
+            // Menambahkan option ke dalam select
+            options.forEach(function(option) {
+                selectElement.append(new Option(option.text, option.value));
+            });
+        }
+
         $(document).on('change','#id_unit_kerja', function() {
             var selectedText = $(this).find(":selected").text();
             if ($(this).val() !== '') {
