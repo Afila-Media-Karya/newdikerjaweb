@@ -115,6 +115,7 @@
         })
 
         optionTipepegawai = (params) => {
+            console.log(params);
             var options = [];
 
             if (params == 'Dinas Pendidikan dan Kebudayaan') {
@@ -133,7 +134,6 @@
 
             var selectElement = $('#tipe_pegawai');
             
-            // Mengosongkan select element jika ada option sebelumnya
             selectElement.empty();
 
             // Menambahkan option ke dalam select
