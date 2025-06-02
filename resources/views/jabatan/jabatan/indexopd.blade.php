@@ -257,7 +257,7 @@
 
         $(document).on('click', '#button-side-form', function() {
             // $('#pagu_tpp_konten').show();
-            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja').prop('disabled', false);
+            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_master_jabatan').prop('disabled', false);
             control.overlay_form('Tambah', 'Jabatan');
             $('#id_satuan_kerja').val(satuan_kerja_user);
             $('#id_satuan_kerja').trigger('change')
@@ -315,7 +315,7 @@
         $(document).on('click', '.button-update', function(e) {
             e.preventDefault();
             // push_option(satuan_kerja_user);
-            // $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', true);
+            $('#id_satuan_kerja, #id_unit_kerja,#id_lokasi_kerja,#id_lokasi_apel,#id_master_jabatan').prop('disabled', true);
             let url = `${url_main}/show/` + $(this).attr('data-uuid');
             control.overlay_form('Update', 'Jabatan', url);
             // $('#pagu_tpp_konten').hide();

@@ -10,9 +10,11 @@
             data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
             class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
             <!--begin::Title-->
+            @if($role['guard'] == 'administrator' && $role['role'] == '2')
             <button class="btn btn-primary btn-sm " data-kt-drawer-show="true" data-kt-drawer-target="#side_form"
                 id="button-side-form"><i class="fa fa-plus-circle" style="color:#ffffff" aria-hidden="true"></i> Tambah
                 Data</button>
+            @endif    
             <!--end::Title-->
         </div>
         <!--end::Page title-->
@@ -626,7 +628,9 @@
                 width: '9rem',
                 orderable: false,
                 render: function(data, type, full, meta) {
-                    return `
+                    let button = '';
+                    if (role.guard == 'administrator' && role.role == '2') {
+                        button = `
                             <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
                             </a>
@@ -635,6 +639,15 @@
                                 <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
                             </a>
                             `;
+                    }else{
+                        button = `
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn btn-danger button-delete btn-icon btn-sm"> 
+                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
+                            </a>
+                            `;
+                    }
+
+                    
                     },
             }];
             control.initDatatable(`${url_main}/datatable?satuan_kerja=${satuan_kerja}&tanggal=${tanggal}&validasi=${validasi}&status=${status}`, columns, columnDefs);
