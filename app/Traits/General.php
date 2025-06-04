@@ -241,6 +241,17 @@ trait General
         return $data;
     }
 
+    public function ifPegawaiPlt($pegawai){
+        $query = DB::table('tb_pegawai')
+       ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
+       ->join('tb_master_jabatan','tb_jabatan.id_master_jabatan','tb_master_jabatan.id')
+       ->select('tb_pegawai.id','tb_pegawai.uuid','tb_pegawai.id_satuan_kerja','tb_pegawai.nip','tb_pegawai.nama','tb_master_jabatan.nama_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.id_parent','tb_jabatan.id as id_jabatan','tb_jabatan.status','tb_master_jabatan.id_kelompok_jabatan','tb_master_jabatan.id as id_master_jabatan','tb_jabatan.target_waktu','tb_master_jabatan.level_jabatan')
+       ->where('tb_pegawai.id',$pegawai)
+       ->first();
+
+       return $query;
+    }
+
     public function checkJabatanDefinitif($pegawai, $params = null, $type = null){
         $status = '';
         $data = array();
@@ -278,6 +289,10 @@ trait General
 
 
        $data = $query->first();
+
+       if (is_null($data)) {
+            $data = $this->ifPegawaiPlt($pegawai);
+       }
 
        return $data;
        
@@ -326,6 +341,7 @@ trait General
 
     public function getMasterAktivitas($pegawai){
         $jabatan = $this->checkJabatanDefinitif($pegawai);
+
         $kelompok_jabatan = 0;
         $jabatan->level_jabatan !== 1 ? $kelompok_jabatan = $jabatan->id_kelompok_jabatan : $kelompok_jabatan  = 0;
         return DB::table('tb_master_aktivitas')
