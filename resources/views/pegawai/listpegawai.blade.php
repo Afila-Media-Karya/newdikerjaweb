@@ -643,9 +643,6 @@
                             <a href="${url_main}/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
                             </a>
-                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn button-reset btn-icon btn-sm" data-toggle="tooltip" title="reset biometrik perangkat" style="background:#8F9BB3"> 
-                                <img src="{{ asset('admin/assets/media/icons/device.png')}}" data-toggle="tooltip" title="Biometrik">
-                            </a>
                             `;
                         }else{
                             button_more = `
