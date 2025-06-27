@@ -34,7 +34,7 @@
 
                             <form id="form-filter">
                                 <div class="row" style="margin-bottom: 1rem">
-                                    @if($role['guard'] == 'administrator' && $role['role'] == '2')
+                                    @if(($role['guard'] == 'administrator' && $role['role'] == '2'))
                                         <div class="col-lg-3">
                                             <label for="filter-tanggal" class="form-label" style="font-size:12px;">Unit Kerja</label>
                                             <select name="satuan_kerja" id="satker-filter" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid">
@@ -44,7 +44,21 @@
                                                 @endforeach
                                             </select>                                    
                                         </div>
-                                    @endif    
+                                    @endif 
+                                    
+                                    @if(($role['guard'] == 'web' && $role['role'] == '1'))
+                                        @if(Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006')
+                                        <div class="col-lg-3">
+                                            <label for="filter-tanggal" class="form-label" style="font-size:12px;">Unit Kerja</label>
+                                            <select name="satuan_kerja" id="satker-filter" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid">
+                                                <option></option>
+                                                @foreach($satuan_kerja as $val)
+                                                    <option value="{{$val->value}}">{{$val->text}}</option>
+                                                @endforeach
+                                            </select>                                    
+                                        </div>
+                                        @endif
+                                    @endif 
                                     <div class="col-lg-2">
                                     <label for="filter-tanggal" class="form-label" style="font-size:12px;">Tanggal</label>
                                         <input type="date" value="{{ date('Y-m-d') }}" name="tanggal" id="filter-tanggal" class="form-control form-control-sm form-control-solid" id="filter-tanggal">

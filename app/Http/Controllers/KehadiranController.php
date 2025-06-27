@@ -88,6 +88,12 @@ class KehadiranController extends BaseController
             if (hasRole()['role'] == '1') {
                 $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
                 $pegawai_option = DB::table('tb_pegawai')->select('id','nama as text','tipe_pegawai')->where('id_satuan_kerja',$satuan_kerja_user)->where('status','1')->get();
+
+                if (Auth::user()->username !== '198212242009011006' || Auth::user()->username !== '198208152008011006') {
+                    $check_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
+                    $satuan_kerja = DB::table('tb_unit_kerja')->select('id as value', 'nama_unit_kerja as text')->where('id_satuan_kerja',$check_satuan_kerja->id_satuan_kerja)->get(); 
+                }
+
             }else {
                 $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
                 $pegawai_option = DB::table('tb_pegawai')
@@ -98,6 +104,7 @@ class KehadiranController extends BaseController
             }
             
         }
+
         return view('kehadiran.index',compact('module','satuan_kerja','satuan_kerja_user','pegawai_option'));
     }
 
@@ -177,9 +184,13 @@ class KehadiranController extends BaseController
             $futureDate = date('Y-m-d', strtotime('-5 days', strtotime($currentDate)));
 
             if (hasRole()['guard'] == 'web') {
-               if ($data->tanggal_absen <= $futureDate) {
-                    return $this->sendError('Anda tidak bisa mengubah data absen apabila sudah lewat dari 5 hari', 'Gagal', 200);
+           
+                if (Auth::user()->username !== '198212242009011006' || Auth::user()->username !== '198208152008011006') {
+                    if ($data->tanggal_absen <= $futureDate) {
+                        return $this->sendError('Anda tidak bisa mengubah data absen apabila sudah lewat dari 5 hari', 'Gagal', 200);
+                    }
                 }
+               
             }
 
             

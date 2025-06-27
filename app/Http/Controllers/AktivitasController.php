@@ -63,9 +63,9 @@ class AktivitasController extends BaseController
                 $pegawai = $request->id_pegawai;
             }
 
-            // if ($request->tanggal <= $futureDate) {
-            //     return $this->sendError('Tanggal aktivitas sudah lewat 5 hari', 'Gagal', 200);
-            // }
+            if ($request->tanggal <= $futureDate) {
+                return $this->sendError('Tanggal aktivitas sudah lewat 5 hari', 'Gagal', 200);
+            }
 
             $check_absen = $this->checkAbsenByTanggal($pegawai, $request->tanggal);
             
