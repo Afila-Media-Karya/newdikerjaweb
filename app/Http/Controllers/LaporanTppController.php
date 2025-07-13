@@ -103,7 +103,7 @@ class LaporanTppController extends BaseController
         //->where('tb_satuan_kerja.id', $satuan_kerja)
         ->where('tb_pegawai.status','1')
         ->orderBy('tb_master_jabatan.kelas_jabatan','DESC')
-        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_jabatan.status','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar');
+        ->groupBy('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_pegawai.golongan', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.target_waktu','tb_master_jabatan.kelas_jabatan','tb_jabatan.pagu_tpp','tb_master_jabatan.jenis_jabatan','tb_master_jabatan.level_jabatan','tb_jabatan.pembayaran','tb_jabatan.status','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_unit_kerja.jumlah_shift');
         
         $role = hasRole();
 
@@ -541,6 +541,8 @@ class LaporanTppController extends BaseController
         $data->jml_dinas_luar = $child['jml_dinas_luar'];
         $data->jml_tidak_apel = $child['jml_tidak_apel'];
         $data->potongan_apel = $child['potongan_apel'];
+        $data->jml_menit_terlambat_masuk_kerja = $child['jml_menit_terlambat_masuk_kerja'];
+        $data->jml_menit_terlambat_pulang_kerja = $child['jml_menit_terlambat_pulang_kerja'];
 
         $jmlPaguTpp = 0;
         $jmlNilaiKinerja = 0;
@@ -664,7 +666,8 @@ class LaporanTppController extends BaseController
             'total_tpp_bruto' => $nilaiKinerja + $jumlahKehadiran,
             'tpp_bulan_ini' => 'Rp. '.number_format($tpp_bulan_ini),
              'potongan_jkn_pph_tmt' => 'Rp. '.number_format($potongan_jkn_pph_tmt),
-             'perkalian_pph' => $perkalian_pph
+             'perkalian_pph' => $perkalian_pph,
+             'terlambat_cepat_pulang' => $data->jml_menit_terlambat_masuk_kerja + $data->jml_menit_terlambat_pulang_kerja,
         ];
     }
 
