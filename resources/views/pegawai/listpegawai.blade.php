@@ -136,6 +136,7 @@
                                                         <option value="pegawai_administratif">Pegawai Administratif</option>
                                                         <option value="tenaga_pendidik">Tenaga Pendidik</option>
                                                         <option value="tenaga_kesehatan">Tenaga Kesehatan</option>
+                                                        <option value="tenaga_kesehatan_non_shift">Tenaga Kesehatan Non Shift</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -416,6 +417,7 @@
                             <option value="tenaga_pendidik">Tenaga Pendidik</option>
                             <option value="tenaga_pendidik_non_guru">Tenaga Kependidikan Non Guru</option>
                             <option value="tenaga_kesehatan">Tenaga Kesehatan</option>
+                            <option value="tenaga_kesehatan_non_shift">Tenaga Kesehatan Non Shift</option>
                         </select>
                         <small class="text-danger tipe_pegawai_error"></small>
                     </div>

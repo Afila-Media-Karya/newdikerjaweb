@@ -63,7 +63,7 @@ trait Presensi
         return $dates;
     }
 
-    public function konvertWaktuNakes($params, $waktu, $tanggal,$shift,$waktu_tetap,$jumlah_shift)
+    public function konvertWaktuNakes($params, $waktu, $tanggal,$shift,$waktu_tetap,$jumlah_shift,$tipe_pegawai)
     {
         $diff = '';
         $selisih_waktu = '';
@@ -72,24 +72,31 @@ trait Presensi
         $waktu_absen_datang = '';
         $waktu_absen_pulang = '';
 
-        if ($shift == 'pagi') {
+        if ($tipe_pegawai == 'tenaga_kesehatan') {
+            if ($shift == 'pagi') {
             
-            $waktu_absen_datang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
-            $waktu_absen_pulang = $jumlah_shift == 3 ? '14:00:00' : '17:00:00';
-
-            $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
-
-            if ($tanggalCarbon->isMonday()) {
-                if ($params == 'masuk') {
-                    $waktu_absen_datang = $jumlah_shift == 3 ? $waktu_tetap : '07:30:00';
+                $waktu_absen_datang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
+                $waktu_absen_pulang = $jumlah_shift == 3 ? '14:00:00' : '17:00:00';
+    
+                $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
+    
+                if ($tanggalCarbon->isMonday()) {
+                    if ($params == 'masuk') {
+                        $waktu_absen_datang = $jumlah_shift == 3 ? $waktu_tetap : '07:30:00';
+                    }
                 }
+            }elseif ($shift == 'siang') {
+                $waktu_absen_datang = '14:00:00';
+                $waktu_absen_pulang = '21:00:00';
+            }else {
+                $waktu_absen_datang = $jumlah_shift == 3 ? '21:00:00' : '17:00:00';
+                $waktu_absen_pulang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
             }
-        }elseif ($shift == 'siang') {
-            $waktu_absen_datang = '14:00:00';
-            $waktu_absen_pulang = '21:00:00';
-        }else {
-            $waktu_absen_datang = $jumlah_shift == 3 ? '21:00:00' : '17:00:00';
-            $waktu_absen_pulang = $jumlah_shift == 3 ? '08:00:00' : '07:30:00';
+        }
+        
+        if ($tipe_pegawai == 'tenaga_kesehatan_non_shift') {
+            $waktu_absen_datang = '08:00:00';
+            $waktu_absen_pulang = '15:15:00';
         }
 
         if ($waktu !== null) {

@@ -28,6 +28,15 @@ class AbsenRequest extends FormRequest
                 'validation' => 'nullable',
                 'shift' => 'required'
             ];
+        }if ($request->tipe_pegawai == 'tenaga_kesehatan_non_shift') {
+            return [
+                'id_satuan_kerja' => 'required',
+                'tanggal_absen' => 'required',
+                'waktu_masuk' => 'required|date_format:H:i',
+                'waktu_keluar' => 'nullable|date_format:H:i',
+                'status' => 'required',
+                'validation' => 'nullable'
+            ];
         }else{
             return [
                 'id_satuan_kerja' => 'required',

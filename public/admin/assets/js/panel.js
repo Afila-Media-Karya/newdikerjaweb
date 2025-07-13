@@ -736,6 +736,8 @@ class Control {
           `Kehadiran (${data.tpp.pembagi_nilai_kehadiran}%)`
         );
 
+      $(".terlambat_cepat_pulang").text(data.tpp.terlambat_cepat_pulang);
+
         $(".maksimal-kinerja").text(data.tpp.kinerja_maks);
         $(".maksimal-kehadiran").text(data.tpp.kehadiran_maks);
 

@@ -179,10 +179,19 @@
                                 <h1 class="kehadiran_hari_kerja">0</h1>
                                 <span>Hari Kerja</span>
                             </div>
+                            @if($tipe_pegawai !== 'tenaga_pendidik' && $tipe_pegawai !== 'tenaga_kesehatan')
                             <div class="badges-lg-danger">
                                 <h1 class="kehadiran_potongan">5%</h1>
                                 <span>Potongan</span>
                             </div>
+                            @else
+                            <div class="badges-lg-danger">
+                                <h1 class="terlambat_cepat_pulang">0</h1>
+                                <span>Terlambat + Cepat pulang</span>
+                            </div>
+                            
+                            @endif
+                            
                         </div>
                     </div>
                 </div>
