@@ -95,8 +95,17 @@ class listPegawaiController extends BaseController
 
         if ($role['guard'] == 'web') {
             $get_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
-            $query->where('tb_pegawai.id_satuan_kerja', $get_satuan_kerja->id_satuan_kerja);
-            $query->where('tb_jabatan.id_unit_kerja', $get_satuan_kerja->id_unit_kerja);
+
+            if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                $query->where('tb_jabatan.id_satuan_kerja', $get_satuan_kerja->id_satuan_kerja);
+                $query->where('tb_jabatan.id_unit_kerja','!=', $get_satuan_kerja->id_satuan_kerja);
+            }else {
+                
+                $query->where('tb_pegawai.id_satuan_kerja', $get_satuan_kerja->id_satuan_kerja);
+                $query->where('tb_jabatan.id_unit_kerja', $get_satuan_kerja->id_unit_kerja);
+            }
+
+
         }
 
         // if ($role['guard'] == 'web' && $role['role'] == '3') {

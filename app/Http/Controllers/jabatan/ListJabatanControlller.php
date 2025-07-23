@@ -11,6 +11,7 @@ use DB;
 use App\Traits\General;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Auth;
 
 class ListJabatanControlller extends BaseController
 {
@@ -47,7 +48,15 @@ class ListJabatanControlller extends BaseController
             ->orderBy('tb_master_jabatan1.kelas_jabatan', 'ASC');
 
         if ($satuan_kerja > 0) {
-            $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
+
+            if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                $query->where('tb_jabatan1.id_satuan_kerja', $satuan_kerja);
+                $query->where('tb_jabatan1.id_unit_kerja','!=', $satuan_kerja);
+            }else {
+                $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
+            }
+
+            
         }
         
         $data = $query->get();
@@ -72,7 +81,17 @@ class ListJabatanControlller extends BaseController
             return view('jabatan.jabatan.index',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja'));
         }elseif (hasRole()['guard'] == 'web' && hasRole()['role'] == '1') {
             $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
-            $unit_kerja = $this->option_by_unit_kerja($satuan_kerja_user);
+            
+            if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                $unit_kerja = DB::table('tb_unit_kerja')
+                    ->select('id', 'nama_unit_kerja as text')
+                    ->where('id_satuan_kerja',$satuan_kerja_user)
+                    ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
+                    ->get(); 
+            }else {
+                $unit_kerja = $this->option_by_unit_kerja($satuan_kerja_user);
+            }
+            
 
             return view('jabatan.jabatan.indexopd',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja'));
         }else{

@@ -9,6 +9,7 @@ use App\Http\Requests\UnitKerjaRequest;
 use App\Models\UnitKerja;
 use DB;
 use App\Traits\General;
+use Auth;
 
 class UnitKerjaController extends BaseController
 {
@@ -106,7 +107,16 @@ class UnitKerjaController extends BaseController
         $data = array();
         try {
             $params = request('satuan_kerja');
-            $data = $this->option_by_unit_kerja($params);
+            if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                $data = DB::table('tb_unit_kerja')
+                    ->select('id as value', 'nama_unit_kerja as text')
+                    ->where('id_satuan_kerja',$params)
+                    ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
+                    ->get(); 
+            }else {
+                $data = $this->option_by_unit_kerja($params);
+            }
+            
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
         }

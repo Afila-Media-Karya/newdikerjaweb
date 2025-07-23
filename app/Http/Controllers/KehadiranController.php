@@ -84,14 +84,27 @@ class KehadiranController extends BaseController
         $satuan_kerja = $this->option_unit_kerja();
         $satuan_kerja_user = '';
         $pegawai_option = array();
+        $type_blade = false;
         if(hasRole()['guard'] == 'web'){
             if (hasRole()['role'] == '1') {
                 $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
                 $pegawai_option = DB::table('tb_pegawai')->select('id','nama as text','tipe_pegawai')->where('id_satuan_kerja',$satuan_kerja_user)->where('status','1')->get();
 
-                if (Auth::user()->username !== '198212242009011006' || Auth::user()->username !== '198208152008011006') {
+                if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
                     $check_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
-                    $satuan_kerja = DB::table('tb_unit_kerja')->select('id as value', 'nama_unit_kerja as text')->where('id_satuan_kerja',$check_satuan_kerja->id_satuan_kerja)->get(); 
+                    $satuan_kerja = DB::table('tb_unit_kerja')
+                    ->select('id as value', 'nama_unit_kerja as text')
+                    ->where('id_satuan_kerja',$check_satuan_kerja->id_satuan_kerja)
+                    ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
+                    ->get(); 
+                    $type_blade = true;
+
+                    $pegawai_option = DB::table('tb_pegawai')
+                                    ->join('tb_jabatan','tb_jabatan.id_pegawai','=','tb_pegawai.id') // Join ke tabel jabatan
+                                    ->select('tb_pegawai.id','nama as text','tipe_pegawai') // Mengambil id dari tb_pegawai
+                                    ->where('tb_jabatan.id_satuan_kerja',$satuan_kerja_user) // Kondisi 1: id_satuan_kerja di tb_pegawai = 1
+                                    ->where('tb_jabatan.id_unit_kerja','!=',$satuan_kerja_user) // Kondisi 2: id_unit_kerja di tb_jabatan TIDAK SAMA DENGAN 1
+                                    ->get();
                 }
 
             }else {
@@ -101,11 +114,12 @@ class KehadiranController extends BaseController
                 ->select('tb_pegawai.id','tb_pegawai.nama as text','tipe_pegawai')
                 ->where('tb_jabatan.id_unit_kerja',$satuan_kerja_user)
                 ->where('tb_pegawai.status','1')->get();
-            }
-            
+            }   
         }
 
-        return view('kehadiran.index',compact('module','satuan_kerja','satuan_kerja_user','pegawai_option'));
+
+
+        return view('kehadiran.index',compact('module','satuan_kerja','satuan_kerja_user','pegawai_option','type_blade'));
     }
 
     public function store(AbsenRequest $request){
