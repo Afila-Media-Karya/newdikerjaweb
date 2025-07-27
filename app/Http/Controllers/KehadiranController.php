@@ -62,7 +62,11 @@ class KehadiranController extends BaseController
             }else{
                 if (hasRole()['guard'] == 'web' && hasRole()['role'] == '1') {
                     $get_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
-                    $query->where('tb_pegawai.id_satuan_kerja',$get_satuan_kerja->id_satuan_kerja);
+                    if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                        $query->where('tb_jabatan.id_satuan_kerja',$get_satuan_kerja->id_unit_kerja);
+                    }else{
+                        $query->where('tb_pegawai.id_satuan_kerja',$get_satuan_kerja->id_satuan_kerja);
+                    }
                 }
 
                 if (hasRole()['guard'] == 'web' && hasRole()['role'] == '3') {
