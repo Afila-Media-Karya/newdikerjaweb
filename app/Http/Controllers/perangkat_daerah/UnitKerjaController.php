@@ -111,7 +111,7 @@ class UnitKerjaController extends BaseController
             if ($role['guard'] == 'web') {
                 if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
                     $data = DB::table('tb_unit_kerja')
-                        ->select('id as value', 'nama_unit_kerja as text')
+                        ->select('id', 'nama_unit_kerja as text')
                         ->where('id_satuan_kerja',$params)
                         ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
                         ->get(); 

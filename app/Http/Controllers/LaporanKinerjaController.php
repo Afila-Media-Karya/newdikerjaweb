@@ -214,14 +214,21 @@ class LaporanKinerjaController extends BaseController
         $role = hasRole();
 
         if ($role['guard'] == 'web') {
+            
             if ($role['role'] == '1') {
+                
                 if ($satuan_kerja !== null) {
                     $query->where('tb_pegawai.id_satuan_kerja', $satuan_kerja);
+                }
+
+                if ($unit_kerja !== 'all') {
+                    $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
                 }
             } else {
                 $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
             }
         }
+
 
         if (hasRole()['guard'] == 'administrator') {
             $query->where('tb_jabatan.id_satuan_kerja', $satuan_kerja);
@@ -271,7 +278,6 @@ class LaporanKinerjaController extends BaseController
             $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
             $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
         }
-
         $data = $this->data_kinerja_pegawai_by_opd($satuan_kerja, $unit_kerja, $bulan, $tipe_pegawai);
         $type = request('type');
         return $this->export_kinerja_rekapitulasi($data, $type, $nama_satuan_kerja, $nama_unit_kerja, $bulan);

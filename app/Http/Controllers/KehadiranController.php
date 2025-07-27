@@ -101,7 +101,7 @@ class KehadiranController extends BaseController
 
                     $pegawai_option = DB::table('tb_pegawai')
                                     ->join('tb_jabatan','tb_jabatan.id_pegawai','=','tb_pegawai.id') // Join ke tabel jabatan
-                                    ->select('tb_pegawai.id','nama as text','tipe_pegawai') // Mengambil id dari tb_pegawai
+                                    ->select('tb_pegawai.id',DB::raw("CONCAT(tb_pegawai.nama, ' | ', tb_pegawai.nip) as text"),'tipe_pegawai') // Mengambil id dari tb_pegawai
                                     ->where('tb_jabatan.id_satuan_kerja',$satuan_kerja_user) // Kondisi 1: id_satuan_kerja di tb_pegawai = 1
                                     ->where('tb_jabatan.id_unit_kerja','!=',$satuan_kerja_user) // Kondisi 2: id_unit_kerja di tb_jabatan TIDAK SAMA DENGAN 1
                                     ->get();

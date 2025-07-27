@@ -36,6 +36,7 @@ class ListJabatanControlller extends BaseController
         $satuan_kerja = intval(request('satuan_kerja'));
         // dd($satuan_kerja);
         // auth()->user()->role
+                $role = hasRole();
 
         $query = DB::table('tb_jabatan as tb_jabatan1')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan1', 'tb_jabatan1.id_master_jabatan', '=', 'tb_master_jabatan1.id')
@@ -49,12 +50,18 @@ class ListJabatanControlller extends BaseController
 
         if ($satuan_kerja > 0) {
 
-            if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
-                $query->where('tb_jabatan1.id_satuan_kerja', $satuan_kerja);
-                $query->where('tb_jabatan1.id_unit_kerja','!=', $satuan_kerja);
+            if ($role['guard'] == 'web') {
+                if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
+                    $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
+                }else {
+                    dd('tes123');
+                    $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
+                }
             }else {
                 $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
             }
+
+            
 
             
         }

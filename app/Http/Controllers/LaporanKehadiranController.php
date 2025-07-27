@@ -62,7 +62,8 @@ class LaporanKehadiranController extends Controller
         $pegawai = $query->get();
 
         if ($role['role'] == '1') {
-            return view('laporan.kehadiran.index_opd', compact('module', 'pegawai','satuan_kerja_user','nama_satuan_kerja'));
+            $username = Auth::user()->username;
+            return view('laporan.kehadiran.index_opd', compact('module', 'pegawai','satuan_kerja_user','nama_satuan_kerja','username'));
         } else {
             return view('laporan.kehadiran.index_unit', compact('module', 'pegawai'));
         }

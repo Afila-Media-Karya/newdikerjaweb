@@ -45,6 +45,17 @@
                                                     </select>
                                                     <small class="text-danger pegawai_error"></small>
                                                 </div>
+                                                @if($username == '198212242009011006')
+                                                <div class="col-lg-4 mb-10 tipe_kepegawai_form">                    
+                                                    <label class="form-label">Tipe Pegawai</label>
+                                                    <select id="tipe_pegawai" name="tipe_pegawai" class="form-control">
+                                                            <option value="tenaga_pendidik">Tenaga Pendidik</option>
+                                                            <option value="tenaga_pendidik_non_guru">Tenaga Pendidik non Guru</option>
+                                                    </select>
+                                                    <small class="text-danger bulan_error"></small>
+                                                </div>
+                                                @endif
+
 
                                                 <div class="col-lg-4 mb-10">                    
                                                     <label class="form-label">Pilih Bulan</label>
