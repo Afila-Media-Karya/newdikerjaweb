@@ -37,7 +37,7 @@
                                     @if(($role['guard'] == 'administrator' && $role['role'] == '2'))
                                         <div class="col-lg-3">
                                             <label for="filter-tanggal" class="form-label" style="font-size:12px;">Unit Kerja</label>
-                                            <select name="satuan_kerja" id="satker-filter" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid">
+                                            <select name="satuan_kerja" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid satker-filter">
                                                 <option></option>
                                                 @foreach($satuan_kerja as $val)
                                                     <option value="{{$val->value}}">{{$val->text}}</option>
@@ -50,7 +50,7 @@
                                         @if(Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006')
                                         <div class="col-lg-3">
                                             <label for="filter-tanggal" class="form-label" style="font-size:12px;">Unit Kerja</label>
-                                            <select name="satuan_kerja" id="satker-filter" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid">
+                                            <select name="satuan_kerja" data-control="select2" data-placeholder="Pilih Unit Kerja" class="form-control form-control-sm form-control-solid satker-filter">
                                                 <option></option>
                                                 @foreach($satuan_kerja as $val)
                                                     <option value="{{$val->value}}">{{$val->text}}</option>
@@ -336,6 +336,7 @@
         let satuan_kerja_user = {!! json_encode($satuan_kerja_user) !!};
         let url_main = '';
         let tipe_pegawai = '';
+        let username = {!! json_encode($username) !!};
 
         role.guard !== 'web' ? url_main = '/kehadiran' : url_main = '/kehadiran-opd';
 
@@ -528,7 +529,7 @@
                             timer: 1500,
                             })
                             .then(function () {
-                                role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('#satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
+                                role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('.satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
                             });
                         } else {
                             Swal.fire("Gagal Memproses data!", `${response.message}`, "warning");
@@ -569,10 +570,17 @@
             e.preventDefault();
            
             let satker = ''; 
-            role.guard !== 'web' ? satker = $('#satker-filter').val() : satker = satuan_kerja_user.id_satuan_kerja;
+            role.guard !== 'web' ? satker = $('.satker-filter').val() : satker = satuan_kerja_user.id_satuan_kerja;
             let tanggal = $('#filter-tanggal').val(); 
             let validasi =  $('#filter-validasi').val();
             let status =  $('#filter-status').val();
+            console.log(username);
+
+            if (username) {
+                if (username == '198212242009011006' || username == '198208152008011006') {
+                    satker = $('.satker-filter').val();
+                }
+            }
 
             datatable(satker,tanggal,validasi,status);
         })
@@ -671,7 +679,7 @@
         $(function() {
             dateConfig();
             $('#shift-konten').hide();
-            role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('#satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
+            role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('.satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
         })
     </script>
 @endsection

@@ -63,7 +63,7 @@ class KehadiranController extends BaseController
                 if (hasRole()['guard'] == 'web' && hasRole()['role'] == '1') {
                     $get_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
                     if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
-                        $query->where('tb_jabatan.id_satuan_kerja',$get_satuan_kerja->id_unit_kerja);
+                        $query->where('tb_jabatan.id_unit_kerja',$unit_kerja);
                     }else{
                         $query->where('tb_pegawai.id_satuan_kerja',$get_satuan_kerja->id_satuan_kerja);
                     }
@@ -89,6 +89,7 @@ class KehadiranController extends BaseController
         $satuan_kerja_user = '';
         $pegawai_option = array();
         $type_blade = false;
+        $username = null;
         if(hasRole()['guard'] == 'web'){
             if (hasRole()['role'] == '1') {
                 $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
@@ -102,6 +103,7 @@ class KehadiranController extends BaseController
                     ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
                     ->get(); 
                     $type_blade = true;
+                    $username = Auth::user()->username;
 
                     $pegawai_option = DB::table('tb_pegawai')
                                     ->join('tb_jabatan','tb_jabatan.id_pegawai','=','tb_pegawai.id') // Join ke tabel jabatan
@@ -123,7 +125,7 @@ class KehadiranController extends BaseController
 
 
 
-        return view('kehadiran.index',compact('module','satuan_kerja','satuan_kerja_user','pegawai_option','type_blade'));
+        return view('kehadiran.index',compact('module','satuan_kerja','satuan_kerja_user','pegawai_option','type_blade','username'));
     }
 
     public function store(AbsenRequest $request){
