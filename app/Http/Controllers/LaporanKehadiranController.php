@@ -819,11 +819,11 @@ class LaporanKehadiranController extends Controller
             
             $keterangan = '';
 
-            $value->total_ > 35 ? $keterangan = 'TMS' : $keterangan = 'MS';
+            $total_ > 35 ? $keterangan = 'TMS' : $keterangan = 'MS';
             $sheet->setCellValue('AH' . $cell, $value->jml_potongan_kehadiran_kerja);
             $sheet->setCellValue('AI' . $cell, $keterangan);
 
-            if ($value->tanpa_keterangan > 3) {
+            if ($total_ > 35) {
                 $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336'); 
              }else{
                 $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
