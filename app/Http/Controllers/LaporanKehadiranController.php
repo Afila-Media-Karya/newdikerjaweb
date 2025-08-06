@@ -819,7 +819,7 @@ class LaporanKehadiranController extends Controller
             
             $keterangan = '';
 
-            $total_ > 35 ? $keterangan = 'TMS' : $keterangan = 'MS';
+            $total_ > 35 || $value->tanpa_keterangan > 3 ? $keterangan = 'TMS' : $keterangan = 'MS';
             $sheet->setCellValue('AH' . $cell, $value->jml_potongan_kehadiran_kerja);
             $sheet->setCellValue('AI' . $cell, $keterangan);
 
