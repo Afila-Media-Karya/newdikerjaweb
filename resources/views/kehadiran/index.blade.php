@@ -556,12 +556,17 @@
                 let tanggalHariIni = new Date();
 
                 // Hitung jarak hari
-                let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
-                if (jarakHari <= 6) {
-                    validation(data_value,data_uuid)
-                }else{
-                    Swal.fire("Gagal Memproses data!", 'Waktu sudah lewat dari 5 hari', "warning");
+
+                if (username !== '198212242009011006' || username !== '198208152008011006') {
+                    let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
+                    if (jarakHari <= 6) {
+                        validation(data_value,data_uuid)
+                    }else{
+                        Swal.fire("Gagal Memproses data!", 'Waktu sudah lewat dari 5 hari', "warning");
+                    }
+                
                 }
+
                 
             }
         })

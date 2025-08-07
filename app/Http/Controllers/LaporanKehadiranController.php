@@ -107,9 +107,9 @@ class LaporanKehadiranController extends Controller
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
-
+        
         $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai,$pegawai_info->jumlah_shift);
-
+                // return $data;
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir,$pegawai_info->tipe_pegawai);
@@ -823,7 +823,7 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('AH' . $cell, $value->jml_potongan_kehadiran_kerja);
             $sheet->setCellValue('AI' . $cell, $keterangan);
 
-            if ($total_ > 35) {
+            if ($total_ > 35 || $value->tanpa_keterangan > 3) {
                 $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336'); 
              }else{
                 $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');

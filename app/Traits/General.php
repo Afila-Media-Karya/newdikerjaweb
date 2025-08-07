@@ -674,15 +674,31 @@ trait General
                     if ($tipe_pegawai == 'pegawai_administratif') {
                         $jml_alfa += 1;
                     }else{
-                        $mingguKe = $tanggalCarbon->weekOfMonth;
+                            $mingguKe = $tanggalCarbon->weekOfMonth;
                          $hari_tidak_hadir_nakes[] = ['tanggal'=>$tanggal,'minggu'=>$mingguKe];
                         $tanggalSebelumnya = date('Y-m-d', strtotime($tanggal . ' -1 day'));
-                        $check_last_day = DB::table('tb_absen')->where('tanggal_absen',$tanggalSebelumnya)->where('id_pegawai',$pegawai)->first();
-                        if (is_null($check_last_day) || $check_last_day->shift !== 'malam') {
+                        $tanggalSebelumnya2 = date('Y-m-d', strtotime($tanggal . ' -2 day'));
+
+                        $check_last_day = DB::table('tb_absen')->where('tanggal_absen', $tanggalSebelumnya)->where('id_pegawai', $pegawai)->first();
+                        $check_last_day2 = DB::table('tb_absen')->where('tanggal_absen', $tanggalSebelumnya2)->where('id_pegawai', $pegawai)->first();
+                        
+                        // if (is_null($check_last_day) || !is_null($check_last_day2) || $check_last_day->shift !== 'malam') {
+                        //     $status_ = '-'; // Tidak lepas jaga jika salah satu hari sebelumnya tidak ada data atau shift tidak malam
+                        // } else {
+                        //     $status_ = 'Lepas Jaga / Lepas Piket'; // Jika kedua hari sebelumnya ada dan shift-nya malam
+                        // }
+
+                        if (!is_null($check_last_day) && $check_last_day->shift == 'malam') {
+                            $status_ = 'Lepas Jaga / Lepas Piket';
+                        }else {
                             $status_ = '-';
-                        }else{
+                        }
+
+                        if (is_null($check_last_day)) {
                             $status_ = 'Lepas Jaga / Lepas Piket';
                         }
+            
+                        
                     }
                 }
 
