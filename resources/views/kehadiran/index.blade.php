@@ -557,15 +557,22 @@
 
                 // Hitung jarak hari
 
-                if (username !== '198212242009011006' || username !== '198208152008011006') {
+                
+
+                if (username == '198212242009011006' || username == '198208152008011006') {
+                    validation(data_value,data_uuid)
+                }else{
                     let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
                     if (jarakHari <= 6) {
                         validation(data_value,data_uuid)
                     }else{
                         Swal.fire("Gagal Memproses data!", 'Waktu sudah lewat dari 5 hari', "warning");
                     }
-                
                 }
+                    
+                    
+                
+                
 
                 
             }
@@ -666,6 +673,16 @@
                                 <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
                             </a>
                             `;
+                    }else if(role.role == '1' && username == '198212242009011006' || username == '198208152008011006'){
+                        button = `
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
+                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
+                            </a>
+
+                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn btn-danger button-delete btn-icon btn-sm"> 
+                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
+                            </a>
+                            `;
                     }else{
                         button = `
                             <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.nama}" class="btn btn-danger button-delete btn-icon btn-sm"> 
@@ -682,7 +699,11 @@
         }
 
         $(function() {
-            dateConfig();
+
+            if (username !== '198212242009011006' && username !== '198208152008011006') {
+                dateConfig();
+            }
+            
             $('#shift-konten').hide();
             role.guard == 'web' ? datatable(satuan_kerja_user.id_satuan_kerja,$('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val()) : datatable($('.satker-filter').val(), $('#filter-tanggal').val(), $('#filter-validasi').val(),$('#filter-status').val());
         })
