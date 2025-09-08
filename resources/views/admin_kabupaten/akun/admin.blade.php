@@ -177,7 +177,7 @@
             e.preventDefault();
             let url = '/admins/delete/' + $(this).attr('data-uuid');
             let label = $(this).attr('data-label');
-            control.ajaxDelete(url, label)
+            control.ajaxDelete(url, label);
         })
 
         $(document).on('click', '.button-update', function(e) {

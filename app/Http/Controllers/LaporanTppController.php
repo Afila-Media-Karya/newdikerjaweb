@@ -354,8 +354,7 @@ class LaporanTppController extends BaseController
             $sheet->setCellValue('N' . $cell, number_format($jumlahKehadiran));
 
             $bpjs = 1 * $nilaiPaguTpp / 100;
-            $value->tanpa_keterangan > 3 || $value->potongan_apel > 40  ? $keterangan = 'TMS'  : $keterangan = 'MS';
-            
+            $value->tanpa_keterangan > 3 || $value->potongan_apel > 40 || $nilai_kinerja < 50  ? $keterangan = 'TMS'  : $keterangan = 'MS';
 
             $tppBruto = 0;
             $iuran = 4 * $nilaiPaguTpp / 100;

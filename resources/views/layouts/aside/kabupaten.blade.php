@@ -173,6 +173,22 @@
     </a>
 </div>
 
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'check-aktivitas' ? 'active' : '' }}"
+        href="{{ route('checkaktivitas.index') }}">
+        <span class="menu-icon">
+            <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'check-aktivitas' ? url('admin/assets/media/icons/aside/kehadiranact.svg') : url('/admin/assets/media/icons/aside/kehadirandef.svg') }}"
+                    alt="">
+            </span>
+            <!--end::Svg Icon-->
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'check-aktivitas' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Check Aktivitas</span>
+    </a>
+</div>
+
 @endif
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan' ? 'show' : '' }} menu-accordion">

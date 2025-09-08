@@ -49,6 +49,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::middleware(['admin_kabupaten'])->group(function () {
         Route::get('/dashboard-kabupaten', 'DashboardController@admin_kabupaten')->name('dashboard.admin');
 
+        Route::prefix('check-aktivitas')->group(function () {
+            Route::get('/', 'CheckAktivitasController@index')->name('checkaktivitas.index');
+            Route::get('/datatable', 'CheckAktivitasController@datatable')->name('checkaktivitas.datatable');
+            Route::post('/proses', 'CheckAktivitasController@proses')->name('checkaktivitas.proses');
+            // Route::post('/update/{params}', 'master_data\satuanController@update')->name('master_data.satuan.update');
+            Route::get('/backup', 'CheckAktivitasController@backup')->name('checkaktivitas.backup');
+            Route::delete('/delete', 'CheckAktivitasController@delete')->name('checkaktivitas.delete');
+        });
+
         Route::prefix('master-data')->group(function () {
             Route::prefix('agama')->group(function () {
                 Route::get('/', 'master_data\agamaController@index')->name('master_data.agama.index');
