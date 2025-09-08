@@ -114,13 +114,7 @@ class LaporanTppController extends BaseController
             if ($unit_kerja !== 'all') {
                  $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);    
              }
-            // if ($role['role'] == '1') {
-            //     if ($satuan_kerja !== null) {
-            //         $query->where('tb_satuan_kerja.id', $satuan_kerja);
-            //     }
-            // }else {
-            //     $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
-            // }     
+
         }
 
         if (hasRole()['guard'] == 'administrator') {
