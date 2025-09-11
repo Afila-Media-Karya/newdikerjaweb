@@ -50,6 +50,15 @@
                                                 </div>
                                             </div>
 
+                                            <div class="col-lg-4 mb-10 tipe_kepegawai_form">                    
+                                                    <label class="form-label">Tipe Pegawai</label>
+                                                    <select id="tipe_pegawai" name="tipe_pegawai" class="form-control">
+                                                            <option value="tenaga_pendidik">Tenaga Pendidik</option>
+                                                            <option value="tenaga_pendidik_non_guru">Tenaga Pendidik non Guru</option>
+                                                    </select>
+                                                    <small class="text-danger bulan_error"></small>
+                                                </div>
+
                                             <div class="d-flex align-items-center gap-2 gap-lg-3">
                                                 <a href="#" id="export-excel" data-type="excel" class="btn btn-sm btn-success">
                                                     <img src="{{asset('admin/assets/media/icons/excel.svg')}}" style="position: relative; bottom: 1px;" alt="" srcset="">
