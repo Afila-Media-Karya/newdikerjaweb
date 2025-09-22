@@ -146,11 +146,11 @@ trait Presensi
                     
                     // Senin (1) atau Jumat (5)
                     if ($dayOfWeek == 1 || $dayOfWeek == 5) {
-                        $data->waktu_masuk = '07:00';
+                        $waktu_tetap_absen = strtotime('07:00');
                     } 
                     // Selasa (2), Kamis (4), atau Sabtu (6)
                     else if ($dayOfWeek == 2 || $dayOfWeek == 4 || $dayOfWeek == 6) {
-                        $data->waktu_masuk = '07:30';
+                        $waktu_tetap_absen = strtotime('07:30');
                     }
                     // Hari lainnya (Rabu/Minggu) tidak diubah
                 }
