@@ -389,6 +389,20 @@ trait General
             }
             $data = $query->first();
 
+            if ($data && ($data->tipe_pegawai == 'tenaga_pendidik' || $data->tipe_pegawai == 'tenaga_pendidik_non_guru')) {
+                $dayOfWeek = date('N'); // 'N' mengembalikan 1 (Senin) hingga 7 (Minggu)
+                
+                // Senin (1) atau Jumat (5)
+                if ($dayOfWeek == 1 || $dayOfWeek == 5) {
+                    $data->waktu_masuk = '07:00';
+                } 
+                // Selasa (2), Kamis (4), atau Sabtu (6)
+                else if ($dayOfWeek == 2 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                    $data->waktu_masuk = '07:30';
+                }
+                // Hari lainnya (Rabu/Minggu) tidak diubah
+            }
+
             return $data;
     }
 
