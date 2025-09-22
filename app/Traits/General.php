@@ -367,7 +367,8 @@ trait General
                 $status = session('session_jabatan');
             }
         }
-        
+
+        $status = 'definitif';
         $query = DB::table('tb_pegawai')
             ->select("tb_pegawai.nama",'tb_pegawai.nip',"tb_pegawai.golongan",'tb_master_jabatan.nama_jabatan','tb_satuan_kerja.nama_satuan_kerja','tb_jabatan.target_waktu','tb_jabatan.status as status_jabatan','tb_unit_kerja.nama_unit_kerja','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai','tb_unit_kerja.jumlah_shift')
             ->join('tb_jabatan','tb_jabatan.id_pegawai','tb_pegawai.id')
@@ -671,9 +672,9 @@ trait General
                 if (strtotime($tanggal) > strtotime(date('Y-m-d'))) {
                     $status_ = 'Belum absen';
                 }else{
-                    if ($tipe_pegawai == 'pegawai_administratif') {
+                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik') {
                         $jml_alfa += 1;
-                    }else{
+                    }else{                        
                             $mingguKe = $tanggalCarbon->weekOfMonth;
                          
                         $tanggalSebelumnya = date('Y-m-d', strtotime($tanggal . ' -1 day'));
@@ -750,8 +751,6 @@ trait General
         // } else {
         //     $potongan_sakit = 0;
         // }
-
-        // return $tes;
 
         $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5); 
         $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5); 
