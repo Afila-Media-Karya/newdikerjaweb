@@ -141,6 +141,20 @@ trait Presensi
                     $waktu_tetap_absen = strtotime('08:00:00');
                 }
 
+                if (($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru')) {
+                    $dayOfWeek = date('N', strtotime($tanggal)); 
+                    
+                    // Senin (1) atau Jumat (5)
+                    if ($dayOfWeek == 1 || $dayOfWeek == 5) {
+                        $data->waktu_masuk = '07:00';
+                    } 
+                    // Selasa (2), Kamis (4), atau Sabtu (6)
+                    else if ($dayOfWeek == 2 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                        $data->waktu_masuk = '07:30';
+                    }
+                    // Hari lainnya (Rabu/Minggu) tidak diubah
+                }
+
                 $waktu_absen = strtotime($waktu);
                 $diff = $waktu_absen - $waktu_tetap_absen;
             } else {
