@@ -55,6 +55,7 @@
                                                     <select id="tipe_pegawai" name="tipe_pegawai" class="form-control">
                                                             <option value="tenaga_pendidik">Tenaga Pendidik</option>
                                                             <option value="tenaga_pendidik_non_guru">Tenaga Pendidik non Guru</option>
+                                                            <option value="tenaga_kesehatan">Tenaga Kesehatan</option>
                                                     </select>
                                                     <small class="text-danger bulan_error"></small>
                                                 </div>
