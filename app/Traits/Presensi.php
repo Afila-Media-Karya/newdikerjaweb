@@ -149,7 +149,7 @@ trait Presensi
                         $waktu_tetap_absen = strtotime('07:00');
                     } 
                     // Selasa (2), Kamis (4), atau Sabtu (6)
-                    else if ($dayOfWeek == 2 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                    else if ($dayOfWeek == 2 || $dayOfWeek == 3 || $dayOfWeek == 4 || $dayOfWeek == 6) {
                         $waktu_tetap_absen = strtotime('07:30');
                     }
                     // Hari lainnya (Rabu/Minggu) tidak diubah
