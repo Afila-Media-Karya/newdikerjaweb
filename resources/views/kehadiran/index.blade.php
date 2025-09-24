@@ -99,6 +99,7 @@
                                             <th>Waktu Pulang</th>
                                             <th>Di absenkan oleh</th>
                                             <th>Validasi</th>
+                                            <th>Fake GPS</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -650,6 +651,18 @@
                         return `<a href="#" type="button" data-value="1" data-uuid="${row.uuid}" data-tanggal="${row.tanggal_absen}" class="btn btn-danger btn-validation btn-icon btn-sm"> 
                                 <img src="{{ asset('admin/assets/media/icons/close.svg')}}" alt="" srcset="">
                             </a>`;
+                    }
+                }
+            },{
+                data: 'indikasi_fake',
+                className : 'text-right',
+                render: function(data, type, row, meta) {
+                    if (data === 1) {
+                        return `<span class="badge badge-danger">Indikasi Fake GPS</span>`;    
+                    }else if (data === 0) {
+                        return `<span class="badge badge-">Tidak Ter-Indikasi Fake GPS</span>`;    
+                    }else{
+                        return '-';
                     }
                 }
             }, {
