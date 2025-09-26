@@ -389,6 +389,16 @@ trait General
             }
             $data = $query->first();
 
+            if (is_null($data)) {
+                if ($status == 'definitif') {
+                    $status = 'plt';
+                    return $this->findPegawai($params, $status);
+                }elseif ($status == 'plt') {
+                    $status = 'definitif';
+                    return $this->findPegawai($params, $status);
+                }
+            }
+
             return $data;
     }
 
