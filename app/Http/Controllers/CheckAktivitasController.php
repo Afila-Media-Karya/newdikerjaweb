@@ -223,6 +223,34 @@ class CheckAktivitasController extends BaseController
         ]);
     }
 
+    public function index_riwayat(){
+        $module = [
+            [
+                'label' => 'Riwayat Aktivitas',
+                'url' => '#'
+            ]
+            ];
+        return view('admin_kabupaten.check_aktivitas.riwayat',compact('module'));
+    }
+
+    public function datatable_riwayat(){
+        $data = array();
+
+        $data = DB::table('tb_riwayat_aktivitas')
+            ->select(
+                'tb_riwayat_aktivitas.*',
+                'tb_pegawai.nama as nama_pegawai',
+                'tb_pegawai.nip as nip_pegawai',
+                'pegawai_approval.nama as nama_approval',
+                'pegawai_approval.nip as nip_approval'
+            )
+            ->join("tb_pegawai", "tb_riwayat_aktivitas.id_pegawai", "=", "tb_pegawai.id")
+            ->join("tb_pegawai as pegawai_approval", "tb_riwayat_aktivitas.user_action", "=", "pegawai_approval.id")
+            ->get();
+
+        return $this->sendResponse($data, 'Riwayat Aktivitas Fetched Success');
+    }
+
     public function delete(){
 
         $bulan = request('bulan');

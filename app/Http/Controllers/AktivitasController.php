@@ -10,6 +10,8 @@ use DB;
 use Auth;
 use App\Traits\General;
 use Carbon\Carbon;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Ramsey\Uuid\Uuid as Generator;
 
 class AktivitasController extends BaseController
 {
@@ -182,7 +184,30 @@ class AktivitasController extends BaseController
     public function delete(Request $request, $params){
         $data = array();
         try {
-            $data =  DB::table('tb_aktivitas')->where('uuid', $params)->delete();
+
+            $tmt_aktivitas = DB::table('tb_aktivitas')->where('uuid', $params)->first();
+            if ($tmt_aktivitas) {
+                DB::table('tb_riwayat_aktivitas')->insert([
+                    'uuid' => Generator::uuid4()->toString(),
+                    'id_pegawai' => $tmt_aktivitas->id_pegawai,
+                    'id_sasaran' => $tmt_aktivitas->id_sasaran,
+                    'aktivitas' => $tmt_aktivitas->aktivitas,
+                    'keterangan' => $tmt_aktivitas->keterangan,
+                    'volume' => $tmt_aktivitas->volume,
+                    'satuan' => $tmt_aktivitas->satuan,
+                    'waktu' => $tmt_aktivitas->waktu,
+                    'tanggal' => $tmt_aktivitas->tanggal,
+                    'validation' => $tmt_aktivitas->validation,
+                    'tahun' => $tmt_aktivitas->tahun,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'user_action' => Auth::user()->id_pegawai
+                ]);
+
+                $data =  DB::table('tb_aktivitas')->where('uuid', $params)->delete();
+            }
+
+            
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
         }

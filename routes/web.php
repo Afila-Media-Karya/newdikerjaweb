@@ -58,6 +58,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::delete('/delete', 'CheckAktivitasController@delete')->name('checkaktivitas.delete');
         });
 
+        Route::prefix('riwayat-aktivitas')->group(function () {
+            Route::get('/', 'CheckAktivitasController@index_riwayat')->name('riwayaktivitas.index');
+            Route::get('/datatable', 'CheckAktivitasController@datatable_riwayat')->name('riwayaktivitas.datatable');
+        });
+
         Route::prefix('master-data')->group(function () {
             Route::prefix('agama')->group(function () {
                 Route::get('/', 'master_data\agamaController@index')->name('master_data.agama.index');
@@ -261,6 +266,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::post('/update/{params}', 'HariLiburController@update')->name('kabupaten.harilibur.update');
             Route::get('/show/{params}', 'HariLiburController@show')->name('kabupaten.harilibur.show');
             Route::delete('/delete/{params}', 'HariLiburController@delete')->name('kabupaten.harilibur.delete');
+        });
+
+        Route::prefix('versi-aplikasi')->group(function () {
+            Route::get('/', 'VersionAppController@index')->name('kabupaten.versi_app.index');
+            Route::get('/datatable', 'VersionAppController@datatable')->name('kabupaten.versi_app.datatable');
+            Route::post('/store', 'VersionAppController@store')->name('kabupaten.versi_app.store');
+            Route::post('/update/{params}', 'VersionAppController@update')->name('kabupaten.versi_app.update');
+            Route::get('/show/{params}', 'VersionAppController@show')->name('kabupaten.versi_app.show');
+            Route::delete('/delete/{params}', 'VersionAppController@delete')->name('kabupaten.versi_app.delete');
         });
 
         Route::prefix('laporan')->group(function () {

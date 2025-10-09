@@ -189,6 +189,38 @@
     </a>
 </div>
 
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'riwayat-aktivitas' ? 'active' : '' }}"
+        href="{{ route('riwayaktivitas.index') }}">
+        <span class="menu-icon">
+            <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'riwayat-aktivitas' ? url('admin/assets/media/icons/aside/kehadiranact.svg') : url('/admin/assets/media/icons/aside/kehadirandef.svg') }}"
+                    alt="">
+            </span>
+            <!--end::Svg Icon-->
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'riwayat-aktivitas' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Riwayat Aktivitas</span>
+    </a>
+</div>
+
+<div class="menu-item">
+    <a class="menu-link  {{ $path[0] == 'versi-aplikasi' ? 'active' : '' }}"
+        href="{{ route('kabupaten.versi_app.index') }}">
+        <span class="menu-icon">
+            <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+            <span class="svg-icon svg-icon-2">
+                <img src="{{ $path[0] == 'versi-aplikasi' ? url('admin/assets/media/icons/aside/kehadiranact.svg') : url('/admin/assets/media/icons/aside/kehadirandef.svg') }}"
+                    alt="">
+            </span>
+            <!--end::Svg Icon-->
+        </span>
+        <span class="menu-title"
+            style="{{ $path[0] == 'versi-aplikasi' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Versi Aplikasi</span>
+    </a>
+</div>
+
 @endif
 
 <div data-kt-menu-trigger="click" class="menu-item {{ $path[0] == 'laporan' ? 'show' : '' }} menu-accordion">
