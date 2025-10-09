@@ -176,7 +176,11 @@
                 data: null,
                 className : 'text-right',
                 render: function(data, type, row, meta) {
-                    return `-`;
+                    if(data.status == 1){
+                        return `<span class="badge badge-success">Aktif</span>`;
+                    } else if(data.status == 0){
+                        return `<span class="badge badge-danger">Tidak Aktif</span>`;
+                    }
                 }
             },{
                 data: 'uuid',
