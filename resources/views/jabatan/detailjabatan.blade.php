@@ -124,7 +124,17 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <label class="form-label">Pendidikan Struktural Lulus</label>
-                                        <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data->pendidikan_struktural_lulus)->format('j F Y') }}" disabled>
+                                        
+                                        <input 
+                                            type="text" 
+                                            class="form-control form-control-sm" 
+                                            {{-- Menggunakan operator Null Coalescing (??) atau if/else Blade --}}
+                                            value="{{ $data->pendidikan_struktural_lulus 
+                                                    ? \Carbon\Carbon::parse($data->pendidikan_struktural_lulus)->format('j F Y') 
+                                                    : '' }}" 
+                                            disabled
+                                        >
+                                        
                                         <small class="text-danger asal_daerah_error"></small>
                                     </div>
                                 </div>
