@@ -289,7 +289,7 @@ class LaporanKehadiranController extends Controller
             $sheet->getStyle('A' . $cell . ':D' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
         }
 
-        if ($tipe_pegawai == 'tenaga_pendidik') {
+        if ($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
             $cell = $cell + 1;
             $sheet->setCellValue('A' . $cell, 'Jumlah Menit Terlambat Datang')->mergeCells('A' . $cell . ':B' . $cell);
             $sheet->setCellValue('C' . $cell, $data['jml_menit_terlambat_masuk_kerja']);
