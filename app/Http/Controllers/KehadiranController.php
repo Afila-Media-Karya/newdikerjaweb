@@ -205,7 +205,7 @@ class KehadiranController extends BaseController
 
             if (hasRole()['guard'] == 'web') {
            
-                if (Auth::user()->username !== '198212242009011006' || Auth::user()->username !== '198208152008011006') {
+                if (Auth::user()->username !== '198212242009011006' && Auth::user()->username !== '198208152008011006') {
                     if ($data->tanggal_absen <= $futureDate) {
                         return $this->sendError('Anda tidak bisa mengubah data absen apabila sudah lewat dari 6 hari', 'Gagal', 200);
                     }
