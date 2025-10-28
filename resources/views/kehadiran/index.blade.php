@@ -561,6 +561,7 @@
                 
 
                 if (username == '198212242009011006' || username == '198208152008011006') {
+                    alert('tess');
                     validation(data_value,data_uuid)
                 }else{
                     let jarakHari = Math.floor((tanggalHariIni - tanggalAwal) / (1000 * 60 * 60 * 24));
