@@ -95,8 +95,23 @@ trait Presensi
         }
         
         if ($tipe_pegawai == 'tenaga_kesehatan_non_shift') {
-            $waktu_absen_datang = '08:00:00';
-            $waktu_absen_pulang = '15:15:00';
+            $dayOfWeek = date('N', strtotime($tanggal)); 
+            // $waktu_absen_datang = '08:00:00';
+            // Senin (1) atau Jumat (5)
+            if ($dayOfWeek == 1 || $dayOfWeek == 5) {
+                $waktu_absen_datang = '07:00:00';
+            } 
+            // Selasa (2), Kamis (4), atau Sabtu (6)
+            else if ($dayOfWeek == 2 || $dayOfWeek == 3 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                $waktu_absen_datang = '07:30:00';
+            }
+            // Hari lainnya (Rabu/Minggu) tidak diubah
+
+            
+            $waktu_absen_pulang = '14:00:00';
+            if ($dayOfWeek == 5) {
+                $waktu_absen_pulang = '11:30:00';
+            } 
         }
 
         if ($waktu !== null) {
