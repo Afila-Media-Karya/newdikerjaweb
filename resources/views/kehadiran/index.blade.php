@@ -630,7 +630,7 @@
                     if (data.user_type  == 1) {
                         return `<span class="badge badge-warning">${data.user_updated_0}</span>`;
                     }else{
-                        if (data.id_pegawai !== data.user_update) {
+                        if (data.id_pegawai == data.user_update) {
                             return `<span class="badge badge-warning">${data.user_update_1}</span>`;    
                         }else{
                             return `<span class="badge badge-success">${data.user_update_1}</span>`;
