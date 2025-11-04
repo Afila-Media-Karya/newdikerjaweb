@@ -32,9 +32,9 @@ class KehadiranController extends BaseController
             $query = DB::table('tb_absen')
             ->leftJoin('tb_pegawai', 'tb_absen.id_pegawai', 'tb_pegawai.id')
             ->leftJoin('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
-            ->leftJoin('tb_pegawai as pegawai_tmt', 'tb_absen.user_update', 'pegawai_tmt.id')
+            // ->leftJoin('tb_pegawai as pegawai_tmt', 'tb_absen.user_update', 'pegawai_tmt.id')
             ->leftJoin('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')
-            ->select('tb_absen.id', 'tb_absen.uuid', 'tb_absen.id_pegawai', 'tb_absen.tanggal_absen', 'tb_absen.waktu_masuk', 'tb_absen.waktu_keluar', 'tb_absen.status', 'tb_absen.validation', 'tb_pegawai.nama', 'tb_absen.user_update', 'tb_absen.user_type', 'pegawai_tmt.nama AS user_update_1', 'admin.username AS user_updated_0', 'tb_master_jabatan.kelas_jabatan','tb_absen.indikasi_fake')
+            ->select('tb_absen.id', 'tb_absen.uuid', 'tb_absen.id_pegawai', 'tb_absen.tanggal_absen', 'tb_absen.waktu_masuk', 'tb_absen.waktu_keluar', 'tb_absen.status', 'tb_absen.validation', 'tb_pegawai.nama', 'tb_absen.user_update', 'tb_absen.user_type', 'tb_pegawai.nama AS user_update_1', 'admin.username AS user_updated_0', 'tb_master_jabatan.kelas_jabatan','tb_absen.indikasi_fake')
             ->leftJoin('users', function ($join) {
                 $join->on('tb_absen.user_update', '=', 'users.id_pegawai')
                     ->where('tb_absen.user_type', '=', 0);
