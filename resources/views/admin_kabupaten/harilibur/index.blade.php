@@ -123,6 +123,7 @@
                             <option selected disabled> Pilih </option>
                             <option value="pegawai_administratif">Pegawai Administratif</option>
                             <option value="tenaga_pendidik">Tenaga Pendidik</option>
+                            <option value="tenaga_kesehatan_non_shift">Tenaga Kesehatan Non Shift</option>
                         </select>
                         <small class="text-danger tipe_error"></small>
                     </div>
