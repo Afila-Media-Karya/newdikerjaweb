@@ -443,7 +443,9 @@ trait General
 
         if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan') {
             $tipe_pegawai = 'pegawai_administratif';
-        }else {
+        } else if ($tipe_pegawai = 'tenaga_kesehatan_non_shift') {
+            $tipe_pegawai = 'tenaga_kesehatan_non_shift';
+        } else {
             $tipe_pegawai = 'tenaga_pendidik';
         }
 
@@ -498,7 +500,7 @@ trait General
 
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
-            if ($tipe_pegawai == 'pegawai_administratif') {
+            if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
                 if ($current_date->dayOfWeek !== 6 && $current_date->dayOfWeek !== 0) {
                     if (!$this->isTanggalLibur($current_date->toDateString(),$tipe_pegawai)) {
                         $daftar_tanggal[] = $current_date->toDateString();
