@@ -500,13 +500,13 @@ trait General
 
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
-            if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
+            if ($tipe_pegawai == 'pegawai_administratif') {
                 if ($current_date->dayOfWeek !== 6 && $current_date->dayOfWeek !== 0) {
                     if (!$this->isTanggalLibur($current_date->toDateString(),$tipe_pegawai)) {
                         $daftar_tanggal[] = $current_date->toDateString();
                     }
                 }
-            }elseif($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru'){
+            }elseif($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru' || $tipe_pegawai == 'tenaga_kesehatan_non_shift'){
                 if ($current_date->dayOfWeek !== 0) {
                     if (!$this->isTanggalLibur($current_date->toDateString(),$tipe_pegawai)) {
                         $daftar_tanggal[] = $current_date->toDateString();
