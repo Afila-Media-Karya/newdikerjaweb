@@ -165,7 +165,7 @@
 @endsection
 @section('script')
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtQrlD7-nUMaatAbVpKpro-V1ikHxhGFY&callback=initMap&libraries=v=weekly,places&sensor=false"
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap&libraries=v=weekly,places&sensor=false"
         defer></script>
     <script>
         let control = new Control();
@@ -180,9 +180,6 @@
         } else {
             path = 'perangkat-daerah';
         }
-
-
-
 
         $(document).on('click', '#button-side-form', function () {
             control.overlay_form('Tambah', 'Lokasi Kerja');
@@ -244,8 +241,6 @@
 
             const geocoder = new google.maps.Geocoder();
             // build request
-
-
 
             marker = new google.maps.Marker({
                 position: center,
@@ -311,14 +306,14 @@
                 orderable: false,
                 render: function (data, type, full, meta) {
                     return `
-                                <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
-                                    <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
-                                </a>
+                                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
+                                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
+                                            </a>
 
-                                <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.inisial_satuan_kerja}" class="btn btn-danger button-delete btn-icon btn-sm"> 
-                                    <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
-                                </a>
-                                `;
+                                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.inisial_satuan_kerja}" class="btn btn-danger button-delete btn-icon btn-sm"> 
+                                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
+                                            </a>
+                                            `;
                 },
             }];
             control.initDatatable(`/${path}/lokasi/datatable`, columns, columnDefs);
