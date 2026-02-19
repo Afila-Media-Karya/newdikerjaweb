@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Auth;
 use App\Models\Ramadan;
+use App\Models\JamApel;
 trait General
 {
     public function option_golongan()
@@ -638,13 +639,28 @@ trait General
                     $count_cuti += 1;
                 }
 
-                if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                // Jika status apel, hitung keterlambatan masuk berdasarkan batas_akhir apel
+                if ($absen_per_tanggal[$tanggal]['status'] == 'apel' && $absen_per_tanggal[$tanggal]['waktu_masuk'] !== null) {
+                    $shift_apel = ($tipe_pegawai == 'tenaga_kesehatan') ? $absen_per_tanggal[$tanggal]['shift'] : null;
+                    $jamApel = JamApel::getJamApel($tipe_pegawai, 'reguler', $shift_apel);
+                    if ($jamApel) {
+                        $waktu_absen = strtotime($absen_per_tanggal[$tanggal]['waktu_masuk']);
+                        $batas_akhir_apel = strtotime($jamApel->batas_akhir);
+                        $diff_apel = $waktu_absen - $batas_akhir_apel;
+                        $selisih_waktu_masuk = ($diff_apel > 0) ? floor($diff_apel / 60) : 0;
+                    } else {
+                        $selisih_waktu_masuk = 0; // fallback: apel tanpa config = tepat waktu
+                    }
+                } elseif ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
                     $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $waktu_tetap_masuk, $tipe_pegawai);
-                    $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $waktu_tetap_keluar, $tipe_pegawai);
-                    // dd($tanggal);
-
                 } else {
                     $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $absen_per_tanggal[$tanggal]['shift'], $waktu_tetap_masuk, $jumlah_shift, $tipe_pegawai);
+                }
+
+                // Hitung selisih waktu pulang (tidak terpengaruh status apel)
+                if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                    $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $waktu_tetap_keluar, $tipe_pegawai);
+                } else {
                     $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $absen_per_tanggal[$tanggal]['shift'], $waktu_tetap_keluar, $jumlah_shift, $tipe_pegawai);
                 }
 

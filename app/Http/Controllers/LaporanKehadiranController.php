@@ -63,12 +63,12 @@ class LaporanKehadiranController extends Controller
 
         if ($role['role'] == '1') {
             $username = Auth::user()->username;
-            return view('laporan.kehadiran.index_opd', compact('module', 'pegawai','satuan_kerja_user','nama_satuan_kerja','username'));
+            return view('laporan.kehadiran.index_opd', compact('module', 'pegawai', 'satuan_kerja_user', 'nama_satuan_kerja', 'username'));
         } else {
             return view('laporan.kehadiran.index_unit', compact('module', 'pegawai'));
         }
 
-        
+
     }
 
     public function index_kabupaten()
@@ -81,42 +81,43 @@ class LaporanKehadiranController extends Controller
     public function export_pegawai()
     {
         $bulan = request('bulan');
-        $tanggal_awal = date("Y-m-d", strtotime(date('Y-'). $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-'). $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+        $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
+        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
 
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
-        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai,$pegawai_info->jumlah_shift);
+        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $pegawai_info->waktu_masuk, $pegawai_info->waktu_keluar, $pegawai_info->tipe_pegawai, $pegawai_info->jumlah_shift);
         $type = request('type');
-        
+
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif') {
-            return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir,$pegawai_info->tipe_pegawai);
-        }else {
+            return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir, $pegawai_info->tipe_pegawai);
+        } else {
             return $this->export_rekap_pegawai_nakes($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir);
         }
     }
 
-    public function export_pegawai_bulan(){
+    public function export_pegawai_bulan()
+    {
         $bulan = request('bulan');
         $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
 
-        $tanggal_awal = date("Y-m-d", strtotime($tahun.'-' . $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime($tahun.'-' . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+        $tanggal_awal = date("Y-m-d", strtotime($tahun . '-' . $bulan . '-01'));
+        $tanggal_akhir = date("Y-m-d", strtotime($tahun . '-' . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun)));
 
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
-        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir,$pegawai_info->waktu_masuk,$pegawai_info->waktu_keluar,$pegawai_info->tipe_pegawai,$pegawai_info->jumlah_shift);
+        $data = $this->data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $pegawai_info->waktu_masuk, $pegawai_info->waktu_keluar, $pegawai_info->tipe_pegawai, $pegawai_info->jumlah_shift);
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik') {
-            return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir,$pegawai_info->tipe_pegawai);
-        }else {
+            return $this->export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir, $pegawai_info->tipe_pegawai);
+        } else {
             return $this->export_rekap_pegawai_nakes($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir);
         }
     }
 
-    public function export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir,$tipe_pegawai)
+    public function export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir, $tipe_pegawai)
     {
         $spreadsheet = new Spreadsheet();
 
@@ -168,13 +169,13 @@ class LaporanKehadiranController extends Controller
         $sheet->getColumnDimension('B')->setWidth(25);
         $sheet->setCellValue('C11', 'Status Absen')->mergeCells('C11:C12');
         $sheet->getColumnDimension('C')->setWidth(25);
-        
+
         $sheet->setCellValue('D11', 'Datang')->mergeCells('D11:E11');
         $sheet->setCellValue('D12', 'Waktu');
         $sheet->getColumnDimension('D')->setWidth(25);
         $sheet->setCellValue('E12', 'Keterangan');
         $sheet->getColumnDimension('E')->setWidth(25);
-        
+
         $sheet->setCellValue('F11', 'Istirahat')->mergeCells('F11:G11');
         $sheet->setCellValue('F12', 'Waktu');
         $sheet->getColumnDimension('F')->setWidth(25);
@@ -527,45 +528,45 @@ class LaporanKehadiranController extends Controller
         $writer->save('php://output');
     }
 
-    public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir,$status_kepegawaian, $tipe_pegawai)
+    public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai)
     {
         $data = array();
         $query = DB::table('tb_pegawai')
-            ->select('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip','tb_unit_kerja.waktu_masuk','tb_unit_kerja.waktu_keluar','tb_pegawai.tipe_pegawai','tb_unit_kerja.jumlah_shift')
+            ->select('tb_pegawai.id', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_unit_kerja.waktu_masuk', 'tb_unit_kerja.waktu_keluar', 'tb_pegawai.tipe_pegawai', 'tb_unit_kerja.jumlah_shift')
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
-            ->join('tb_unit_kerja','tb_jabatan.id_unit_kerja','=','tb_unit_kerja.id')
+            ->join('tb_unit_kerja', 'tb_jabatan.id_unit_kerja', '=', 'tb_unit_kerja.id')
             ->where('tb_pegawai.status', '1')
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'DESC');
 
         $role = hasRole();
 
         if ($role['guard'] == 'web') {
-            $query->where("tb_jabatan.id_satuan_kerja",$satuan_kerja);
+            $query->where("tb_jabatan.id_satuan_kerja", $satuan_kerja);
             if ($unit_kerja !== 'all') {
-                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);    
+                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
             }
         }
 
         if (hasRole()['guard'] == 'administrator') {
-            $query->where("tb_jabatan.id_satuan_kerja",$satuan_kerja);
+            $query->where("tb_jabatan.id_satuan_kerja", $satuan_kerja);
             if ($unit_kerja !== 'all') {
-                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);    
+                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
             }
         }
 
         if (!is_null($status_kepegawaian)) {
-            $query->where('status_kepegawaian',$status_kepegawaian);
+            $query->where('status_kepegawaian', $status_kepegawaian);
         }
 
         if (!is_null($tipe_pegawai)) {
-            $query->where('tipe_pegawai',$tipe_pegawai);
+            $query->where('tipe_pegawai', $tipe_pegawai);
         }
 
         $data = $query->get();
 
         $data = $data->map(function ($item) use ($tanggal_awal, $tanggal_akhir) {
-            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir,$item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
+            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];
@@ -607,7 +608,7 @@ class LaporanKehadiranController extends Controller
         $nama_unit_kerja = '';
         $bulan = request('bulan');
         $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-'. cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
 
 
         if (request('satuan_kerja')) {
@@ -627,12 +628,13 @@ class LaporanKehadiranController extends Controller
         return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
     }
 
-    public function export_opd_bulan(){
+    public function export_opd_bulan()
+    {
         $satuan_kerja = '';
         $nama_satuan_kerja = '';
         $unit_kerja = '';
         $nama_unit_kerja = '';
-        
+
         $bulan = request('bulan');
 
         // $tanggalAwal = Carbon::create(session('tahun_penganggaran'), $bulan, 1)->startOfMonth();
@@ -641,7 +643,7 @@ class LaporanKehadiranController extends Controller
         $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
         $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
 
-    
+
         $status_kepegawaian = request('status_kepegawaian');
         $tipe_pegawai = request('tipe_pegawai');
 
@@ -656,20 +658,21 @@ class LaporanKehadiranController extends Controller
             $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
             $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
         }
-        
+
         $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai);
         $type = request('type');
         if ($this->CheckOpd($unit_kerja) && $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_kesehatan_non_shift' || $tipe_pegawai == 'tenaga_kesehatan') {
             return $this->export_rekapitulasi_absen_guru($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
-            
-        }else {
+
+        } else {
             return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
         }
 
-        
+
     }
 
-   public function export_rekapitulasi_absen($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
+    public function export_rekapitulasi_absen($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja)
+    {
 
         $spreadsheet = new Spreadsheet();
 
@@ -709,13 +712,13 @@ class LaporanKehadiranController extends Controller
 
         $sheet->setCellValue('A5', ' ');
 
-        
-        
+
+
         $sheet->getStyle('A1:AI1')->getFont()->setSize(16);
         $sheet->getStyle('A3:AI4')->getFont()->setSize(12);
 
         $sheet->getColumnDimension('B')->setWidth(35);
-       
+
 
         $sheet->getStyle('A6:AI10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
 
@@ -730,9 +733,9 @@ class LaporanKehadiranController extends Controller
 
 
         $sheet->setCellValue('D6', 'KEHADIRAN KERJA')->mergeCells('D6:AI6');
-       
+
         $sheet->setCellValue('H7', 'TANPA KETERANGAN')->mergeCells('H7:J8');
-         $sheet->setCellValue('H9', 'JUMLAH KEHADIRAN KERJA')->mergeCells('H9:H11');
+        $sheet->setCellValue('H9', 'JUMLAH KEHADIRAN KERJA')->mergeCells('H9:H11');
         $sheet->setCellValue('I9', 'JUMLAH HARI TANPA KETERANGAN')->mergeCells('I9:I11');
         $sheet->setCellValue('J9', 'TOTAL POTONGAN (%)')->mergeCells('J9:J11');
 
@@ -814,7 +817,7 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('AF' . $cell, ($value->jml_tidak_apel_hari_senin * 0.25));
             $total_ = $value->potongan_masuk_kerja + $value->potongan_pulang_kerja + ($value->jml_tidak_apel * 2) + ($value->jml_tidak_apel_hari_senin * 0.25);
             $sheet->setCellValue('AG' . $cell, $total_);
-            
+
             $keterangan = '';
 
             $total_ > 35 || $value->tanpa_keterangan > 3 ? $keterangan = 'TMS' : $keterangan = 'MS';
@@ -822,10 +825,10 @@ class LaporanKehadiranController extends Controller
             $sheet->setCellValue('AI' . $cell, $keterangan);
 
             if ($total_ > 35 || $value->tanpa_keterangan > 3) {
-                $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336'); 
-             }else{
+                $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('F44336');
+            } else {
                 $sheet->getStyle('AI' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('00E676');
-             }
+            }
             $cell++;
         }
 
@@ -848,8 +851,8 @@ class LaporanKehadiranController extends Controller
         $sheet->getStyle('AH7:AH' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('4EAD5A');
 
         $sheet->getStyle('K7:AG7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
-        $sheet->getStyle('AG8:AG'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
-        
+        $sheet->getStyle('AG8:AG' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
+
         $sheet->getStyle('A6:AI' . $cell)->applyFromArray($border);
         $sheet->getStyle('A:AI')->getAlignment()->setHorizontal('center');
         $sheet->getStyle('A:AI')->getAlignment()->setVertical('center');
@@ -879,7 +882,8 @@ class LaporanKehadiranController extends Controller
         $writer->save('php://output');
     }
 
-    public function export_rekapitulasi_absen_guru($data, $type,$tanggal_awal,$tanggal_akhir,$satuan_kerja){
+    public function export_rekapitulasi_absen_guru($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja)
+    {
 
         $spreadsheet = new Spreadsheet();
 
@@ -919,13 +923,13 @@ class LaporanKehadiranController extends Controller
 
         $sheet->setCellValue('A5', ' ');
 
-        
-        
+
+
         $sheet->getStyle('A1:M1')->getFont()->setSize(16);
         $sheet->getStyle('A3:M4')->getFont()->setSize(12);
 
         $sheet->getColumnDimension('B')->setWidth(35);
-       
+
 
         $sheet->getStyle('A6:M10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('D9D9D9');
 
@@ -990,7 +994,7 @@ class LaporanKehadiranController extends Controller
 
         // $sheet->getStyle('K7:AG7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
         // $sheet->getStyle('AG8:AG'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('f7f702');
-        
+
         $sheet->getStyle('A6:M' . $cell)->applyFromArray($border);
         $sheet->getStyle('A:M')->getAlignment()->setHorizontal('center');
         $sheet->getStyle('A:M')->getAlignment()->setVertical('center');

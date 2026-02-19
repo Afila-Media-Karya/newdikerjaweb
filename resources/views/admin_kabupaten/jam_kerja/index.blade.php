@@ -186,27 +186,34 @@
                             <h3 class="card-title fw-bold">Pengaturan Absensi Apel Pagi</h3>
                         </div>
                         <div class="card-body">
-                            @php $firstApel = $apelReguler->first(); @endphp
-                            <div class="row">
-                                <div class="col-md-6 mb-5">
-                                    <label class="form-label fs-7">Batas awal absen apel</label>
-                                    <input type="time" class="form-control form-control-sm"
-                                        name="jam_apel[{{ $firstApel->id }}][batas_awal]"
-                                        value="{{ substr($firstApel->batas_awal, 0, 5) }}">
-                                </div>
-                                <div class="col-md-6 mb-5">
-                                    <label class="form-label fs-7">Batas akhir absen apel</label>
-                                    <input type="time" class="form-control form-control-sm"
-                                        name="jam_apel[{{ $firstApel->id }}][batas_akhir]"
-                                        value="{{ substr($firstApel->batas_akhir, 0, 5) }}">
+                            <div class="row mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label fs-7">Pilih Tipe Pegawai</label>
+                                    <select class="form-select form-select-sm" id="select-apel-reguler">
+                                        @foreach($apelReguler as $apel)
+                                            <option value="{{ $apel->id }}">
+                                                {{ $tipeLabels[$apel->tipe_pegawai] ?? ucwords(str_replace('_', ' ', $apel->tipe_pegawai)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            {{-- Sync other apel reguler records --}}
-                            @foreach($apelReguler->skip(1) as $apel)
-                                <input type="hidden" name="jam_apel[{{ $apel->id }}][batas_awal]"
-                                    value="{{ substr($apel->batas_awal, 0, 5) }}" class="sync-apel-reguler-awal">
-                                <input type="hidden" name="jam_apel[{{ $apel->id }}][batas_akhir]"
-                                    value="{{ substr($apel->batas_akhir, 0, 5) }}" class="sync-apel-reguler-akhir">
+                            @foreach($apelReguler as $apel)
+                                <div class="row apel-reguler-fields" data-apel-id="{{ $apel->id }}"
+                                    style="{{ $loop->first ? '' : 'display:none;' }}">
+                                    <div class="col-md-6 mb-5">
+                                        <label class="form-label fs-7">Batas awal absen apel</label>
+                                        <input type="time" class="form-control form-control-sm"
+                                            name="jam_apel[{{ $apel->id }}][batas_awal]"
+                                            value="{{ substr($apel->batas_awal, 0, 5) }}">
+                                    </div>
+                                    <div class="col-md-6 mb-5">
+                                        <label class="form-label fs-7">Batas akhir absen apel</label>
+                                        <input type="time" class="form-control form-control-sm"
+                                            name="jam_apel[{{ $apel->id }}][batas_akhir]"
+                                            value="{{ substr($apel->batas_akhir, 0, 5) }}">
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -218,26 +225,34 @@
                             <h3 class="card-title fw-bold">Pengaturan Absensi Apel Hari Besar</h3>
                         </div>
                         <div class="card-body">
-                            @php $firstApelHB = $apelHariBesar->first(); @endphp
-                            <div class="row">
-                                <div class="col-md-6 mb-5">
-                                    <label class="form-label fs-7">Batas awal absen apel hari besar</label>
-                                    <input type="time" class="form-control form-control-sm"
-                                        name="jam_apel[{{ $firstApelHB->id }}][batas_awal]"
-                                        value="{{ substr($firstApelHB->batas_awal, 0, 5) }}">
-                                </div>
-                                <div class="col-md-6 mb-5">
-                                    <label class="form-label fs-7">Batas akhir absen apel hari besar</label>
-                                    <input type="time" class="form-control form-control-sm"
-                                        name="jam_apel[{{ $firstApelHB->id }}][batas_akhir]"
-                                        value="{{ substr($firstApelHB->batas_akhir, 0, 5) }}">
+                            <div class="row mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label fs-7">Pilih Tipe Pegawai</label>
+                                    <select class="form-select form-select-sm" id="select-apel-hb">
+                                        @foreach($apelHariBesar as $apel)
+                                            <option value="{{ $apel->id }}">
+                                                {{ $tipeLabels[$apel->tipe_pegawai] ?? ucwords(str_replace('_', ' ', $apel->tipe_pegawai)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            @foreach($apelHariBesar->skip(1) as $apel)
-                                <input type="hidden" name="jam_apel[{{ $apel->id }}][batas_awal]"
-                                    value="{{ substr($apel->batas_awal, 0, 5) }}" class="sync-apel-hb-awal">
-                                <input type="hidden" name="jam_apel[{{ $apel->id }}][batas_akhir]"
-                                    value="{{ substr($apel->batas_akhir, 0, 5) }}" class="sync-apel-hb-akhir">
+                            @foreach($apelHariBesar as $apel)
+                                <div class="row apel-hb-fields" data-apel-id="{{ $apel->id }}"
+                                    style="{{ $loop->first ? '' : 'display:none;' }}">
+                                    <div class="col-md-6 mb-5">
+                                        <label class="form-label fs-7">Batas awal absen apel hari besar</label>
+                                        <input type="time" class="form-control form-control-sm"
+                                            name="jam_apel[{{ $apel->id }}][batas_awal]"
+                                            value="{{ substr($apel->batas_awal, 0, 5) }}">
+                                    </div>
+                                    <div class="col-md-6 mb-5">
+                                        <label class="form-label fs-7">Batas akhir absen apel hari besar</label>
+                                        <input type="time" class="form-control form-control-sm"
+                                            name="jam_apel[{{ $apel->id }}][batas_akhir]"
+                                            value="{{ substr($apel->batas_akhir, 0, 5) }}">
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -278,26 +293,24 @@
                 @endif
             @endforeach
 
-            // Sync apel reguler
+            // Toggle apel reguler fields by dropdown
             @if($apelReguler->count() > 0)
-                @php $firstApel = $apelReguler->first(); @endphp
-                $('input[name="jam_apel[{{ $firstApel->id }}][batas_awal]"]').on('change', function () {
-                    $('.sync-apel-reguler-awal').val($(this).val());
+                $('#select-apel-reguler').on('change', function () {
+                    let selectedId = $(this).val();
+                    $('.apel-reguler-fields').hide().find('input').prop('disabled', true);
+                    $('.apel-reguler-fields[data-apel-id="' + selectedId + '"]').show().find('input').prop('disabled', false);
                 });
-                $('input[name="jam_apel[{{ $firstApel->id }}][batas_akhir]"]').on('change', function () {
-                    $('.sync-apel-reguler-akhir').val($(this).val());
-                });
+                $('.apel-reguler-fields:hidden').find('input').prop('disabled', true);
             @endif
 
-            // Sync apel hari besar
+            // Toggle apel hari besar fields by dropdown
             @if($apelHariBesar->count() > 0)
-                @php $firstApelHB = $apelHariBesar->first(); @endphp
-                $('input[name="jam_apel[{{ $firstApelHB->id }}][batas_awal]"]').on('change', function () {
-                    $('.sync-apel-hb-awal').val($(this).val());
+                $('#select-apel-hb').on('change', function () {
+                    let selectedId = $(this).val();
+                    $('.apel-hb-fields').hide().find('input').prop('disabled', true);
+                    $('.apel-hb-fields[data-apel-id="' + selectedId + '"]').show().find('input').prop('disabled', false);
                 });
-                $('input[name="jam_apel[{{ $firstApelHB->id }}][batas_akhir]"]').on('change', function () {
-                    $('.sync-apel-hb-akhir').val($(this).val());
-                });
+                $('.apel-hb-fields:hidden').find('input').prop('disabled', true);
             @endif
 
             // Submit form via AJAX
