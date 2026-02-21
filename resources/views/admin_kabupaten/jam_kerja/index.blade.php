@@ -15,166 +15,185 @@
             <form id="form-settings" method="POST">
                 @csrf
 
-                @foreach($settings as $tipe => $group)
-                    @if(!$group['is_shift'])
-                        {{-- NON-SHIFT employee types (administratif, pendidik, etc.) --}}
-                        <div class="card mb-6">
-                            <div class="card-header">
-                                <h3 class="card-title fw-bold">Pengaturan Absensi {{ $group['label'] }}</h3>
+                {{-- ============================================== --}}
+                {{-- NON-SHIFT JAM KERJA (Unified Dropdown) --}}
+                {{-- ============================================== --}}
+                @if($nonShiftTipeList->count() > 0)
+                    <div class="card mb-6">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold">Pengaturan Waktu Absensi</h3>
+                        </div>
+                        <div class="card-body">
+                            {{-- Dropdown filters --}}
+                            <div class="row mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label fs-7">Pilih Tipe Pegawai</label>
+                                    <select class="form-select form-select-sm" id="select-jk-tipe">
+                                        @foreach($nonShiftTipeList as $tipe)
+                                            <option value="{{ $tipe }}">
+                                                {{ $tipeLabels[$tipe] ?? ucwords(str_replace('_', ' ', $tipe)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fs-7">Pilih Hari</label>
+                                    <select class="form-select form-select-sm" id="select-jk-hari">
+                                        {{-- Options populated by JS based on tipe pegawai --}}
+                                    </select>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                @php
-                                    // Get representative record (first day)
-                                    $firstRecord = $group['data']->first();
-                                @endphp
-                                @if($firstRecord)
+
+                            {{-- Form fields for each tipe+hari combination --}}
+                            @foreach($jamKerjaAll as $record)
+                                <div class="jk-fields" data-tipe="{{ $record->tipe_pegawai }}" data-hari="{{ $record->hari }}"
+                                    style="display:none;">
                                     <div class="row">
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas awal waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][batas_awal_masuk]"
-                                                value="{{ substr($firstRecord->batas_awal_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_awal_masuk]"
+                                                value="{{ substr($record->batas_awal_masuk, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas akhir waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][batas_akhir_masuk]"
-                                                value="{{ substr($firstRecord->batas_akhir_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_akhir_masuk]"
+                                                value="{{ substr($record->batas_akhir_masuk, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas akhir tepat waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][jam_masuk]"
-                                                value="{{ substr($firstRecord->jam_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][jam_masuk]"
+                                                value="{{ substr($record->jam_masuk, 0, 5) }}">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas awal waktu absen pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][batas_awal_pulang]"
-                                                value="{{ substr($firstRecord->batas_awal_pulang, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_awal_pulang]"
+                                                value="{{ substr($record->batas_awal_pulang, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas akhir waktu absen pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][batas_akhir_pulang]"
-                                                value="{{ substr($firstRecord->batas_akhir_pulang, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_akhir_pulang]"
+                                                value="{{ substr($record->batas_akhir_pulang, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
                                             <label class="form-label fs-7">Batas awal absen tepat waktu pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstRecord->id }}][jam_keluar]"
-                                                value="{{ substr($firstRecord->jam_keluar, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][jam_keluar]"
+                                                value="{{ substr($record->jam_keluar, 0, 5) }}">
                                         </div>
                                     </div>
-
-                                    {{-- Also update all other records for same tipe (hidden inputs to bulk update) --}}
-                                    @foreach($group['data']->skip(1) as $record)
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_awal_masuk]"
-                                            value="{{ substr($record->batas_awal_masuk, 0, 5) }}" class="sync-batas-awal-masuk-{{ $tipe }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_akhir_masuk]"
-                                            value="{{ substr($record->batas_akhir_masuk, 0, 5) }}"
-                                            class="sync-batas-akhir-masuk-{{ $tipe }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_awal_pulang]"
-                                            value="{{ substr($record->batas_awal_pulang, 0, 5) }}"
-                                            class="sync-batas-awal-pulang-{{ $tipe }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_akhir_pulang]"
-                                            value="{{ substr($record->batas_akhir_pulang, 0, 5) }}"
-                                            class="sync-batas-akhir-pulang-{{ $tipe }}">
-                                    @endforeach
-                                @endif
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
-                    @else
-                        {{-- SHIFT employee types (tenaga_kesehatan) --}}
-                        <div class="card mb-6">
-                            <div class="card-header">
-                                <h3 class="card-title fw-bold">Pengaturan Absensi {{ $group['label'] }}</h3>
+                    </div>
+                @endif
+
+                {{-- ============================================== --}}
+                {{-- SHIFT-BASED JAM KERJA (Unified Dropdown) --}}
+                {{-- ============================================== --}}
+                @if($shiftTipeList->count() > 0)
+                    @php
+                        $shiftGroups = $jamKerjaShift->groupBy(function ($item) {
+                            return $item->shift . '_' . $item->jumlah_shift;
+                        })->keys()->unique();
+                    @endphp
+                    <div class="card mb-6">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bold">Pengaturan Waktu Absensi (Shift)</h3>
+                        </div>
+                        <div class="card-body">
+                            {{-- Dropdown filters --}}
+                            <div class="row mb-5">
+                                <div class="col-md-3">
+                                    <label class="form-label fs-7">Pilih Tipe Pegawai</label>
+                                    <select class="form-select form-select-sm" id="select-jk-shift-tipe">
+                                        @foreach($shiftTipeList as $tipe)
+                                            <option value="{{ $tipe }}">
+                                                {{ $tipeLabels[$tipe] ?? ucwords(str_replace('_', ' ', $tipe)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fs-7">Pilih Shift</label>
+                                    <select class="form-select form-select-sm" id="select-jk-shift-shift">
+                                        {{-- Options populated by JS --}}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fs-7">Pilih Hari</label>
+                                    <select class="form-select form-select-sm" id="select-jk-shift-hari">
+                                        {{-- Options populated by JS --}}
+                                    </select>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                @php
-                                    $shifts = $group['data']->groupBy(function ($item) {
-                                        return $item->shift . '_' . $item->jumlah_shift;
-                                    });
-                                @endphp
 
-                                @foreach($shifts as $shiftKey => $shiftRecords)
-                                    @php
-                                        $firstShiftRecord = $shiftRecords->first();
-                                        $shiftLabel = ucfirst($firstShiftRecord->shift) . ' (' . $firstShiftRecord->jumlah_shift . ' Shift)';
-                                    @endphp
+                            {{-- Form fields for each tipe+shift+hari combination --}}
+                            @foreach($jamKerjaShift as $record)
+                                @php $shiftKey = $record->shift . '_' . $record->jumlah_shift; @endphp
+                                <div class="jk-shift-fields" data-tipe="{{ $record->tipe_pegawai }}"
+                                    data-shift-key="{{ $shiftKey }}" data-hari="{{ $record->hari }}" style="display:none;">
 
-                                    <h5 class="fw-bold text-primary mt-3 mb-4">Absen Datang - Shift {{ $shiftLabel }}</h5>
+                                    <h5 class="fw-bold text-primary mb-4">Absen Datang - Shift {{ ucfirst($record->shift) }}
+                                        ({{ $record->jumlah_shift }} Shift)</h5>
                                     <div class="row">
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas awal waktu absen datang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas awal waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][batas_awal_masuk]"
-                                                value="{{ substr($firstShiftRecord->batas_awal_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_awal_masuk]"
+                                                value="{{ substr($record->batas_awal_masuk, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas akhir waktu absen datang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas akhir waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][batas_akhir_masuk]"
-                                                value="{{ substr($firstShiftRecord->batas_akhir_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_akhir_masuk]"
+                                                value="{{ substr($record->batas_akhir_masuk, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas akhir absen tepat waktu datang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas akhir tepat waktu absen datang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][jam_masuk]"
-                                                value="{{ substr($firstShiftRecord->jam_masuk, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][jam_masuk]"
+                                                value="{{ substr($record->jam_masuk, 0, 5) }}">
                                         </div>
                                     </div>
 
-                                    <h5 class="fw-bold text-primary mt-3 mb-4">Absen Pulang - Shift {{ $shiftLabel }}</h5>
+                                    <h5 class="fw-bold text-primary mt-3 mb-4">Absen Pulang - Shift {{ ucfirst($record->shift) }}
+                                        ({{ $record->jumlah_shift }} Shift)</h5>
                                     <div class="row">
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas awal waktu absen pulang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas awal waktu absen pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][batas_awal_pulang]"
-                                                value="{{ substr($firstShiftRecord->batas_awal_pulang, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_awal_pulang]"
+                                                value="{{ substr($record->batas_awal_pulang, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas akhir waktu absen pulang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas akhir waktu absen pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][batas_akhir_pulang]"
-                                                value="{{ substr($firstShiftRecord->batas_akhir_pulang, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][batas_akhir_pulang]"
+                                                value="{{ substr($record->batas_akhir_pulang, 0, 5) }}">
                                         </div>
                                         <div class="col-md-4 mb-5">
-                                            <label class="form-label fs-7">Batas awal absen tepat waktu pulang Shift
-                                                ({{ ucfirst($firstShiftRecord->shift) }})</label>
+                                            <label class="form-label fs-7">Batas awal absen tepat waktu pulang</label>
                                             <input type="time" class="form-control form-control-sm"
-                                                name="jam_kerja[{{ $firstShiftRecord->id }}][jam_keluar]"
-                                                value="{{ substr($firstShiftRecord->jam_keluar, 0, 5) }}">
+                                                name="jam_kerja[{{ $record->id }}][jam_keluar]"
+                                                value="{{ substr($record->jam_keluar, 0, 5) }}">
                                         </div>
                                     </div>
-
-                                    {{-- Hidden inputs for other days in same shift --}}
-                                    @foreach($shiftRecords->skip(1) as $record)
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_awal_masuk]"
-                                            value="{{ substr($record->batas_awal_masuk, 0, 5) }}" class="sync-shift-{{ $shiftKey }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_akhir_masuk]"
-                                            value="{{ substr($record->batas_akhir_masuk, 0, 5) }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_awal_pulang]"
-                                            value="{{ substr($record->batas_awal_pulang, 0, 5) }}">
-                                        <input type="hidden" name="jam_kerja[{{ $record->id }}][batas_akhir_pulang]"
-                                            value="{{ substr($record->batas_akhir_pulang, 0, 5) }}">
-                                    @endforeach
-
-                                    <div class="separator separator-dashed my-5"></div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
-                    @endif
-                @endforeach
+                    </div>
+                @endif
 
-                {{-- APEL SETTINGS --}}
+                {{-- ============================================== --}}
+                {{-- APEL SETTINGS (unchanged) --}}
+                {{-- ============================================== --}}
                 @php
                     $apelReguler = $apelSettings->where('jenis', 'reguler');
                     $apelHariBesar = $apelSettings->where('jenis', 'hari_besar');
@@ -271,29 +290,112 @@
 @section('script')
     <script>
         $(document).ready(function () {
-            // Sync visible inputs to hidden inputs for same tipe_pegawai
-            @foreach($settings as $tipe => $group)
-                @if(!$group['is_shift'])
-                    @php $firstRecord = $group['data']->first(); @endphp
-                    @if($firstRecord)
-                        // Sync batas fields for {{ $tipe }}
-                        $('input[name="jam_kerja[{{ $firstRecord->id }}][batas_awal_masuk]"]').on('change', function () {
-                            $('.sync-batas-awal-masuk-{{ $tipe }}').val($(this).val());
-                        });
-                        $('input[name="jam_kerja[{{ $firstRecord->id }}][batas_akhir_masuk]"]').on('change', function () {
-                            $('.sync-batas-akhir-masuk-{{ $tipe }}').val($(this).val());
-                        });
-                        $('input[name="jam_kerja[{{ $firstRecord->id }}][batas_awal_pulang]"]').on('change', function () {
-                            $('.sync-batas-awal-pulang-{{ $tipe }}').val($(this).val());
-                        });
-                        $('input[name="jam_kerja[{{ $firstRecord->id }}][batas_akhir_pulang]"]').on('change', function () {
-                            $('.sync-batas-akhir-pulang-{{ $tipe }}').val($(this).val());
-                        });
-                    @endif
-                @endif
-            @endforeach
+            // ============================================
+            // Data: hari kerja per tipe pegawai
+            // ============================================
+            var hariKerjaPerTipe = @json($hariKerjaPerTipe);
+            var namaHari = @json($namaHari);
 
-            // Toggle apel reguler fields by dropdown
+            // ============================================
+            // NON-SHIFT: Tipe Pegawai + Hari dropdowns
+            // ============================================
+            function updateJkHariDropdown() {
+                var tipe = $('#select-jk-tipe').val();
+                var hariList = hariKerjaPerTipe[tipe] || [];
+                var $hariSelect = $('#select-jk-hari');
+                $hariSelect.empty();
+                $.each(hariList, function (i, hariNum) {
+                    $hariSelect.append('<option value="' + hariNum + '">' + (namaHari[hariNum] || 'Hari ' + hariNum) + '</option>');
+                });
+                updateJkFields();
+            }
+
+            function updateJkFields() {
+                var tipe = $('#select-jk-tipe').val();
+                var hari = $('#select-jk-hari').val();
+
+                // Hide all and disable inputs
+                $('.jk-fields').hide().find('input').prop('disabled', true);
+
+                // Show matching fields
+                $('.jk-fields[data-tipe="' + tipe + '"][data-hari="' + hari + '"]')
+                    .show().find('input').prop('disabled', false);
+            }
+
+            $('#select-jk-tipe').on('change', updateJkHariDropdown);
+            $('#select-jk-hari').on('change', updateJkFields);
+
+            // Initialize on page load
+            if ($('#select-jk-tipe').length) {
+                updateJkHariDropdown();
+            }
+
+            // ============================================
+            // SHIFT: Tipe + Shift + Hari dropdowns
+            // ============================================
+            @if($shiftTipeList->count() > 0)
+                // Build shift data from rendered elements
+                var shiftData = {};
+                $('.jk-shift-fields').each(function () {
+                    var tipe = $(this).data('tipe');
+                    var shiftKey = $(this).data('shift-key');
+                    var hari = $(this).data('hari');
+                    if (!shiftData[tipe]) shiftData[tipe] = {};
+                    if (!shiftData[tipe][shiftKey]) shiftData[tipe][shiftKey] = [];
+                    if (shiftData[tipe][shiftKey].indexOf(hari) === -1) {
+                        shiftData[tipe][shiftKey].push(hari);
+                    }
+                });
+
+                function updateShiftDropdown() {
+                    var tipe = $('#select-jk-shift-tipe').val();
+                    var shifts = shiftData[tipe] || {};
+                    var $shiftSelect = $('#select-jk-shift-shift');
+                    $shiftSelect.empty();
+                    $.each(shifts, function (shiftKey) {
+                        var parts = shiftKey.split('_');
+                        var label = parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' (' + parts[1] + ' Shift)';
+                        $shiftSelect.append('<option value="' + shiftKey + '">' + label + '</option>');
+                    });
+                    updateShiftHariDropdown();
+                }
+
+                function updateShiftHariDropdown() {
+                    var tipe = $('#select-jk-shift-tipe').val();
+                    var shiftKey = $('#select-jk-shift-shift').val();
+                    var hariList = (shiftData[tipe] && shiftData[tipe][shiftKey]) ? shiftData[tipe][shiftKey] : [];
+                    var $hariSelect = $('#select-jk-shift-hari');
+                    $hariSelect.empty();
+                    $.each(hariList, function (i, hariNum) {
+                        $hariSelect.append('<option value="' + hariNum + '">' + (namaHari[hariNum] || 'Hari ' + hariNum) + '</option>');
+                    });
+                    updateShiftFields();
+                }
+
+                function updateShiftFields() {
+                    var tipe = $('#select-jk-shift-tipe').val();
+                    var shiftKey = $('#select-jk-shift-shift').val();
+                    var hari = $('#select-jk-shift-hari').val();
+
+                    // Hide all shift fields and disable inputs
+                    $('.jk-shift-fields').hide().find('input').prop('disabled', true);
+
+                    // Show matching fields
+                    $('.jk-shift-fields[data-tipe="' + tipe + '"][data-shift-key="' + shiftKey + '"][data-hari="' + hari + '"]')
+                        .show().find('input').prop('disabled', false);
+                }
+
+                $('#select-jk-shift-tipe').on('change', updateShiftDropdown);
+                $('#select-jk-shift-shift').on('change', updateShiftHariDropdown);
+                $('#select-jk-shift-hari').on('change', updateShiftFields);
+
+                // Initialize
+                updateShiftDropdown();
+            @endif
+
+            // ============================================
+            // APEL: Toggle fields by dropdown (unchanged)
+            // ============================================
             @if($apelReguler->count() > 0)
                 $('#select-apel-reguler').on('change', function () {
                     let selectedId = $(this).val();
@@ -303,7 +405,6 @@
                 $('.apel-reguler-fields:hidden').find('input').prop('disabled', true);
             @endif
 
-            // Toggle apel hari besar fields by dropdown
             @if($apelHariBesar->count() > 0)
                 $('#select-apel-hb').on('change', function () {
                     let selectedId = $(this).val();
@@ -313,7 +414,9 @@
                 $('.apel-hb-fields:hidden').find('input').prop('disabled', true);
             @endif
 
-            // Submit form via AJAX
+            // ============================================
+            // SUBMIT: AJAX save (unchanged)
+            // ============================================
             $('#form-settings').on('submit', function (e) {
                 e.preventDefault();
                 let formData = $(this).serialize();

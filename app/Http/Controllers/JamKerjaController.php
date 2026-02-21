@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\JamKerja;
 use App\Models\JamApel;
+use App\Models\HariKerja;
 use DB;
 
 class JamKerjaController extends BaseController
@@ -21,17 +22,12 @@ class JamKerjaController extends BaseController
     }
 
     /**
-     * Display the settings page with all jam kerja grouped by tipe_pegawai.
+     * Display the settings page with all jam kerja using unified dropdown UI.
      */
     public function index()
     {
         $module = $this->breadcumb();
 
-        // Get distinct tipe pegawai
-        $tipePegawaiList = JamKerja::getTipePegawaiList();
-
-        // Build settings data grouped by tipe_pegawai
-        $settings = [];
         $namaHari = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
         $tipeLabels = [
             'pegawai_administratif' => 'Pegawai Administratif',
@@ -41,19 +37,52 @@ class JamKerjaController extends BaseController
             'tenaga_kesehatan_non_shift' => 'Tenaga Kesehatan Non Shift',
         ];
 
+        // Get distinct tipe pegawai from jam kerja records
+        $tipePegawaiList = JamKerja::getTipePegawaiList();
+
+        // Get hari kerja per tipe pegawai (for dropdown options)
+        $hariKerjaPerTipe = [];
         foreach ($tipePegawaiList as $tipe) {
-            $jamKerja = JamKerja::getSettingsForTipe($tipe);
-            $settings[$tipe] = [
-                'label' => $tipeLabels[$tipe] ?? ucwords(str_replace('_', ' ', $tipe)),
-                'data' => $jamKerja,
-                'is_shift' => $jamKerja->whereNotNull('shift')->count() > 0,
-            ];
+            $hariKerjaPerTipe[$tipe] = HariKerja::getHariKerja($tipe);
         }
+
+        // Non-shift jam kerja: grouped by [tipe_pegawai][hari] => record
+        $jamKerjaAll = JamKerja::where('is_active', true)
+            ->where('kategori', 'reguler')
+            ->whereNull('shift')
+            ->orderBy('tipe_pegawai')
+            ->orderBy('hari')
+            ->get();
+
+        // Shift-based jam kerja (tenaga_kesehatan): grouped by [tipe_pegawai][shift_jumlah][hari]
+        $jamKerjaShift = JamKerja::where('is_active', true)
+            ->where('kategori', 'reguler')
+            ->whereNotNull('shift')
+            ->orderBy('tipe_pegawai')
+            ->orderBy('shift')
+            ->orderBy('jumlah_shift')
+            ->orderBy('hari')
+            ->get();
+
+        // Determine which tipe_pegawai are shift-based
+        $shiftTipeList = $jamKerjaShift->pluck('tipe_pegawai')->unique()->values();
+        $nonShiftTipeList = $tipePegawaiList->diff($shiftTipeList)->values();
 
         // Get apel settings
         $apelSettings = JamApel::getAllSettings();
 
-        return view('admin_kabupaten.jam_kerja.index', compact('module', 'settings', 'apelSettings', 'namaHari', 'tipeLabels'));
+        return view('admin_kabupaten.jam_kerja.index', compact(
+            'module',
+            'tipePegawaiList',
+            'nonShiftTipeList',
+            'shiftTipeList',
+            'jamKerjaAll',
+            'jamKerjaShift',
+            'hariKerjaPerTipe',
+            'apelSettings',
+            'namaHari',
+            'tipeLabels'
+        ));
     }
 
     /**
