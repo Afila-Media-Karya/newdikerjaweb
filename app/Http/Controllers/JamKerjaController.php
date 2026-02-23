@@ -68,8 +68,22 @@ class JamKerjaController extends BaseController
         $shiftTipeList = $jamKerjaShift->pluck('tipe_pegawai')->unique()->values();
         $nonShiftTipeList = $tipePegawaiList->diff($shiftTipeList)->values();
 
-        // Get apel settings
-        $apelSettings = JamApel::getAllSettings();
+        // Get apel settings (including inactive for toggle)
+        $apelSettings = JamApel::orderBy('tipe_pegawai')
+            ->orderBy('jenis')
+            ->orderBy('hari')
+            ->get();
+
+        // Build hari list per tipe for apel reguler dropdown
+        $apelHariPerTipe = [];
+        foreach ($apelSettings->where('jenis', 'reguler') as $apel) {
+            if (!isset($apelHariPerTipe[$apel->tipe_pegawai])) {
+                $apelHariPerTipe[$apel->tipe_pegawai] = [];
+            }
+            if (!in_array($apel->hari, $apelHariPerTipe[$apel->tipe_pegawai])) {
+                $apelHariPerTipe[$apel->tipe_pegawai][] = $apel->hari;
+            }
+        }
 
         return view('admin_kabupaten.jam_kerja.index', compact(
             'module',
@@ -80,6 +94,7 @@ class JamKerjaController extends BaseController
             'jamKerjaShift',
             'hariKerjaPerTipe',
             'apelSettings',
+            'apelHariPerTipe',
             'namaHari',
             'tipeLabels'
         ));
@@ -136,6 +151,9 @@ class JamKerjaController extends BaseController
                     if ($record) {
                         $record->batas_awal = $values['batas_awal'] ?? $record->batas_awal;
                         $record->batas_akhir = $values['batas_akhir'] ?? $record->batas_akhir;
+                        if (isset($values['is_active'])) {
+                            $record->is_active = $values['is_active'];
+                        }
                         $record->save();
                     }
                 }

@@ -192,11 +192,12 @@
                 @endif
 
                 {{-- ============================================== --}}
-                {{-- APEL SETTINGS (unchanged) --}}
+                {{-- APEL SETTINGS --}}
                 {{-- ============================================== --}}
                 @php
                     $apelReguler = $apelSettings->where('jenis', 'reguler');
                     $apelHariBesar = $apelSettings->where('jenis', 'hari_besar');
+                    $apelRegulerTipeList = $apelReguler->pluck('tipe_pegawai')->unique()->values();
                 @endphp
 
                 @if($apelReguler->count() > 0)
@@ -205,32 +206,60 @@
                             <h3 class="card-title fw-bold">Pengaturan Absensi Apel Pagi</h3>
                         </div>
                         <div class="card-body">
+                            {{-- Dropdown filters --}}
                             <div class="row mb-5">
                                 <div class="col-md-4">
                                     <label class="form-label fs-7">Pilih Tipe Pegawai</label>
-                                    <select class="form-select form-select-sm" id="select-apel-reguler">
-                                        @foreach($apelReguler as $apel)
-                                            <option value="{{ $apel->id }}">
-                                                {{ $tipeLabels[$apel->tipe_pegawai] ?? ucwords(str_replace('_', ' ', $apel->tipe_pegawai)) }}
+                                    <select class="form-select form-select-sm" id="select-apel-reguler-tipe">
+                                        @foreach($apelRegulerTipeList as $tipe)
+                                            <option value="{{ $tipe }}">
+                                                {{ $tipeLabels[$tipe] ?? ucwords(str_replace('_', ' ', $tipe)) }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fs-7">Pilih Hari</label>
+                                    <select class="form-select form-select-sm" id="select-apel-reguler-hari">
+                                        {{-- Options populated by JS based on tipe pegawai --}}
+                                    </select>
+                                </div>
                             </div>
+
+                            {{-- Form fields for each tipe+hari combination --}}
                             @foreach($apelReguler as $apel)
-                                <div class="row apel-reguler-fields" data-apel-id="{{ $apel->id }}"
-                                    style="{{ $loop->first ? '' : 'display:none;' }}">
-                                    <div class="col-md-6 mb-5">
-                                        <label class="form-label fs-7">Batas awal absen apel</label>
-                                        <input type="time" class="form-control form-control-sm"
-                                            name="jam_apel[{{ $apel->id }}][batas_awal]"
-                                            value="{{ substr($apel->batas_awal, 0, 5) }}">
+                                <div class="apel-reguler-fields" data-tipe="{{ $apel->tipe_pegawai }}" data-hari="{{ $apel->hari }}" style="display:none;">
+                                    {{-- Toggle Aktif/Non-Aktif --}}
+                                    <div class="row mb-4">
+                                        <div class="col-md-12">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input apel-toggle" type="checkbox"
+                                                    id="apel-toggle-{{ $apel->id }}"
+                                                    data-apel-id="{{ $apel->id }}"
+                                                    {{ $apel->is_active ? 'checked' : '' }}>
+                                                <input type="hidden" class="apel-is-active-input"
+                                                    name="jam_apel[{{ $apel->id }}][is_active]"
+                                                    value="{{ $apel->is_active ? '1' : '0' }}">
+                                                <label class="form-check-label fw-semibold" for="apel-toggle-{{ $apel->id }}">
+                                                    <span class="apel-status-label">{{ $apel->is_active ? 'Apel Aktif' : 'Apel Non-Aktif' }}</span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6 mb-5">
-                                        <label class="form-label fs-7">Batas akhir absen apel</label>
-                                        <input type="time" class="form-control form-control-sm"
-                                            name="jam_apel[{{ $apel->id }}][batas_akhir]"
-                                            value="{{ substr($apel->batas_akhir, 0, 5) }}">
+                                    {{-- Time fields --}}
+                                    <div class="row apel-time-fields" style="{{ $apel->is_active ? '' : 'opacity: 0.5; pointer-events: none;' }}">
+                                        <div class="col-md-6 mb-5">
+                                            <label class="form-label fs-7">Batas awal absen apel</label>
+                                            <input type="time" class="form-control form-control-sm"
+                                                name="jam_apel[{{ $apel->id }}][batas_awal]"
+                                                value="{{ substr($apel->batas_awal, 0, 5) }}">
+                                        </div>
+                                        <div class="col-md-6 mb-5">
+                                            <label class="form-label fs-7">Batas akhir absen apel</label>
+                                            <input type="time" class="form-control form-control-sm"
+                                                name="jam_apel[{{ $apel->id }}][batas_akhir]"
+                                                value="{{ substr($apel->batas_akhir, 0, 5) }}">
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -394,15 +423,57 @@
             @endif
 
             // ============================================
-            // APEL: Toggle fields by dropdown (unchanged)
+            // APEL REGULER: Tipe + Hari dropdowns + Toggle
             // ============================================
             @if($apelReguler->count() > 0)
-                $('#select-apel-reguler').on('change', function () {
-                    let selectedId = $(this).val();
+                var apelHariPerTipe = @json($apelHariPerTipe);
+
+                function updateApelHariDropdown() {
+                    var tipe = $('#select-apel-reguler-tipe').val();
+                    var hariList = apelHariPerTipe[tipe] || [];
+                    var $hariSelect = $('#select-apel-reguler-hari');
+                    $hariSelect.empty();
+                    $.each(hariList, function (i, hariNum) {
+                        $hariSelect.append('<option value="' + hariNum + '">' + (namaHari[hariNum] || 'Hari ' + hariNum) + '</option>');
+                    });
+                    updateApelFields();
+                }
+
+                function updateApelFields() {
+                    var tipe = $('#select-apel-reguler-tipe').val();
+                    var hari = $('#select-apel-reguler-hari').val();
+
+                    // Hide all and disable inputs
                     $('.apel-reguler-fields').hide().find('input').prop('disabled', true);
-                    $('.apel-reguler-fields[data-apel-id="' + selectedId + '"]').show().find('input').prop('disabled', false);
+
+                    // Show matching fields
+                    $('.apel-reguler-fields[data-tipe="' + tipe + '"][data-hari="' + hari + '"]')
+                        .show().find('input').prop('disabled', false);
+                }
+
+                $('#select-apel-reguler-tipe').on('change', updateApelHariDropdown);
+                $('#select-apel-reguler-hari').on('change', updateApelFields);
+
+                // Toggle is_active
+                $(document).on('change', '.apel-toggle', function () {
+                    var isChecked = $(this).is(':checked');
+                    var $parent = $(this).closest('.apel-reguler-fields');
+                    var $hiddenInput = $parent.find('.apel-is-active-input');
+                    var $timeFields = $parent.find('.apel-time-fields');
+                    var $label = $parent.find('.apel-status-label');
+
+                    $hiddenInput.val(isChecked ? '1' : '0');
+                    $label.text(isChecked ? 'Apel Aktif' : 'Apel Non-Aktif');
+
+                    if (isChecked) {
+                        $timeFields.css({'opacity': '1', 'pointer-events': 'auto'});
+                    } else {
+                        $timeFields.css({'opacity': '0.5', 'pointer-events': 'none'});
+                    }
                 });
-                $('.apel-reguler-fields:hidden').find('input').prop('disabled', true);
+
+                // Initialize on page load
+                updateApelHariDropdown();
             @endif
 
             @if($apelHariBesar->count() > 0)

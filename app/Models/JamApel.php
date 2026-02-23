@@ -20,6 +20,7 @@ class JamApel extends Model
         'batas_awal',
         'batas_akhir',
         'is_active',
+        'hari',
         'user_insert',
         'user_update'
     ];
