@@ -474,10 +474,9 @@ trait General
 
     function isTanggalLibur($tanggal, $tipe_pegawai)
     {
-
         if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan') {
             $tipe_pegawai = 'pegawai_administratif';
-        } else if ($tipe_pegawai = 'tenaga_kesehatan_non_shift') {
+        } else if ($tipe_pegawai == 'tenaga_kesehatan_non_shift') {
             $tipe_pegawai = 'tenaga_kesehatan_non_shift';
         } else {
             $tipe_pegawai = 'tenaga_pendidik';
@@ -488,6 +487,7 @@ trait General
             ->where('tanggal_selesai', '>=', $tanggal)
             ->where('tipe', $tipe_pegawai)
             ->first();
+
         return !empty($libur);
     }
 
@@ -537,7 +537,6 @@ trait General
         $jml_tidak_apel = 0;
         $jml_tidak_apel_hari_senin = 0;
         $jml_tidak_hadir_berturut_turut = 0;
-
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
             if ($tipe_pegawai == 'pegawai_administratif') {
