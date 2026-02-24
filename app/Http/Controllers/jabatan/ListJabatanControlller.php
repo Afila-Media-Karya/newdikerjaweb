@@ -36,7 +36,7 @@ class ListJabatanControlller extends BaseController
         $satuan_kerja = intval(request('satuan_kerja'));
         // dd($satuan_kerja);
         // auth()->user()->role
-                $role = hasRole();
+        $role = hasRole();
 
         $query = DB::table('tb_jabatan as tb_jabatan1')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan1', 'tb_jabatan1.id_master_jabatan', '=', 'tb_master_jabatan1.id')
@@ -53,19 +53,18 @@ class ListJabatanControlller extends BaseController
             if ($role['guard'] == 'web') {
                 if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
                     $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
-                }else {
-                    dd('tes123');
+                } else {
                     $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
                 }
-            }else {
+            } else {
                 $query->where('tb_jabatan1.id_unit_kerja', $satuan_kerja);
             }
 
-            
 
-            
+
+
         }
-        
+
         $data = $query->get();
 
         return $this->sendResponse($data, 'Jabatan Fetched Success');
@@ -78,37 +77,37 @@ class ListJabatanControlller extends BaseController
         $unit_kerja = $this->option_unit_kerja();
         $satuan_kerja_user = '';
 
-     
 
-        if(hasRole()['guard'] == 'web'){
+
+        if (hasRole()['guard'] == 'web') {
             $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
         }
 
         if (hasRole()['guard'] == 'administrator') {
-            return view('jabatan.jabatan.index',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja'));
-        }elseif (hasRole()['guard'] == 'web' && hasRole()['role'] == '1') {
+            return view('jabatan.jabatan.index', compact('module', 'satuan_kerja', 'satuan_kerja_user', 'unit_kerja'));
+        } elseif (hasRole()['guard'] == 'web' && hasRole()['role'] == '1') {
             $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
-            
+
             if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
                 $unit_kerja = DB::table('tb_unit_kerja')
                     ->select('id', 'nama_unit_kerja as text')
-                    ->where('id_satuan_kerja',$satuan_kerja_user)
+                    ->where('id_satuan_kerja', $satuan_kerja_user)
                     ->whereNotIn('nama_unit_kerja', ['Dinas Kesehatan', 'Dinas Pendidikan dan Kebudayaan'])
-                    ->get(); 
-            }else {
+                    ->get();
+            } else {
                 $unit_kerja = $this->option_by_unit_kerja($satuan_kerja_user);
             }
-            
 
-            return view('jabatan.jabatan.indexopd',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja'));
-        }else{
+
+            return view('jabatan.jabatan.indexopd', compact('module', 'satuan_kerja', 'satuan_kerja_user', 'unit_kerja'));
+        } else {
             $unit_kerja = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
             $satuan_kerja = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja;
             $group = $this->infoSatuanKerja(hasRole()['id_pegawai']);
-            $lokasi = DB::table('tb_lokasi')->where('id_unit_kerja',$unit_kerja)->first()->id;
-            $pegawai = $this->option_pegawaiBy_unit_kerja(null,$unit_kerja);
-            
-            return view('jabatan.jabatan.indexunit',compact('module','satuan_kerja','satuan_kerja_user','unit_kerja','lokasi','pegawai'));
+            $lokasi = DB::table('tb_lokasi')->where('id_unit_kerja', $unit_kerja)->first()->id;
+            $pegawai = $this->option_pegawaiBy_unit_kerja(null, $unit_kerja);
+
+            return view('jabatan.jabatan.indexunit', compact('module', 'satuan_kerja', 'satuan_kerja_user', 'unit_kerja', 'lokasi', 'pegawai'));
         }
     }
 
@@ -124,7 +123,7 @@ class ListJabatanControlller extends BaseController
             ->leftJoin('tb_jabatan as tb_jabatan2', 'tb_jabatan1.id_parent', '=', 'tb_jabatan2.id')
             ->leftJoin('tb_pegawai', 'tb_jabatan1.id_pegawai', '=', 'tb_pegawai.id')
             ->leftJoin('tb_master_jabatan as tb_master_jabatan2', 'tb_jabatan2.id_master_jabatan', '=', 'tb_master_jabatan2.id')
-            ->select('tb_jabatan1.id', 'tb_jabatan1.uuid','tb_pegawai.nama as nama', 'tb_pegawai.nip as nip' , 'tb_master_jabatan1.nama_jabatan as jabatan', 'tb_master_jabatan2.nama_jabatan as atasan_langsung', 'tb_jabatan1.status', 'tb_master_jabatan1.level_jabatan', 'tb_satuan_kerja.nama_satuan_kerja')
+            ->select('tb_jabatan1.id', 'tb_jabatan1.uuid', 'tb_pegawai.nama as nama', 'tb_pegawai.nip as nip', 'tb_master_jabatan1.nama_jabatan as jabatan', 'tb_master_jabatan2.nama_jabatan as atasan_langsung', 'tb_jabatan1.status', 'tb_master_jabatan1.level_jabatan', 'tb_satuan_kerja.nama_satuan_kerja')
             ->whereNotNull('tb_jabatan1.id_parent')
             ->orderBy('tb_satuan_kerja.kode_satuan_kerja', 'ASC')
             ->orderBy('tb_master_jabatan1.kelas_jabatan', 'DESC');
@@ -230,7 +229,7 @@ class ListJabatanControlller extends BaseController
             // Untuk download 
             $writer = new Xlsx($spreadsheet);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="Daftar Laporan TPP"' . strtoupper('tes')  . ' BULAN ' . strtoupper('tes') . ' .xlsx"');
+            header('Content-Disposition: attachment;filename="Daftar Laporan TPP"' . strtoupper('tes') . ' BULAN ' . strtoupper('tes') . ' .xlsx"');
         } else {
             $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, $cell_head - 1);
             $spreadsheet->getActiveSheet()->getHeaderFooter()
@@ -247,37 +246,39 @@ class ListJabatanControlller extends BaseController
         $writer->save('php://output');
     }
 
-    public function carijumlahkelasjabatan($satuan_kerja){
+    public function carijumlahkelasjabatan($satuan_kerja)
+    {
 
         $result = DB::table('tb_jabatan')
-        ->join('tb_pegawai', 'tb_jabatan.id_pegawai', '=', 'tb_pegawai.id')
-        ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
-        ->where('tb_jabatan.id_satuan_kerja', $satuan_kerja)
-        ->select(
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 15 THEN 1 END) AS kelas_15'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 14 THEN 1 END) AS kelas_14'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 13 THEN 1 END) AS kelas_13'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 12 THEN 1 END) AS kelas_12'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 11 THEN 1 END) AS kelas_11'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 10 THEN 1 END) AS kelas_10'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 9 THEN 1 END) AS kelas_9'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 8 THEN 1 END) AS kelas_8'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 7 THEN 1 END) AS kelas_7'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 6 THEN 1 END) AS kelas_6'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 5 THEN 1 END) AS kelas_5'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 4 THEN 1 END) AS kelas_4'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 3 THEN 1 END) AS kelas_3'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 2 THEN 1 END) AS kelas_2'),
-            DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 1 THEN 1 END) AS kelas_1')
-        )
-        ->first(); // Menggunakan first() karena kita hanya mengharapkan satu baris hasil
+            ->join('tb_pegawai', 'tb_jabatan.id_pegawai', '=', 'tb_pegawai.id')
+            ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
+            ->where('tb_jabatan.id_satuan_kerja', $satuan_kerja)
+            ->select(
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 15 THEN 1 END) AS kelas_15'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 14 THEN 1 END) AS kelas_14'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 13 THEN 1 END) AS kelas_13'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 12 THEN 1 END) AS kelas_12'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 11 THEN 1 END) AS kelas_11'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 10 THEN 1 END) AS kelas_10'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 9 THEN 1 END) AS kelas_9'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 8 THEN 1 END) AS kelas_8'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 7 THEN 1 END) AS kelas_7'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 6 THEN 1 END) AS kelas_6'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 5 THEN 1 END) AS kelas_5'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 4 THEN 1 END) AS kelas_4'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 3 THEN 1 END) AS kelas_3'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 2 THEN 1 END) AS kelas_2'),
+                DB::raw('COUNT(CASE WHEN tb_master_jabatan.kelas_jabatan = 1 THEN 1 END) AS kelas_1')
+            )
+            ->first(); // Menggunakan first() karena kita hanya mengharapkan satu baris hasil
 
-         return $result;       
+        return $result;
     }
 
-    public function cetakKelasJabatan(){
+    public function cetakKelasJabatan()
+    {
 
-        $data = DB::table('tb_satuan_kerja')->select('id as id_satuan_kerja','inisial_satuan_kerja')->get();
+        $data = DB::table('tb_satuan_kerja')->select('id as id_satuan_kerja', 'inisial_satuan_kerja')->get();
 
         $data = $data->map(function ($item) {
             $nilai = $this->carijumlahkelasjabatan($item->id_satuan_kerja);
@@ -343,7 +344,7 @@ class ListJabatanControlller extends BaseController
         $sheet->setCellValue('A3', 'PEGAWAI NEGERI SIPIL DI LINGKUP PEMERINTAH KABUPATEN BULUKUMBA')->mergeCells('A3:R3');
         $sheet->setCellValue('A4', ' ')->mergeCells('A4:F4');
 
-         $sheet->setCellValue('A5', 'NO')->mergeCells('A5:A6');
+        $sheet->setCellValue('A5', 'NO')->mergeCells('A5:A6');
         $sheet->setCellValue('B5', 'NAMA OPD')->mergeCells('B5:B6')->getColumnDimension('B')->setWidth(30);
         $sheet->setCellValue('C5', 'KELAS JABATAN')->mergeCells('C5:Q5');
         $sheet->setCellValue('R5', 'JUMLAH');
@@ -374,7 +375,7 @@ class ListJabatanControlller extends BaseController
 
         $cell = $cell_head = 7;
         $no = 1;
-       
+
         $count_kelas_1 = 0;
         $count_kelas_2 = 0;
         $count_kelas_3 = 0;
@@ -429,17 +430,17 @@ class ListJabatanControlller extends BaseController
             $count_kelas_14 += $value->kelas_14;
             $count_kelas_15 += $value->kelas_15;
             $count_jml += $value->jml_kelas;
-            
-            
-            $sheet->getStyle('C'.$cell.':F'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFF3CC');
-            $sheet->getStyle('G'.$cell.':J'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('C8C8C8');
-            $sheet->getStyle('K'.$cell.':Q'.$cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E2EEDA');
+
+
+            $sheet->getStyle('C' . $cell . ':F' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFF3CC');
+            $sheet->getStyle('G' . $cell . ':J' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('C8C8C8');
+            $sheet->getStyle('K' . $cell . ':Q' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E2EEDA');
             $cell++;
         }
 
-        
 
-        $sheet->setCellValue('A' . $cell, 'Jumlah')->mergeCells('A'.$cell.':B'.$cell);
+
+        $sheet->setCellValue('A' . $cell, 'Jumlah')->mergeCells('A' . $cell . ':B' . $cell);
         $sheet->setCellValue('C' . $cell, $count_kelas_1);
         $sheet->setCellValue('D' . $cell, $count_kelas_2);
         $sheet->setCellValue('E' . $cell, $count_kelas_3);
@@ -474,23 +475,23 @@ class ListJabatanControlller extends BaseController
 
         $cell++;
 
-       $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, $cell_head - 1);
-            $spreadsheet->getActiveSheet()->getHeaderFooter()
-                ->setOddHeader('&C&H' . url()->current());
-            $spreadsheet->getActiveSheet()->getHeaderFooter()
-                ->setOddFooter('&L&B &RPage &P of &N');
-            $class = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf::class;
-            \PhpOffice\PhpSpreadsheet\IOFactory::registerWriter('Pdf', $class);
-            header('Content-Type: application/pdf');
-            header('Cache-Control: max-age=0');
-            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Pdf');
+        $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, $cell_head - 1);
+        $spreadsheet->getActiveSheet()->getHeaderFooter()
+            ->setOddHeader('&C&H' . url()->current());
+        $spreadsheet->getActiveSheet()->getHeaderFooter()
+            ->setOddFooter('&L&B &RPage &P of &N');
+        $class = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf::class;
+        \PhpOffice\PhpSpreadsheet\IOFactory::registerWriter('Pdf', $class);
+        header('Content-Type: application/pdf');
+        header('Cache-Control: max-age=0');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Pdf');
 
         $writer->save('php://output');
     }
 
     public function detail($params)
     {
-        $module =  [
+        $module = [
             [
                 'label' => 'Jabatan',
                 'url' => '#'
@@ -562,7 +563,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_satuan_kerja = $request->id_satuan_kerja;
                     $data->id_unit_kerja = $request->id_unit_kerja;
                     $data->status = $request->status;
-                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                     $data->pembayaran = $request->pembayaran;
                     $data->target_waktu = $request->target_waktu;
                     $data->save();
@@ -576,7 +577,7 @@ class ListJabatanControlller extends BaseController
                     $data->id_lokasi_kerja = $request->id_lokasi_kerja;
                     $data->id_parent = $request->id_parent;
                     $data->status = $request->status;
-                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));  
+                    $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                     $data->pembayaran = $request->pembayaran;
                     $data->target_waktu = $request->target_waktu;
                     $data->save();
@@ -601,7 +602,7 @@ class ListJabatanControlller extends BaseController
                     if ($data->id_pegawai !== intval($request->id_pegawai)) {
                         return $this->sendError($check_jabatan->nama . ' mengisi jabatan ' . $check_jabatan->nama_jabatan . ' dan status ' . $check_jabatan->status . ', anda tidak bisa memilih jabatan definitif!', 'Gagal', 200);
                     }
-   
+
                 }
 
                 if ($check_jabatan->status === 'definitif' && $request->status === 'plt') {
@@ -641,11 +642,11 @@ class ListJabatanControlller extends BaseController
                 if (isset($request->pagu_tpp)) {
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                 }
-                $data->target_waktu = $request->target_waktu;  
+                $data->target_waktu = $request->target_waktu;
                 $data->save();
             } else {
                 if ($request->type == 'administrator') {
-         
+
                     $data->id_pegawai = $pegawai_val;
                     if (isset($data->id_master_jabatan)) {
                         $data->id_master_jabatan = $request->id_master_jabatan;
@@ -663,7 +664,7 @@ class ListJabatanControlller extends BaseController
                     $data->target_waktu = $request->target_waktu;
                     $data->save();
                 } else {
-                   
+
                     if (isset($data->id_master_jabatan)) {
                         $data->id_master_jabatan = $request->id_master_jabatan;
                     }
