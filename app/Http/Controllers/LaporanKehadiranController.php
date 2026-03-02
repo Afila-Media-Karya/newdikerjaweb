@@ -11,6 +11,7 @@ use Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LaporanKehadiranController extends Controller
 {
@@ -41,7 +42,6 @@ class LaporanKehadiranController extends Controller
     {
         $module = $this->breadcumb();
         $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai);
-        // dd($satuan_kerja);
         $pegawai = array();
         $role = hasRole();
         $satuan_kerja_user = '';
@@ -96,7 +96,7 @@ class LaporanKehadiranController extends Controller
     }
 
     public function export_pegawai_bulan()
-    {
+    {;
         $satuan_kerja = request('satuan_kerja');
         $bulan = request('bulan');
         $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
@@ -533,15 +533,34 @@ class LaporanKehadiranController extends Controller
     public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai)
     {
         $data = array();
+
+        $query_mutasi_check =  DB::table('tb_pegawai')
+            ->select(
+                "tb_pegawai.id",
+                "tb_pegawai.nama",
+                'tb_pegawai.nip',
+                'tb_unit_kerja.waktu_masuk',
+                'tb_unit_kerja.waktu_keluar',
+                'tb_pegawai.tipe_pegawai',
+                'tb_unit_kerja.jumlah_shift',
+                'tb_mutasi.tmt'
+            )
+            ->join('tb_mutasi', 'tb_mutasi.id_pegawai', '=', 'tb_pegawai.id')
+            ->join('tb_jabatan', 'tb_jabatan.id', '=', 'tb_mutasi.id_jabatan_lama')
+            ->join('tb_unit_kerja', 'tb_unit_kerja.id', '=', 'tb_jabatan.id_unit_kerja')
+            ->where('tb_mutasi.id_satuan_kerja', $satuan_kerja)
+            ->whereDate('tb_mutasi.tmt', '>=', $tanggal_awal);
+
         $query = DB::table('tb_pegawai')
             ->select(
-                'tb_pegawai.id', 
-                'tb_pegawai.nama', 
-                'tb_pegawai.nip', 
-                'tb_unit_kerja.waktu_masuk', 
-                'tb_unit_kerja.waktu_keluar', 
-                'tb_pegawai.tipe_pegawai', 
-                'tb_unit_kerja.jumlah_shift'
+                'tb_pegawai.id',
+                'tb_pegawai.nama',
+                'tb_pegawai.nip',
+                'tb_unit_kerja.waktu_masuk',
+                'tb_unit_kerja.waktu_keluar',
+                'tb_pegawai.tipe_pegawai',
+                'tb_unit_kerja.jumlah_shift',
+                DB::raw('NULL as tmt')
             )
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
@@ -573,10 +592,24 @@ class LaporanKehadiranController extends Controller
             $query->where('tipe_pegawai', $tipe_pegawai);
         }
 
-        $data = $query->get();
+        // $data = $query->get();
+        $data = $query->union($query_mutasi_check)->get();
 
         $data = $data->map(function ($item) use ($tanggal_awal, $tanggal_akhir) {
-            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
+
+            if (!is_null($item->tmt)) {
+                // tanggal akhir = tmt - 1 hari
+                $tanggal_akhir_final = Carbon::parse($item->tmt)
+                    ->subDay()
+                    ->format('Y-m-d');
+            } else {
+                // pegawai aktif
+                $tanggal_akhir_final = $tanggal_akhir;
+            }
+            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir_final, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
+
+           Log::debug($tanggal_akhir_final);
+
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];
@@ -658,11 +691,13 @@ class LaporanKehadiranController extends Controller
         $tipe_pegawai = request('tipe_pegawai');
 
         if (request('satuan_kerja')) {
+
             $satuan_kerja = request('satuan_kerja');
             $nama_satuan_kerja = request('nama_satuan_kerja');
             $unit_kerja = request('id_unit_kerja');
             $nama_unit_kerja = request('nama_unit_kerja');
         } else {
+            dd("ELSE KI");
             $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_satuan_kerja;
             $nama_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_satuan_kerja;
             $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
