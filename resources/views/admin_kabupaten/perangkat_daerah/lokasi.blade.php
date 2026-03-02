@@ -16,7 +16,7 @@
     </div>
 @endsection
 @section('content')
-<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container">
             <div class="row">
@@ -61,8 +61,7 @@
                 <div class="card-title">
                     <!--begin::User-->
                     <div class="d-flex justify-content-center flex-column me-3">
-                        <a href="#"
-                            class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1 title_side_form"></a>
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1 title_side_form"></a>
                     </div>
                     <!--end::User-->
                 </div>
@@ -73,12 +72,11 @@
                     <div class="btn btn-sm btn-icon btn-active-light-primary" id="side_form_close">
                         <!--begin::Svg Icon | path: icons/duotone/Navigation/Close.svg-->
                         <span class="svg-icon svg-icon-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                                height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g transform="translate(12.000000, 12.000000) rotate(-45.000000) translate(-12.000000, -12.000000) translate(4.000000, 4.000000)"
                                     fill="#000000">
-                                    <rect fill="#000000" x="0" y="7" width="16" height="2"
-                                        rx="1" />
+                                    <rect fill="#000000" x="0" y="7" width="16" height="2" rx="1" />
                                     <rect fill="#000000" opacity="0.5"
                                         transform="translate(8.000000, 8.000000) rotate(-270.000000) translate(-8.000000, -8.000000)"
                                         x="0" y="7" width="16" height="2" rx="1" />
@@ -101,7 +99,8 @@
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Satuan Kerja</label>
-                        <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja" data-control="select2" data-placeholder="Pilih Satuan Kerja">
+                        <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja"
+                            data-control="select2" data-placeholder="Pilih Satuan Kerja">
                             <option></option>
                             @foreach($satuan_kerja as $val)
                                 <option value="{{$val->value}}">{{$val->text}}</option>
@@ -112,7 +111,8 @@
 
                     <div class="mb-10">
                         <label class="form-label">Unit Kerja</label>
-                        <select class="form-select form-control" name="id_unit_kerja" id="id_unit_kerja" data-control="select2" data-placeholder="Pilih Unit Kerja">
+                        <select class="form-select form-control" name="id_unit_kerja" id="id_unit_kerja"
+                            data-control="select2" data-placeholder="Pilih Unit Kerja">
                             <option></option>
                         </select>
                         <small class="text-danger id_unit_kerja_error"></small>
@@ -120,7 +120,8 @@
 
                     <div class="mb-10">
                         <label class="form-label">Nama Lokasi</label>
-                        <input type="text" id="nama_lokasi" class="form-control" name="nama_lokasi" placeholder="Masukkan Nama Lokasi">
+                        <input type="text" id="nama_lokasi" class="form-control" name="nama_lokasi"
+                            placeholder="Masukkan Nama Lokasi">
                         <small class="text-danger nama_lokasi_error"></small>
                     </div>
 
@@ -144,7 +145,7 @@
                         <input type="number" id="radius" class="form-control" name="radius" placeholder="Masukkan Radius">
                         <small class="text-danger radius_error"></small>
                     </div>
-                    
+
 
                     <div class="separator separator-dashed mt-8 mb-5"></div>
                     <div class="d-flex gap-5">
@@ -163,7 +164,9 @@
     </div>
 @endsection
 @section('script')
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA97drRATl2BEEoFPEqpF1o9Jk0wenosuU&callback=initMap&libraries=v=weekly,places&sensor=false" defer></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap&libraries=v=weekly,places&sensor=false"
+        defer></script>
     <script>
         let control = new Control();
         let role = {!! json_encode($role) !!};
@@ -172,49 +175,46 @@
         console.log(guard);
 
         let path = '';
-            if (parseInt(role) > 0 && guard == 'web') {
-                path = 'perangkat-daerah-opd';
-            }else{
-                path = 'perangkat-daerah';
-            }
-        
+        if (parseInt(role) > 0 && guard == 'web') {
+            path = 'perangkat-daerah-opd';
+        } else {
+            path = 'perangkat-daerah';
+        }
 
-
-        
-        $(document).on('click', '#button-side-form', function() {
+        $(document).on('click', '#button-side-form', function () {
             control.overlay_form('Tambah', 'Lokasi Kerja');
         })
 
-        $(document).on('submit', ".form-data", function(e) {
+        $(document).on('submit', ".form-data", function (e) {
             e.preventDefault();
             let type = $(this).attr('data-type');
             if (type == 'add') {
-                control.submitFormMultipart(`/${path}/lokasi/store`, 'Tambah', 'Lokasi Kerja','POST');
+                control.submitFormMultipart(`/${path}/lokasi/store`, 'Tambah', 'Lokasi Kerja', 'POST');
             } else {
                 let uuid = $("input[name='uuid']").val();
-                control.submitFormMultipart(`/${path}/lokasi/update/` + uuid, 'Update','Lokasi Kerja', 'POST');
+                control.submitFormMultipart(`/${path}/lokasi/update/` + uuid, 'Update', 'Lokasi Kerja', 'POST');
             }
         });
 
-        $(document).on('change','#id_satuan_kerja', function () {
+        $(document).on('change', '#id_satuan_kerja', function () {
             if ($(this).val() !== '') {
                 let val = $(this).val();
-                control.push_select(`/${path}/unit-kerja/option?satuan_kerja=${val}`,'#id_unit_kerja'); 
+                control.push_select(`/${path}/unit-kerja/option?satuan_kerja=${val}`, '#id_unit_kerja');
             }
         })
 
-        $(document).on('click', '.button-update', function(e) {
+        $(document).on('click', '.button-update', function (e) {
             e.preventDefault();
             let url = `/${path}/lokasi/show/` + $(this).attr('data-uuid');
             control.overlay_form('Update', 'Perangkat Daerah', url);
             setTimeout(() => {
-               var lat = $('#lat').val(); 
-               var lng = $('#long').val(); 
-               initMap(lat, lng);
+                var lat = $('#lat').val();
+                var lng = $('#long').val();
+                initMap(lat, lng);
             }, 500);
         })
 
-        $(document).on('click', '.button-delete', function(e) {
+        $(document).on('click', '.button-delete', function (e) {
             e.preventDefault();
             let url = `/${path}/lokasi/delete/` + $(this).attr('data-uuid');
             let label = $(this).attr('data-label');
@@ -223,32 +223,30 @@
 
         let marker;
         function initMap(lat = null, lng = null) {
-                lat = lat ? lat : '-5.558543';
-                lng = lng ? lng : '120.1909133,17';
-                
-                var center = { lat: parseFloat(lat), lng: parseFloat(lng) };
-                const bounds = new google.maps.LatLngBounds();
-                const map = new google.maps.Map(document.getElementById("mapView"), {
-                    zoom: 14,
-                    center: center,
-                    mapTypeControl: true,
-                    mapTypeControlOptions: {
-                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                        // mapTypeId: google.maps.MapTypeId.SATELLITE
-                        mapTypeId: 'satellite'
-                    },
-                });
+            lat = lat ? lat : '-5.558543';
+            lng = lng ? lng : '120.1909133,17';
 
-                const geocoder = new google.maps.Geocoder();
-             // build request
-                
+            var center = { lat: parseFloat(lat), lng: parseFloat(lng) };
+            const bounds = new google.maps.LatLngBounds();
+            const map = new google.maps.Map(document.getElementById("mapView"), {
+                zoom: 14,
+                center: center,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    // mapTypeId: google.maps.MapTypeId.SATELLITE
+                    mapTypeId: 'satellite'
+                },
+            });
 
+            const geocoder = new google.maps.Geocoder();
+            // build request
 
             marker = new google.maps.Marker({
                 position: center,
                 map,
             });
-            google.maps.event.addListener(map, 'click', function(event) {
+            google.maps.event.addListener(map, 'click', function (event) {
                 setMarker(this, event.latLng);
                 // geocodeLatLng(geocoder, map);
 
@@ -260,7 +258,7 @@
             const geocoder = new google.maps.Geocoder();
             const service = new google.maps.DistanceMatrixService();
             console.log(markerPosition)
-            if( marker ){
+            if (marker) {
                 marker.setPosition(markerPosition);
             } else {
                 marker = new google.maps.Marker({
@@ -270,58 +268,58 @@
             }
             map.setZoom(16);
             map.setCenter(markerPosition);
-                // isi nilai koordinat ke form
-                // document.getElementById("setLongitude").value = markerPosition.lng();
-                // document.getElementById("setLatitude").value = markerPosition.lat();
-                document.getElementById('lat').value = markerPosition.lat();
-                 document.getElementById('long').value = markerPosition.lng();
-                // Get Lokasi
-                // lat_locationlong_location
+            // isi nilai koordinat ke form
+            // document.getElementById("setLongitude").value = markerPosition.lng();
+            // document.getElementById("setLatitude").value = markerPosition.lat();
+            document.getElementById('lat').value = markerPosition.lat();
+            document.getElementById('long').value = markerPosition.lng();
+            // Get Lokasi
+            // lat_locationlong_location
 
 
         }
 
-        datatable = () =>{
+        datatable = () => {
             let columns = [{
                 data: null,
-                className : 'text-center',
-                render: function(data, type, row, meta) {
+                className: 'text-center',
+                render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             }, {
                 data: 'nama_lokasi',
-                className : 'text-right',
+                className: 'text-right',
             }, {
                 data: 'nama_satuan_kerja',
-                className : 'text-right',
+                className: 'text-right',
             }, {
                 data: 'nama_unit_kerja',
-                className : 'text-right',
+                className: 'text-right',
             }, {
                 data: 'uuid',
-                className : 'text-center',
+                className: 'text-center',
             }];
             let columnDefs = [{
                 targets: -1,
                 title: 'Aksi',
                 width: '9rem',
                 orderable: false,
-                render: function(data, type, full, meta) {
+                render: function (data, type, full, meta) {
                     return `
-                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
-                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
-                            </a>
+                                            <a href="javascript:;" type="button" data-uuid="${data}" data-kt-drawer-show="true" data-kt-drawer-target="#side_form" class="btn btn-primary button-update btn-icon btn-sm"> 
+                                                <img src="{{ asset('admin/assets/media/icons/edit.svg')}}" alt="" srcset="">
+                                            </a>
 
-                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.inisial_satuan_kerja}" class="btn btn-danger button-delete btn-icon btn-sm"> 
-                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
-                            </a>
-                            `;
-                    },
+                                            <a href="javascript:;" type="button" data-uuid="${data}" data-label="${full.inisial_satuan_kerja}" class="btn btn-danger button-delete btn-icon btn-sm"> 
+                                                <img src="{{ asset('admin/assets/media/icons/trash.svg')}}" alt="" srcset="">
+                                            </a>
+                                            `;
+                },
             }];
             control.initDatatable(`/${path}/lokasi/datatable`, columns, columnDefs);
         }
 
-        $(function() {    
+        $(function () {
             initMap();
             datatable();
         })

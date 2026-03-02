@@ -67,6 +67,8 @@ class LaporanKehadiranController extends Controller
         } else {
             return view('laporan.kehadiran.index_unit', compact('module', 'pegawai'));
         }
+
+
     }
 
     public function index_kabupaten()

@@ -5,8 +5,13 @@ namespace App\Traits;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Auth;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Log;
 
+=======
+use App\Models\Ramadan;
+use App\Models\JamApel;
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
 trait General
 {
     public function option_golongan()
@@ -127,6 +132,7 @@ trait General
     {
         $data = array();
 
+<<<<<<< HEAD
         $aktif = DB::table('tb_pegawai')
             ->select(
                 'tb_pegawai.id',
@@ -136,12 +142,16 @@ trait General
                 ),
                 'tipe_pegawai'
             )
+=======
+        $query = DB::table('tb_pegawai')->select('tb_pegawai.id', DB::raw('CONCAT(tb_pegawai.nama, " - ", tb_pegawai.nip) as text'), 'tipe_pegawai')
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', '=', 'tb_pegawai.id')
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->where('tb_pegawai.status', '1')
             ->groupBy('tb_pegawai.id');
 
         if (isset($satuan_kerja)) {
+<<<<<<< HEAD
             $aktif->where('tb_pegawai.id_satuan_kerja', $satuan_kerja);
         }
 
@@ -174,6 +184,16 @@ trait General
         $data = $aktif->unionAll($mutasi)->get();
 
         // $data =  $query->get();
+=======
+            $query->where('tb_pegawai.id_satuan_kerja', $satuan_kerja);
+        }
+
+        if ($unit_kerja !== 'all') {
+            $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
+        }
+
+        $data = $query->get();
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
         return $data;
     }
 
@@ -351,14 +371,24 @@ trait General
         if (is_null($data)) {
             $data = $this->ifPegawaiPlt($pegawai);
         }
+<<<<<<< HEAD
 
         return $data;
+=======
+
+        return $data;
+
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
     }
 
     public function checkJabatanAll($pegawai)
     {
+<<<<<<< HEAD
         $query = DB::table('tb_pegawai')->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu', 'tb_jabatan.id_unit_kerja')->where('tb_pegawai.id', $pegawai);
         return $query->get();
+=======
+        return DB::table('tb_pegawai')->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu')->where('tb_pegawai.id', $pegawai)->get();
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
     }
 
     public function optionJabatanKosong($params)
@@ -407,7 +437,7 @@ trait General
         $jabatan = $this->checkJabatanDefinitif($pegawai);
 
         $kelompok_jabatan = 0;
-        $jabatan->level_jabatan !== 1 ? $kelompok_jabatan = $jabatan->id_kelompok_jabatan : $kelompok_jabatan  = 0;
+        $jabatan->level_jabatan !== 1 ? $kelompok_jabatan = $jabatan->id_kelompok_jabatan : $kelompok_jabatan = 0;
         return DB::table('tb_master_aktivitas')
             ->select('uuid', 'aktivitas as text')
             ->union(
@@ -420,6 +450,7 @@ trait General
             ->get();
     }
 
+<<<<<<< HEAD
     public function getPeriodePegawaiDiSatuanKerja($pegawai_id, $id_satuan_kerja, $tahun, $bulan)
     {
         $tanggal_awal = date("Y-m-d", strtotime($tahun . '-' . $bulan . '-01'));
@@ -517,6 +548,8 @@ trait General
     }
 
 
+=======
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
     public function findPegawai($params, $status_jabatan = null, $role_check = null)
     {
 
@@ -532,10 +565,15 @@ trait General
 
         // $status = 'definitif';
         $query = DB::table('tb_pegawai')
+<<<<<<< HEAD
+=======
+            ->select("tb_pegawai.nama", 'tb_pegawai.nip', "tb_pegawai.golongan", 'tb_master_jabatan.nama_jabatan', 'tb_satuan_kerja.nama_satuan_kerja', 'tb_jabatan.target_waktu', 'tb_jabatan.status as status_jabatan', 'tb_unit_kerja.nama_unit_kerja', 'tb_unit_kerja.waktu_masuk', 'tb_unit_kerja.waktu_keluar', 'tb_pegawai.tipe_pegawai', 'tb_unit_kerja.jumlah_shift')
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->join("tb_master_jabatan", 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->join('tb_satuan_kerja', 'tb_jabatan.id_satuan_kerja', '=', 'tb_satuan_kerja.id')
             ->join('tb_unit_kerja', 'tb_jabatan.id_unit_kerja', '=', 'tb_unit_kerja.id')
+<<<<<<< HEAD
             ->select(
                 "tb_pegawai.nama",
                 'tb_pegawai.nip',
@@ -550,6 +588,8 @@ trait General
                 'tb_pegawai.tipe_pegawai',
                 'tb_unit_kerja.jumlah_shift'
             )
+=======
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
             ->where('tb_pegawai.id', $params);
 
         if ($status !== '') {
@@ -616,10 +656,9 @@ trait General
 
     function isTanggalLibur($tanggal, $tipe_pegawai)
     {
-
         if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_kesehatan') {
             $tipe_pegawai = 'pegawai_administratif';
-        } else if ($tipe_pegawai = 'tenaga_kesehatan_non_shift') {
+        } else if ($tipe_pegawai == 'tenaga_kesehatan_non_shift') {
             $tipe_pegawai = 'tenaga_kesehatan_non_shift';
         } else {
             $tipe_pegawai = 'tenaga_pendidik';
@@ -630,20 +669,26 @@ trait General
             ->where('tanggal_selesai', '>=', $tanggal)
             ->where('tipe', $tipe_pegawai)
             ->first();
+
         return !empty($libur);
     }
 
     function isRhamadan($tanggal)
     {
-        // Ubah tanggal ke format yang sesuai untuk memeriksa bulan
-        $tanggal_awal_ramadan = '2025-03-01'; // Tanggal awal bulan Ramadan
-        $tanggal_akhir_ramadan = '2025-03-31'; // Tanggal akhir bulan Ramadan
+        // Query dari database terlebih dahulu
+        $fromDb = Ramadan::isRamadan($tanggal);
+        if ($fromDb) {
+            return true;
+        }
 
-        // Periksa apakah tanggal berada dalam rentang bulan Ramadan
+        // Fallback ke hardcoded jika data belum ada di database
+        $tanggal_awal_ramadan = '2025-03-01';
+        $tanggal_akhir_ramadan = '2025-03-31';
+
         if ($tanggal >= $tanggal_awal_ramadan && $tanggal <= $tanggal_akhir_ramadan) {
-            return true; // Jika tanggal berada dalam rentang bulan Ramadan
+            return true;
         } else {
-            return false; // Jika tanggal tidak berada dalam rentang bulan Ramadan
+            return false;
         }
     }
 
@@ -674,7 +719,6 @@ trait General
         $jml_tidak_apel = 0;
         $jml_tidak_apel_hari_senin = 0;
         $jml_tidak_hadir_berturut_turut = 0;
-
 
         while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
             if ($tipe_pegawai == 'pegawai_administratif') {
@@ -776,13 +820,37 @@ trait General
                     $count_cuti += 1;
                 }
 
+                // Jika status apel, hitung keterlambatan masuk berdasarkan batas_akhir apel
+                if ($absen_per_tanggal[$tanggal]['status'] == 'apel' && $absen_per_tanggal[$tanggal]['waktu_masuk'] !== null) {
+                    $shift_apel = ($tipe_pegawai == 'tenaga_kesehatan') ? $absen_per_tanggal[$tanggal]['shift'] : null;
+                    $jamApel = JamApel::getJamApel($tipe_pegawai, 'reguler', $shift_apel);
+                    if ($jamApel) {
+                        $waktu_absen = strtotime($absen_per_tanggal[$tanggal]['waktu_masuk']);
+                        $batas_akhir_apel = strtotime($jamApel->batas_akhir);
+                        $diff_apel = $waktu_absen - $batas_akhir_apel;
+                        $selisih_waktu_masuk = ($diff_apel > 0) ? floor($diff_apel / 60) : 0;
+                    } else {
+                        $selisih_waktu_masuk = 0; // fallback: apel tanpa config = tepat waktu
+                    }
+                } elseif ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                    $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $waktu_tetap_masuk, $tipe_pegawai);
+                } else {
+                    $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $absen_per_tanggal[$tanggal]['shift'], $waktu_tetap_masuk, $jumlah_shift, $tipe_pegawai);
+                }
+
+                // Hitung selisih waktu pulang (tidak terpengaruh status apel)
                 if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+<<<<<<< HEAD
                     $selisih_waktu_masuk = $this->konvertWaktu('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $waktu_tetap_masuk, $tipe_pegawai);
                     $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $waktu_tetap_keluar, $tipe_pegawai);
                     // dd($tanggal);
 
                 } else {
                     $selisih_waktu_masuk = $this->konvertWaktuNakes('masuk', $absen_per_tanggal[$tanggal]['waktu_masuk'], $tanggal, $absen_per_tanggal[$tanggal]['shift'], $waktu_tetap_masuk, $jumlah_shift, $tipe_pegawai);
+=======
+                    $selisih_waktu_pulang = $this->konvertWaktu('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $waktu_tetap_keluar, $tipe_pegawai);
+                } else {
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
                     $selisih_waktu_pulang = $this->konvertWaktuNakes('keluar', $absen_per_tanggal[$tanggal]['waktu_keluar'], $tanggal, $absen_per_tanggal[$tanggal]['shift'], $waktu_tetap_keluar, $jumlah_shift, $tipe_pegawai);
                 }
 
@@ -823,7 +891,11 @@ trait General
                 $jamSekarang = $waktuSekarang->format('H:i:s');
 
                 if ($waktu_pulang) {
+<<<<<<< HEAD
                     $keterangan_pulang = $selisih_waktu_pulang > 0 ?  'Cepat ' . $selisih_waktu_pulang . ' menit' : 'Tepat waktu';
+=======
+                    $keterangan_pulang = $selisih_waktu_pulang > 0 ? 'Cepat ' . $selisih_waktu_pulang . ' menit' : 'Tepat waktu';
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
                 } else {
                     if ($waktuSekarang->greaterThan(Carbon::parse('22:00:00'))) {
                         $waktu_pulang = '14:00:00';
@@ -842,8 +914,8 @@ trait General
                     'waktu_keluar' => $waktu_pulang,
                     'waktu_istirahat' => $absen_per_tanggal[$tanggal]['waktu_istirahat'],
                     'waktu_masuk_istirahat' => $absen_per_tanggal[$tanggal]['waktu_masuk_istirahat'],
-                    'keterangan_masuk' => $selisih_waktu_masuk > 0 ?  'Telat ' . $selisih_waktu_masuk . ' menit' : 'Tepat waktu',
-                    'keterangan_pulang' =>  $keterangan_pulang,
+                    'keterangan_masuk' => $selisih_waktu_masuk > 0 ? 'Telat ' . $selisih_waktu_masuk . ' menit' : 'Tepat waktu',
+                    'keterangan_pulang' => $keterangan_pulang,
                     'shift' => $absen_per_tanggal[$tanggal]['shift'],
                     'status_masuk_istirahat' => $absen_per_tanggal[$tanggal]['status_masuk_istirahat']
                 ];
@@ -882,6 +954,11 @@ trait General
                                 $status_ = '-';
                             }
                         }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
                     }
                 }
 
@@ -987,7 +1064,11 @@ trait General
             ->selectRaw('COALESCE(SUM(tb_aspek_skp.realisasi), 0) as target_pencapaian')
             ->first();
 
+<<<<<<< HEAD
         $sasaran =  0;
+=======
+        $sasaran = 0;
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
         $realisasi = 0;
 
         if (is_array($data) && count($data) > 0) {
@@ -1034,7 +1115,11 @@ trait General
 
         $data = [
             'target' => $jabatan->target_waktu,
+<<<<<<< HEAD
             'capaian' => $aktivitas->capaian !== null ?  $aktivitas->capaian : 0,
+=======
+            'capaian' => $aktivitas->capaian !== null ? $aktivitas->capaian : 0,
+>>>>>>> a4f3a67b67ad4bb0aa13a93dfa25dc85d717ba94
             'prestasi' => round($persentase, 2),
             'total_aktivitas' => $aktivitas->total_aktivitas
         ];

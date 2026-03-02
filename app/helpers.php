@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Pegawai;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 function hasRole(){
     if (Auth::guard('administrator')->check()) {

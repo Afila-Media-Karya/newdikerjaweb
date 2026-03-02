@@ -268,6 +268,58 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::delete('/delete/{params}', 'HariLiburController@delete')->name('kabupaten.harilibur.delete');
         });
 
+        Route::prefix('jam-kerja')->group(function () {
+            Route::get('/', 'JamKerjaController@index')->name('kabupaten.jamkerja.index');
+            Route::get('/data', 'JamKerjaController@data')->name('kabupaten.jamkerja.data');
+            Route::post('/save', 'JamKerjaController@save')->name('kabupaten.jamkerja.save');
+        });
+
+        Route::prefix('hari-kerja')->group(function () {
+            Route::get('/', 'HariKerjaController@index')->name('kabupaten.harikerja.index');
+            Route::get('/datatable', 'HariKerjaController@datatable')->name('kabupaten.harikerja.datatable');
+            Route::post('/store', 'HariKerjaController@store')->name('kabupaten.harikerja.store');
+            Route::post('/update/{params}', 'HariKerjaController@update')->name('kabupaten.harikerja.update');
+            Route::get('/show/{params}', 'HariKerjaController@show')->name('kabupaten.harikerja.show');
+            Route::delete('/delete/{params}', 'HariKerjaController@delete')->name('kabupaten.harikerja.delete');
+        });
+
+        Route::prefix('ramadan')->group(function () {
+            Route::get('/', 'RamadanController@index')->name('kabupaten.ramadan.index');
+            Route::get('/datatable', 'RamadanController@datatable')->name('kabupaten.ramadan.datatable');
+            Route::post('/store', 'RamadanController@store')->name('kabupaten.ramadan.store');
+            Route::post('/update/{params}', 'RamadanController@update')->name('kabupaten.ramadan.update');
+            Route::get('/show/{params}', 'RamadanController@show')->name('kabupaten.ramadan.show');
+            Route::delete('/delete/{params}', 'RamadanController@delete')->name('kabupaten.ramadan.delete');
+        });
+
+        Route::prefix('usia-pensiun')->group(function () {
+            Route::get('/', 'UsiaPensiunController@index')->name('kabupaten.usiapensiun.index');
+            Route::get('/datatable', 'UsiaPensiunController@datatable')->name('kabupaten.usiapensiun.datatable');
+            Route::post('/store', 'UsiaPensiunController@store')->name('kabupaten.usiapensiun.store');
+            Route::post('/update/{params}', 'UsiaPensiunController@update')->name('kabupaten.usiapensiun.update');
+            Route::get('/show/{params}', 'UsiaPensiunController@show')->name('kabupaten.usiapensiun.show');
+            Route::delete('/delete/{params}', 'UsiaPensiunController@delete')->name('kabupaten.usiapensiun.delete');
+        });
+
+        Route::prefix('tipe-pegawai')->group(function () {
+            Route::get('/', 'TipePegawaiController@index')->name('kabupaten.tipepegawai.index');
+            Route::get('/datatable', 'TipePegawaiController@datatable')->name('kabupaten.tipepegawai.datatable');
+            Route::post('/store', 'TipePegawaiController@store')->name('kabupaten.tipepegawai.store');
+            Route::post('/update/{params}', 'TipePegawaiController@update')->name('kabupaten.tipepegawai.update');
+            Route::get('/show/{params}', 'TipePegawaiController@show')->name('kabupaten.tipepegawai.show');
+            Route::delete('/delete/{params}', 'TipePegawaiController@delete')->name('kabupaten.tipepegawai.delete');
+            Route::get('/option', 'TipePegawaiController@option')->name('kabupaten.tipepegawai.option');
+        });
+
+        Route::prefix('potongan-kehadiran')->group(function () {
+            Route::get('/', 'PotonganKehadiranController@index')->name('kabupaten.potongankehadiran.index');
+            Route::get('/datatable', 'PotonganKehadiranController@datatable')->name('kabupaten.potongankehadiran.datatable');
+            Route::post('/store', 'PotonganKehadiranController@store')->name('kabupaten.potongankehadiran.store');
+            Route::post('/update/{params}', 'PotonganKehadiranController@update')->name('kabupaten.potongankehadiran.update');
+            Route::get('/show/{params}', 'PotonganKehadiranController@show')->name('kabupaten.potongankehadiran.show');
+            Route::delete('/delete/{params}', 'PotonganKehadiranController@delete')->name('kabupaten.potongankehadiran.delete');
+        });
+
         Route::prefix('versi-aplikasi')->group(function () {
             Route::get('/', 'VersionAppController@index')->name('kabupaten.versi_app.index');
             Route::get('/datatable', 'VersionAppController@datatable')->name('kabupaten.versi_app.datatable');
@@ -645,13 +697,13 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/show/{params}', 'pegawai\pegawaiPensiunController@show')->name('opd.pegawai.pegawaipensiun.show');
                 Route::get('/detail/{params}', 'pegawai\pegawaiPensiunController@detail')->name('opd.pegawai.pegawaipensiun.detail');
                 Route::delete('/delete/{params}', 'pegawai\pegawaiPensiunController@delete')->name('opd.pegawai.pegawaipensiun.delete');
-            }); 
+            });
 
             Route::prefix('pegawai-akan-pensiun')->group(function () {
                 Route::get('/', 'pegawai\pegawaiPensiunController@index_akan_pensiun')->name('opd.pegawai.pegawaiakanpensiun.index');
                 Route::get('/datatable', 'pegawai\pegawaiPensiunController@datatable_akan_pensiun')->name('opd.pegawai.pegawaiakanpensiun.datatable');
                 Route::get('/option/{params}', 'pegawai\pegawaiPensiunController@option')->name('opd.pegawai.pegawaiakanpensiun.option');
-            }); 
+            });
 
             Route::prefix('pegawai-non-job')->group(function () {
                 Route::get('/', 'pegawai\PegawaiNonJobController@index')->name('opd.pegawai.pegawainonjob.index');
@@ -764,7 +816,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::prefix('pegawai')->group(function () {
                 Route::get('/', 'LaporanListPegawaiController@export')->name('opd.laporan.pegawai.export');
             });
-        }); 
+        });
 
         Route::prefix('perangkat-daerah-opd')->group(function () {
             Route::prefix('perangkat-daerah')->group(function () {
@@ -774,7 +826,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::post('/update/{params}', 'perangkat_daerah\PerangkatDaerahController@update')->name('opd.perangkat_daerah.update');
                 Route::get('/show/{params}', 'perangkat_daerah\PerangkatDaerahController@show')->name('opd.perangkat_daerah.show');
                 Route::delete('/delete/{params}', 'perangkat_daerah\PerangkatDaerahController@delete')->name('opd.perangkat_daerah.delete');
-            }); 
+            });
             Route::prefix('unit-kerja')->group(function () {
                 Route::get('/', 'perangkat_daerah\UnitKerjaController@index')->name('opd.unit_kerja.index');
                 Route::get('/datatable', 'perangkat_daerah\UnitKerjaController@datatable')->name('opd.unit_kerja.datatable');
@@ -783,7 +835,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/show/{params}', 'perangkat_daerah\UnitKerjaController@show')->name('opd.unit_kerja.show');
                 Route::delete('/delete/{params}', 'perangkat_daerah\UnitKerjaController@delete')->name('opd.unit_kerja.delete');
                 Route::get('/option', 'perangkat_daerah\UnitKerjaController@option')->name('opd.unit_kerja.option');
-            }); 
+            });
             Route::prefix('lokasi')->group(function () {
                 Route::get('/', 'perangkat_daerah\lokasiController@index')->name('opd.perangkat_daerah.lokasi.index');
                 Route::get('/datatable', 'perangkat_daerah\lokasiController@datatable')->name('opd.perangkat_daerah.lokasi.datatable');
@@ -793,9 +845,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::delete('/delete/{params}', 'perangkat_daerah\lokasiController@delete')->name('opd.perangkat_daerah.lokasi.delete');
                 Route::get('/option-lokasi/{params}', 'perangkat_daerah\lokasiController@optionLokasiSatuanKerja')->name('opd.perangkat_daerah.lokasi.option_lokasi_satuan_kerja');
                 Route::get('/option-lokasi-apel/{params}', 'perangkat_daerah\lokasiController@optionLokasiApel')->name('opd.perangkat_daerah.lokasi.option_lokasi_apel');
-            }); 
-        }); 
-    });         
+            });
+        });
+    });
 
     Route::post('/logout', 'AuthController@logout')->name('logout');
 });
