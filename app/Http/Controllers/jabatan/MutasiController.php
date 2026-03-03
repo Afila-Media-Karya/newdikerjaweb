@@ -11,6 +11,7 @@ use App\Models\Jabatan;
 use App\Models\Pegawai;
 use DB;
 use App\Traits\General;
+use Illuminate\Support\Facades\Log;
 
 class MutasiController extends BaseController
 {
@@ -62,17 +63,21 @@ class MutasiController extends BaseController
 
             $check_jabatan = $this->checkJabatanAll($request->id_pegawai);
             $jabatan_lama = 0;
+            $id_unit_kerja_lama = 0;
+
+            Log::info($check_jabatan);
 
             if (count($check_jabatan) > 0) {
                 foreach ($check_jabatan as $key => $value) {
 
                     if ($value->status === 'definitif') {
                         $jabatan_lama = $value->id_jabatan;
+                        $id_unit_kerja_lama = $value->id_unit_kerja;
                     }
 
                     $jabatan = Jabatan::where('id',$value->id_jabatan)->first();
                     if ($jabatan) {
-                       $jabatan->id_pegawai = null;
+                        $jabatan->id_pegawai = null;
                         $jabatan->save();   
                     }
                 }
@@ -84,6 +89,7 @@ class MutasiController extends BaseController
             $data->id_satuan_kerja_baru = $request->id_satuan_kerja_baru;
             $data->id_jabatan_lama = $jabatan_lama;
             $data->id_jabatan_baru = $request->id_jabatan_baru;
+            $data->id_unit_kerja_lama = $id_unit_kerja_lama;
             $data->tmt = $request->tmt;
             $data->tahun = date('Y');
             $data->save();
