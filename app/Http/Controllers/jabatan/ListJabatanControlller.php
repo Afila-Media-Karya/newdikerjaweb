@@ -637,12 +637,18 @@ class ListJabatanControlller extends BaseController
                 if (isset($request->id_parent)) {
                     $data->id_parent = $request->id_parent;
                 }
-                $data->status = $request->status;
-                $data->pembayaran = $request->pembayaran;
+                if (isset($request->status)) {
+                    $data->status = $request->status;
+                }
+                if (isset($request->pembayaran)) {
+                    $data->pembayaran = $request->pembayaran;
+                }
                 if (isset($request->pagu_tpp)) {
                     $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                 }
-                $data->target_waktu = $request->target_waktu;
+                if (isset($request->target_waktu)) {
+                    $data->target_waktu = $request->target_waktu;
+                }
                 $data->save();
             } else {
                 if ($request->type == 'administrator') {
@@ -655,13 +661,21 @@ class ListJabatanControlller extends BaseController
                     $data->id_unit_kerja = $request->id_unit_kerja;
                     $data->id_lokasi_apel = $request->id_lokasi_apel;
                     $data->id_lokasi_kerja = $request->id_lokasi_kerja;
-                    $data->id_parent = $request->id_parent;
-                    $data->status = $request->status;
+                    if (isset($request->id_parent)) {
+                        $data->id_parent = $request->id_parent;
+                    }
+                    if (isset($request->status)) {
+                        $data->status = $request->status;
+                    }
                     if (isset($request->pagu_tpp)) {
                         $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                     }
-                    $data->pembayaran = $request->pembayaran;
-                    $data->target_waktu = $request->target_waktu;
+                    if (isset($request->pembayaran)) {
+                        $data->pembayaran = $request->pembayaran;
+                    }
+                    if (isset($request->target_waktu)) {
+                        $data->target_waktu = $request->target_waktu;
+                    }
                     $data->save();
                 } else {
 
@@ -669,13 +683,21 @@ class ListJabatanControlller extends BaseController
                         $data->id_master_jabatan = $request->id_master_jabatan;
                     }
                     $data->id_pegawai = $pegawai_val;
-                    $data->id_parent = $request->id_parent;
-                    $data->status = $request->status;
+                    if (isset($request->id_parent)) {
+                        $data->id_parent = $request->id_parent;
+                    }
+                    if (isset($request->status)) {
+                        $data->status = $request->status;
+                    }
                     if (isset($request->pagu_tpp)) {
                         $data->pagu_tpp = intval(str_replace(['Rp ', '.'], '', $request->pagu_tpp));
                     }
-                    $data->pembayaran = $request->pembayaran;
-                    $data->target_waktu = $request->target_waktu;
+                    if (isset($request->pembayaran)) {
+                        $data->pembayaran = $request->pembayaran;
+                    }
+                    if (isset($request->target_waktu)) {
+                        $data->target_waktu = $request->target_waktu;
+                    }
                     $data->save();
                 }
             }
