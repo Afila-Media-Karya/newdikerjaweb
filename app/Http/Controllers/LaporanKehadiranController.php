@@ -699,7 +699,6 @@ class LaporanKehadiranController extends Controller
             $unit_kerja = request('id_unit_kerja');
             $nama_unit_kerja = request('nama_unit_kerja');
         } else {
-            dd("ELSE KI");
             $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_satuan_kerja;
             $nama_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_satuan_kerja;
             $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
