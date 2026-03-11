@@ -328,12 +328,6 @@ trait General
             session('session_jabatan') ? $status = session('session_jabatan') : $status = 'definitif';
         }
 
-        $path = explode('/', request()->path());
-
-        if ($path[0] == 'review' && $path[1] == 'aktivitas' && $path[2] == 'review') {
-            $status = 'definitif';
-        }
-
         $query = DB::table('tb_pegawai')
             ->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')
@@ -346,8 +340,7 @@ trait General
                 $query->where('tb_jabatan.id', session('session_jabatan_kode'));
             }
         } else {
-            if (session('session_jabatan_kode') && $path[0] !== 'review') {
-
+            if (session('session_jabatan_kode')) {
                 if (is_null($type) || $type > 0) {
                     $query->where('tb_jabatan.id', session('session_jabatan_kode'));
                 }
