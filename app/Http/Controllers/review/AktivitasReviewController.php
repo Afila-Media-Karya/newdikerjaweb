@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Aktivitas;
-use DB;
 use App\Traits\General;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AktivitasReviewController extends BaseController
 {
@@ -76,12 +76,15 @@ class AktivitasReviewController extends BaseController
             }
         }
 
+        Log::info("Data Table", (array) $jabatan);
+        Log::info("Jabatan Parent", (array) $id_jabatan_parent);
+
         $data = DB::table("tb_jabatan")
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->join('tb_pegawai', 'tb_jabatan.id_pegawai', '=', 'tb_pegawai.id')
             ->leftJoin('tb_skp', 'tb_jabatan.id', '=', 'tb_skp.id_jabatan')
             ->select('tb_pegawai.id as pegawai_id', 'tb_pegawai.uuid as pegawai_uuid', 'tb_pegawai.nama', 'tb_pegawai.nip', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.id as id_jabatan', 'tb_master_jabatan.level_jabatan')
-            ->where('tb_jabatan.id_parent', $id_jabatan_parent)
+            ->where('tb_jabatan.id_parent', $jabatan->id_jabatan)
             ->groupBy('tb_pegawai.nama', 'tb_pegawai.nip', 'tb_master_jabatan.nama_jabatan', 'tb_jabatan.id')
             ->get();
 
