@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
-use DB;
 use App\Traits\General;
 use App\Traits\Presensi;
-use Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LaporanKehadiranController extends Controller
 {
@@ -67,8 +67,6 @@ class LaporanKehadiranController extends Controller
         } else {
             return view('laporan.kehadiran.index_unit', compact('module', 'pegawai'));
         }
-
-
     }
 
     public function index_kabupaten()
@@ -106,13 +104,17 @@ class LaporanKehadiranController extends Controller
         // $tanggal_akhir = date("Y-m-d", strtotime($tahun . '-' . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
         $periodePegawai = $this->getPeriodePegawaiDiSatuanKerja(request('pegawai'), $satuan_kerja, $tahun, $bulan);
 
+        // CEK jika periode pegawai tidak ada
+        if ($periodePegawai == null) {
+            return back()->withErrors(['Periode pegawai tidak ditemukan pada satuan kerja tersebut']);
+        }
+
         $jabatan_req = request("status");
         $pegawai = request('pegawai') ? request('pegawai') : Auth::user()->id_pegawai;
         // $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
-        $pegawai_info = $this->findPegawaiByMutasi($pegawai, $satuan_kerja);
-
-
+        $pegawai_info = $this->findPegawaiByMutasi($pegawai, $satuan_kerja, $tahun);
         $data = $this->data_kehadiran_pegawai($pegawai, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->waktu_masuk, $pegawai_info->waktu_keluar, $pegawai_info->tipe_pegawai, $pegawai_info->jumlah_shift);
+
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->tipe_pegawai);
@@ -610,7 +612,7 @@ class LaporanKehadiranController extends Controller
             }
             $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir_final, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
 
-           Log::debug($tanggal_akhir_final);
+            Log::debug($tanggal_akhir_final);
 
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
