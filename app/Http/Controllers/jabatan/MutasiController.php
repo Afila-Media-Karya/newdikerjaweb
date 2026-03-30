@@ -58,6 +58,7 @@ class MutasiController extends BaseController
     public function store(MutasiRequest $request){
          try {
             $data = array();
+
        
             DB::beginTransaction();
 
@@ -65,7 +66,7 @@ class MutasiController extends BaseController
             $jabatan_lama = 0;
             $id_unit_kerja_lama = 0;
 
-            Log::info($check_jabatan);
+            Log::info("Cek Jabatan", (array) $check_jabatan);
 
             if (count($check_jabatan) > 0) {
                 foreach ($check_jabatan as $key => $value) {
@@ -81,6 +82,8 @@ class MutasiController extends BaseController
                         $jabatan->save();   
                     }
                 }
+
+                
             }
 
             $data = new Mutasi();

@@ -347,14 +347,8 @@ trait General
             }
         }
 
-        Log::info("General params", (array) $params);
-        Log::info("General type", (array) $type);
-        // Log::info("General Query",(array) $query->where('tb_jabatan.id', session('session_jabatan_kode'))->first());
-
         $data = $query->first();
 
-        Log::info("General status", (array) $status);
-        Log::info("General data", (array) $data);
 
         if (is_null($data)) {
             $data = $this->ifPegawaiPlt($pegawai);
@@ -365,7 +359,9 @@ trait General
 
     public function checkJabatanAll($pegawai)
     {
-        return DB::table('tb_pegawai')->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu')->where('tb_pegawai.id', $pegawai)->get();
+        return DB::table('tb_pegawai')->join(
+            'tb_jabatan', 
+            'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu', 'tb_jabatan.id_unit_kerja')->where('tb_pegawai.id', $pegawai)->get();
     }
 
     public function optionJabatanKosong($params)

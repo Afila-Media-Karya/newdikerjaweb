@@ -76,9 +76,6 @@ class AktivitasReviewController extends BaseController
             }
         }
 
-        Log::info("Data Table", (array) $jabatan);
-        Log::info("Jabatan Parent", (array) $id_jabatan_parent);
-
         $data = DB::table("tb_jabatan")
             ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')
             ->join('tb_pegawai', 'tb_jabatan.id_pegawai', '=', 'tb_pegawai.id')
