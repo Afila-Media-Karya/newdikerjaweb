@@ -98,7 +98,7 @@ class LaporanKehadiranController extends Controller
     }
 
     public function export_pegawai_bulan()
-    {;
+    {
         $satuan_kerja = request('satuan_kerja');
         $bulan = request('bulan');
         $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
@@ -536,7 +536,7 @@ class LaporanKehadiranController extends Controller
     {
         $data = array();
 
-        $query_mutasi_check =  DB::table('tb_pegawai')
+        $query_mutasi_check = DB::table('tb_pegawai')
             ->select(
                 "tb_pegawai.id",
                 "tb_pegawai.nama",
@@ -610,7 +610,7 @@ class LaporanKehadiranController extends Controller
             }
             $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir_final, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
 
-           Log::debug($tanggal_akhir_final);
+            Log::debug($tanggal_akhir_final);
 
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];

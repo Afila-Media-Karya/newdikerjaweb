@@ -84,10 +84,8 @@ trait Presensi
         // Query jam kerja dari database
         $jamKerja = JamKerja::getJamKerja($tipe_pegawai, $dayOfWeek, $shift, $jumlah_shift, $kategori);
 
-        // Fallback ke reguler jika ramadan tidak ditemukan
-        if (!$jamKerja && $kategori == 'ramadan') {
-            $jamKerja = JamKerja::getJamKerja($tipe_pegawai, $dayOfWeek, $shift, $jumlah_shift, 'reguler');
-        }
+        // Jangan fallback ke reguler untuk tanggal ramadan
+        // Biarkan hardcoded logic di bawah yang menangani jam kerja ramadan
 
         if ($jamKerja) {
             $waktu_absen_datang = $jamKerja->jam_masuk;
@@ -169,10 +167,8 @@ trait Presensi
         // Query jam kerja dari database
         $jamKerja = JamKerja::getJamKerja($tipe_pegawai, $dayOfWeek, null, null, $kategori);
 
-        // Fallback ke reguler jika ramadan tidak ditemukan
-        if (!$jamKerja && $kategori == 'ramadan') {
-            $jamKerja = JamKerja::getJamKerja($tipe_pegawai, $dayOfWeek, null, null, 'reguler');
-        }
+        // Jangan fallback ke reguler untuk tanggal ramadan
+        // Biarkan hardcoded logic di bawah yang menangani jam kerja ramadan
 
         if ($waktu !== null) {
             if ($params == 'masuk') {
