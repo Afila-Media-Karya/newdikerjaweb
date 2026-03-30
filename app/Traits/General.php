@@ -4,11 +4,12 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Ramadan;
 use App\Models\JamApel;
+
 trait General
 {
     public function option_golongan()
@@ -129,6 +130,8 @@ trait General
     {
         $data = array();
 
+        $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
+
         $aktif = DB::table('tb_pegawai')
             ->select(
                 'tb_pegawai.id',
@@ -171,7 +174,10 @@ trait General
             )
             ->join('tb_mutasi', 'tb_mutasi.id_pegawai', '=', 'tb_pegawai.id')
             ->where('tb_pegawai.status', '1')
+            ->where('tb_mutasi.tahun', $tahun)
+            ->whereColumn('tb_mutasi.id_satuan_kerja', '!=', 'tb_mutasi.id_satuan_kerja_baru')
             ->where('tb_mutasi.id_satuan_kerja', $satuan_kerja);
+
 
         $data = $aktif->unionAll($mutasi)->get();
 
@@ -341,20 +347,21 @@ trait General
             }
         }
 
-
         $data = $query->first();
+
 
         if (is_null($data)) {
             $data = $this->ifPegawaiPlt($pegawai);
         }
 
         return $data;
-
     }
 
     public function checkJabatanAll($pegawai)
     {
-        return DB::table('tb_pegawai')->join('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu')->where('tb_pegawai.id', $pegawai)->get();
+        return DB::table('tb_pegawai')->join(
+            'tb_jabatan', 
+            'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu', 'tb_jabatan.id_unit_kerja')->where('tb_pegawai.id', $pegawai)->get();
     }
 
     public function optionJabatanKosong($params)
@@ -428,40 +435,41 @@ trait General
             ->first();
 
         if ($mutasi) {
+            if ($mutasi->id_satuan_kerja != $mutasi->id_satuan_kerja_baru) {
+                $tanggal_mutasi = $mutasi->tmt;
 
-            $tanggal_mutasi = $mutasi->tmt;
+                // ========================
+                // SATUAN KERJA LAMA
+                // ========================
+                if ($id_satuan_kerja == $mutasi->id_satuan_kerja) {
 
-            // ========================
-            // SATUAN KERJA LAMA
-            // ========================
-            if ($id_satuan_kerja == $mutasi->id_satuan_kerja) {
+                    $tanggal_akhir_lama = date('Y-m-d', strtotime($tanggal_mutasi . ' -1 day'));
 
-                $tanggal_akhir_lama = date('Y-m-d', strtotime($tanggal_mutasi . ' -1 day'));
+                    // kalau bulan setelah mutasi → tidak ada data
+                    if ($tanggal_awal > $tanggal_akhir_lama) {
+                        return null;
+                    }
 
-                // kalau bulan setelah mutasi → tidak ada data
-                if ($tanggal_awal > $tanggal_akhir_lama) {
-                    return null;
+                    // batasi tanggal akhir
+                    if ($tanggal_akhir > $tanggal_akhir_lama) {
+                        $tanggal_akhir = $tanggal_akhir_lama;
+                    }
                 }
 
-                // batasi tanggal akhir
-                if ($tanggal_akhir > $tanggal_akhir_lama) {
-                    $tanggal_akhir = $tanggal_akhir_lama;
-                }
-            }
+                // ========================
+                // SATUAN KERJA BARU
+                // ========================
+                if ($id_satuan_kerja == $mutasi->id_satuan_kerja_baru) {
 
-            // ========================
-            // SATUAN KERJA BARU
-            // ========================
-            if ($id_satuan_kerja == $mutasi->id_satuan_kerja_baru) {
+                    // kalau bulan sebelum mutasi → tidak ada data
+                    if ($tanggal_akhir < $tanggal_mutasi) {
+                        return null;
+                    }
 
-                // kalau bulan sebelum mutasi → tidak ada data
-                if ($tanggal_akhir < $tanggal_mutasi) {
-                    return null;
-                }
-
-                // batasi tanggal awal
-                if ($tanggal_awal < $tanggal_mutasi) {
-                    $tanggal_awal = $tanggal_mutasi;
+                    // batasi tanggal awal
+                    if ($tanggal_awal < $tanggal_mutasi) {
+                        $tanggal_awal = $tanggal_mutasi;
+                    }
                 }
             }
         }
@@ -473,15 +481,16 @@ trait General
     }
 
 
-    public function findPegawaiByMutasi($pegawai_id, $satuan_kerja)
+    public function findPegawaiByMutasi($pegawai_id, $satuan_kerja, $tahun)
     {
         $mutasi = DB::table('tb_mutasi')
             ->where('id_pegawai', $pegawai_id)
             ->where('id_satuan_kerja', $satuan_kerja)
+            ->where('tahun', $tahun)
             ->orderBy('tmt', 'desc')
             ->first();
 
-        if (!$mutasi) {
+        if (!$mutasi || $mutasi->id_satuan_kerja_baru == $mutasi->id_satuan_kerja) {
             return $this->findPegawai($pegawai_id);
         }
 
@@ -648,7 +657,7 @@ trait General
         }
     }
 
-    public function data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai, $jumlah_shift)
+    public function data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai, $jumlah_shift=null)
     {
         $result = array();
         $daftar_tanggal = [];
