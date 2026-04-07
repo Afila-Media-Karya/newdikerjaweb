@@ -383,6 +383,20 @@
                     {
                       data: "keterangan",
                       className: "text-center",
+                      render: function (data, type, row, meta) {
+                            if (!data) return "-";
+
+                            // regex sederhana untuk cek apakah string adalah URL
+                            const urlPattern = /^(https?:\/\/[^\s]+)/g;
+
+                            if (urlPattern.test(data)) {
+                            return `<a href="${data}" target="_blank" rel="noopener noreferrer">
+                                        ${data}
+                                    </a>`;
+                            }
+
+                            return data; // kalau bukan link, tampilkan biasa
+                        },
                     },
                     {
                       data: "volume",
