@@ -430,7 +430,7 @@ trait General
 
         $mutasi = DB::table('tb_mutasi')
             ->where('id_pegawai', $pegawai_id)
-            // ->where('id_satuan_kerja', $id_satuan_kerja) // satuan kerja lama
+            ->where('tahun', $tahun) // satuan kerja lama
             ->orderBy('tmt', 'asc')
             ->first();
 
