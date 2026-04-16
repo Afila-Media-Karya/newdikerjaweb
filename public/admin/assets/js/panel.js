@@ -206,6 +206,7 @@ class Control {
               if (
                 x !== "gambar" &&
                 x !== "jenis_kelamin" &&
+                x !== "status_kepegawaian" &&
                 x !== "validation" &&
                 x !== "jenis" &&
                 x !== "dokumen" &&

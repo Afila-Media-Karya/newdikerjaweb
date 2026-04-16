@@ -13,7 +13,7 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $table = 'tb_pegawai';
-    protected $fillable = ['id','uuid','nip','nama','tempat_lahir','tanggal_lahir','jenis_kelamin','golongan','agama','status_perkawinan','pendidikan','tmt_jabatan','tmt_golongan','tmt_pegawai','tahun','pendidikan_lulus','pendidikan_struktural','pendidikan_struktural_lulus','id_satuan_kerja','status_verifikasi'];
+    protected $fillable = ['id','uuid','nip','nama','tempat_lahir','tanggal_lahir','jenis_kelamin','golongan','agama','status_perkawinan','pendidikan','tmt_jabatan','tmt_golongan','tmt_pegawai','tahun','pendidikan_lulus','pendidikan_struktural','pendidikan_struktural_lulus','id_satuan_kerja','status_verifikasi','status_kepegawaian','tipe_pegawai','status','status_rekam','user_insert','user_update','face_character'];
 
     protected static function boot(){
         parent::boot();

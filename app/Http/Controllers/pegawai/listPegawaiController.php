@@ -50,7 +50,7 @@ class listPegawaiController extends BaseController
             ->LeftJoin('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', 'tb_satuan_kerja.id')
             ->LeftJoin('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')
             ->LeftJoin('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')
-            ->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_pegawai.status', 'tb_master_jabatan.nama_jabatan', 'level_jabatan', 'tb_satuan_kerja.kode_satuan_kerja', 'tb_satuan_kerja.kode_satuan_kerja','tb_jabatan.status as status_jabatan')
+            ->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_pegawai.status', 'tb_master_jabatan.nama_jabatan', 'level_jabatan', 'tb_satuan_kerja.kode_satuan_kerja', 'tb_satuan_kerja.kode_satuan_kerja', 'tb_jabatan.status as status_jabatan')
             ->orderBy('tb_satuan_kerja.kode_satuan_kerja', 'DESC')
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'ASC')
             ->orderBy('tb_jabatan.id', 'ASC');
@@ -63,7 +63,7 @@ class listPegawaiController extends BaseController
             if (!is_null($unit_kerja) && $unit_kerja !== 'all') {
                 $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
             }
-        }    
+        }
 
         if (!is_null($jenis_kelamin) && $jenis_kelamin !== 'semua') {
             $query->where('tb_pegawai.jenis_kelamin', $jenis_kelamin);
@@ -98,9 +98,9 @@ class listPegawaiController extends BaseController
 
             if (Auth::user()->username == '198212242009011006' || Auth::user()->username == '198208152008011006') {
                 $query->where('tb_jabatan.id_satuan_kerja', $get_satuan_kerja->id_satuan_kerja);
-                $query->where('tb_jabatan.id_unit_kerja','!=', $get_satuan_kerja->id_satuan_kerja);
-            }else {
-                
+                $query->where('tb_jabatan.id_unit_kerja', '!=', $get_satuan_kerja->id_satuan_kerja);
+            } else {
+
                 $query->where('tb_pegawai.id_satuan_kerja', $get_satuan_kerja->id_satuan_kerja);
                 $query->where('tb_jabatan.id_unit_kerja', $get_satuan_kerja->id_unit_kerja);
             }
@@ -133,12 +133,12 @@ class listPegawaiController extends BaseController
             hasRole()['role'] == '1' ? $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_satuan_kerja : $satuan_kerja_user = $this->infoSatuanKerja(hasRole()['id_pegawai'])->id_unit_kerja;
         }
 
-        return view('pegawai.listpegawai', compact('module', 'golongan', 'pendidikan', 'satuan_kerja', 'satuan_kerja_user', 'agama', 'jenis_jabatan', 'eselon','tipe_pegawai'));
+        return view('pegawai.listpegawai', compact('module', 'golongan', 'pendidikan', 'satuan_kerja', 'satuan_kerja_user', 'agama', 'jenis_jabatan', 'eselon', 'tipe_pegawai'));
     }
 
     public function detail($params)
     {
-        $module =  [
+        $module = [
             [
                 'label' => 'Pegawai',
                 'url' => '#'
@@ -228,23 +228,20 @@ class listPegawaiController extends BaseController
             if ($request->pendidikan_struktural_lulus) {
                 $data->pendidikan_struktural_lulus = $request->pendidikan_struktural_lulus;
             }
-            if ($request->status_kepegawaian) {
+            if (!is_null($request->status_kepegawaian)) {
                 $data->status_kepegawaian = $request->status_kepegawaian;
             }
-            if ($request->tipe_pegawai) {
+            if (!is_null($request->tipe_pegawai)) {
                 $data->tipe_pegawai = $request->tipe_pegawai;
             }
             $data->user_update = hasRole()['id'];
             $data->save();
 
-            $user =  User::where('id_pegawai', $data->id)->first();
-            // // dd($user);
-            // $user->id_pegawai = $data->id;
-            // $user->username = $data->nip;
-            $user->password = Hash::make('dikerja');
-            // $user->role = '2';
-            // $user->status = 1;
-            $user->save();
+            $user = User::where('id_pegawai', $data->id)->first();
+            if ($user) {
+                $user->password = Hash::make('dikerja');
+                $user->save();
+            }
 
             DB::commit();
         } catch (\Exception $e) {
@@ -272,7 +269,7 @@ class listPegawaiController extends BaseController
             $satuan_kerja = request('satuan_kerja');
             $unit_kerja = request("unit_kerja");
             $kelas_jabatan = intval(request("kelas_jabatan"));
-           
+
             $data = $this->option_pegawaiBy_satuan_kerja($satuan_kerja, $kelas_jabatan);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), $e->getMessage(), 200);
@@ -315,7 +312,7 @@ class listPegawaiController extends BaseController
             $check_jabatan = $this->checkJabatan($params);
 
             if (!isset($check_jabatan)) {
-                $data =  DB::table('tb_pegawai')->where('uuid', $params)->delete();
+                $data = DB::table('tb_pegawai')->where('uuid', $params)->delete();
             } else {
                 return $this->sendError('Pegawai dengan nip ' . $check_jabatan->nip . ' sedang mengisi jabatan ' . $check_jabatan->nama_jabatan, 'Pegawai Tidak dapat di hapus!', 422);
             }

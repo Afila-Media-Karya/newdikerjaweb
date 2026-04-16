@@ -675,7 +675,7 @@
                 $('#nip').attr('readonly',true);
                 $('#nama').attr('readonly',true);
                 
-                $('input[name="status_kepegawaian"]').prop('disabled', true);
+                $('input[name="status_kepegawaian"]').css({'pointer-events': 'none', 'opacity': '0.5'});
                 $('#pendidikan_struktural').attr('readonly',true);
                 $('#pendidikan_struktural_lulus').attr('readonly',true);
                 $('#golongan').attr('readonly',true);
