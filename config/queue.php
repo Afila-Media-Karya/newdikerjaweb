@@ -36,7 +36,7 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table' => 'tb_export_kehadiran_jobs',
+            'table' => 'jobs',
             'queue' => 'default',
             'retry_after' => 90,
             'after_commit' => false,
