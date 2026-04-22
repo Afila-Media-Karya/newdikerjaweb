@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
+use App\Jobs\ProcessKehadiranExportJob;
+use App\Models\KehadiranExportJob;
+use App\Models\JamApel;
+use App\Models\JamKerja;
+use App\Models\Ramadan;
 use App\Traits\General;
 use App\Traits\Presensi;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -536,8 +543,279 @@ class LaporanKehadiranController extends Controller
 
     public function data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai)
     {
-        $data = array();
+        $result = $this->calculateDataKehadiranPegawaiByOpdOptimized(
+            $satuan_kerja,
+            $unit_kerja,
+            $tanggal_awal,
+            $tanggal_akhir,
+            $status_kepegawaian,
+            $tipe_pegawai
+        );
 
+        return $result['data'];
+    }
+
+    public function export_opd()
+    {
+        $context = $this->resolveExportOpdContext(request());
+        $result = $this->calculateDataKehadiranPegawaiByOpdOptimized(
+            $context['satuan_kerja'],
+            $context['unit_kerja'],
+            $context['tanggal_awal'],
+            $context['tanggal_akhir'],
+            $context['status_kepegawaian'],
+            $context['tipe_pegawai']
+        );
+        $startedRender = microtime(true);
+        $response = $this->exportRekapBasedOnType($result['data'], $context['type'], $context, null);
+        $renderSeconds = round(microtime(true) - $startedRender, 4);
+
+        $this->logExportMetrics('export_opd', array_merge($result['metrics'], [
+            'render_seconds' => $renderSeconds,
+            'total_seconds' => round(microtime(true) - $result['metrics']['started_at'], 4),
+        ]));
+
+        return $response;
+    }
+
+    public function export_opd_bulan()
+    {
+        $context = $this->resolveExportOpdContext(request());
+        $mode = request('mode', 'auto');
+        $forceAsync = request('force_async') == '1';
+
+        $startedLoadPegawai = microtime(true);
+        $pegawaiRows = $this->loadPegawaiDataByOpd(
+            $context['satuan_kerja'],
+            $context['unit_kerja'],
+            $context['tanggal_awal'],
+            $context['status_kepegawaian'],
+            $context['tipe_pegawai']
+        );
+        $loadPegawaiSeconds = microtime(true) - $startedLoadPegawai;
+
+        $jumlahHari = Carbon::parse($context['tanggal_awal'])->diffInDays(Carbon::parse($context['tanggal_akhir'])) + 1;
+        $estimatedWorkload = $pegawaiRows->count() * $jumlahHari;
+        $shouldAsync = $forceAsync
+            || $mode === 'async'
+            || ($mode === 'auto' && $context['type'] === 'pdf' && $estimatedWorkload > 3000);
+
+        if ($shouldAsync) {
+            $exportJob = KehadiranExportJob::create([
+                'user_id' => Auth::id(),
+                'status' => 'queued',
+                'type' => $context['type'],
+                'payload' => $context,
+                'estimated_workload' => $estimatedWorkload,
+            ]);
+
+            ProcessKehadiranExportJob::dispatch($exportJob->id);
+
+            Log::info('kehadiran_export_queued', [
+                'export_job_id' => $exportJob->id,
+                'estimated_workload' => $estimatedWorkload,
+                'load_pegawai_seconds' => round($loadPegawaiSeconds, 4),
+                'mode' => $mode,
+                'force_async' => $forceAsync,
+            ]);
+
+            $basePath = request()->is('laporan-opd/*') ? '/laporan-opd/kehadiran' : '/laporan/kehadiran';
+            $statusUrl = url($basePath . '/export-status/' . $exportJob->id);
+            $downloadUrl = url($basePath . '/export-download/' . $exportJob->id);
+
+            if (!request()->expectsJson() && !request()->ajax()) {
+                return response()->view('laporan.kehadiran.export_wait', [
+                    'jobId' => $exportJob->id,
+                    'statusUrl' => $statusUrl,
+                    'downloadUrl' => $downloadUrl,
+                    'estimatedWorkload' => $estimatedWorkload,
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'mode' => 'async',
+                'job_id' => $exportJob->id,
+                'status_url' => $statusUrl,
+                'download_url' => $downloadUrl,
+            ]);
+        }
+
+        $result = $this->calculateDataKehadiranPegawaiByOpdOptimized(
+            $context['satuan_kerja'],
+            $context['unit_kerja'],
+            $context['tanggal_awal'],
+            $context['tanggal_akhir'],
+            $context['status_kepegawaian'],
+            $context['tipe_pegawai'],
+            $pegawaiRows
+        );
+        $startedRender = microtime(true);
+        $response = $this->exportRekapBasedOnType($result['data'], $context['type'], $context, null);
+        $renderSeconds = round(microtime(true) - $startedRender, 4);
+
+        $this->logExportMetrics('export_opd_bulan', array_merge($result['metrics'], [
+            'load_pegawai_seconds' => round($loadPegawaiSeconds, 4),
+            'estimated_workload' => $estimatedWorkload,
+            'mode' => 'sync',
+            'render_seconds' => $renderSeconds,
+            'total_seconds' => round(microtime(true) - $result['metrics']['started_at'], 4),
+        ]));
+
+        return $response;
+    }
+
+    public function export_status(int $id): JsonResponse
+    {
+        $job = KehadiranExportJob::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$job) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data export tidak ditemukan.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'id' => $job->id,
+            'status' => $job->status,
+            'type' => $job->type,
+            'estimated_workload' => $job->estimated_workload,
+            'error_message' => $job->error_message,
+            'download_url' => $job->status === 'done'
+                ? url((request()->is('laporan-opd/*') ? '/laporan-opd/kehadiran' : '/laporan/kehadiran') . '/export-download/' . $job->id)
+                : null,
+            'started_at' => optional($job->started_at)->toDateTimeString(),
+            'finished_at' => optional($job->finished_at)->toDateTimeString(),
+        ]);
+    }
+
+    public function export_download(int $id)
+    {
+        $job = KehadiranExportJob::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$job) {
+            abort(404, 'Data export tidak ditemukan');
+        }
+
+        if ($job->status !== 'done' || empty($job->result_path)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File belum siap diunduh.',
+            ], 409);
+        }
+
+        $absolutePath = storage_path('app/' . $job->result_path);
+        if (!file_exists($absolutePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File hasil export tidak ditemukan.',
+            ], 404);
+        }
+
+        return response()->download($absolutePath);
+    }
+
+    public function runExportOpdBulanWithContext(array $context, ?string $savePath = null): ?string
+    {
+        $result = $this->calculateDataKehadiranPegawaiByOpdOptimized(
+            $context['satuan_kerja'],
+            $context['unit_kerja'],
+            $context['tanggal_awal'],
+            $context['tanggal_akhir'],
+            $context['status_kepegawaian'],
+            $context['tipe_pegawai']
+        );
+        $startedRender = microtime(true);
+        $path = $this->exportRekapBasedOnType(
+            $result['data'],
+            $context['type'],
+            $context,
+            $savePath
+        );
+        $renderSeconds = round(microtime(true) - $startedRender, 4);
+
+        $this->logExportMetrics('export_opd_bulan_async_worker', array_merge($result['metrics'], [
+            'render_seconds' => $renderSeconds,
+            'total_seconds' => round(microtime(true) - $result['metrics']['started_at'], 4),
+        ]));
+
+        return $path;
+    }
+
+    private function resolveExportOpdContext(Request $request): array
+    {
+        $bulan = (int) $request->get('bulan');
+        $type = $request->get('type', 'pdf');
+        $type = $type === 'excel' ? 'excel' : 'pdf';
+
+        $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
+        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+
+        if ($request->get('satuan_kerja')) {
+            $satuan_kerja = $request->get('satuan_kerja');
+            $nama_satuan_kerja = $request->get('nama_satuan_kerja');
+            $unit_kerja = $request->get('id_unit_kerja');
+            $nama_unit_kerja = $request->get('nama_unit_kerja');
+        } else {
+            $info = $this->infoSatuanKerja(Auth::user()->id_pegawai);
+            $satuan_kerja = $info->id_satuan_kerja;
+            $nama_satuan_kerja = $info->nama_satuan_kerja;
+            $unit_kerja = $info->id_unit_kerja;
+            $nama_unit_kerja = $info->nama_unit_kerja;
+        }
+
+        return [
+            'bulan' => $bulan,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' => $tanggal_akhir,
+            'type' => $type,
+            'satuan_kerja' => $satuan_kerja,
+            'nama_satuan_kerja' => $nama_satuan_kerja,
+            'unit_kerja' => $unit_kerja,
+            'nama_unit_kerja' => $nama_unit_kerja,
+            'status_kepegawaian' => $request->get('status_kepegawaian'),
+            'tipe_pegawai' => $request->get('tipe_pegawai'),
+        ];
+    }
+
+    private function exportRekapBasedOnType($data, string $type, array $context, ?string $savePath): ?string
+    {
+        if ($this->CheckOpd($context['unit_kerja']) && $context['tipe_pegawai'] == 'tenaga_pendidik' || $context['tipe_pegawai'] == 'tenaga_kesehatan_non_shift' || $context['tipe_pegawai'] == 'tenaga_kesehatan') {
+            return $this->export_rekapitulasi_absen_guru(
+                $data,
+                $type,
+                $context['bulan'],
+                $context['nama_satuan_kerja'],
+                $context['nama_unit_kerja'],
+                $savePath
+            );
+        }
+
+        return $this->export_rekapitulasi_absen(
+            $data,
+            $type,
+            $context['bulan'],
+            $context['nama_satuan_kerja'],
+            $context['nama_unit_kerja'],
+            $savePath
+        );
+    }
+
+    private function logExportMetrics(string $channel, array $metrics): void
+    {
+        $payload = $metrics;
+        unset($payload['started_at']);
+        Log::info($channel, $payload);
+    }
+
+    private function loadPegawaiDataByOpd($satuan_kerja, $unit_kerja, $tanggal_awal, $status_kepegawaian, $tipe_pegawai)
+    {
         $query_mutasi_check = DB::table('tb_pegawai')
             ->select(
                 "tb_pegawai.id",
@@ -572,20 +850,9 @@ class LaporanKehadiranController extends Controller
             ->where('tb_pegawai.status', '1')
             ->orderBy('tb_master_jabatan.kelas_jabatan', 'DESC');
 
-        $role = hasRole();
-
-        if ($role['guard'] == 'web') {
-            $query->where("tb_jabatan.id_satuan_kerja", $satuan_kerja);
-            if ($unit_kerja !== 'all') {
-                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
-            }
-        }
-
-        if (hasRole()['guard'] == 'administrator') {
-            $query->where("tb_jabatan.id_satuan_kerja", $satuan_kerja);
-            if ($unit_kerja !== 'all') {
-                $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
-            }
+        $query->where("tb_jabatan.id_satuan_kerja", $satuan_kerja);
+        if ($unit_kerja !== 'all') {
+            $query->where('tb_jabatan.id_unit_kerja', $unit_kerja);
         }
 
         if (!is_null($status_kepegawaian)) {
@@ -596,22 +863,115 @@ class LaporanKehadiranController extends Controller
             $query->where('tipe_pegawai', $tipe_pegawai);
         }
 
-        // $data = $query->get();
-        $data = $query->union($query_mutasi_check)->get();
+        return $query->union($query_mutasi_check)->get();
+    }
 
-        $data = $data->map(function ($item) use ($tanggal_awal, $tanggal_akhir) {
+    private function calculateDataKehadiranPegawaiByOpdOptimized(
+        $satuan_kerja,
+        $unit_kerja,
+        $tanggal_awal,
+        $tanggal_akhir,
+        $status_kepegawaian,
+        $tipe_pegawai,
+        $preloadedPegawaiRows = null
+    ): array {
+        $metrics = [
+            'started_at' => microtime(true),
+            'query_count' => 0,
+            'load_pegawai_seconds' => 0,
+            'load_absen_batch_seconds' => 0,
+            'hitung_rekap_seconds' => 0,
+        ];
 
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+
+        $startedLoadPegawai = microtime(true);
+        $pegawaiRows = $preloadedPegawaiRows ?: $this->loadPegawaiDataByOpd(
+            $satuan_kerja,
+            $unit_kerja,
+            $tanggal_awal,
+            $status_kepegawaian,
+            $tipe_pegawai
+        );
+        $metrics['load_pegawai_seconds'] = round(microtime(true) - $startedLoadPegawai, 4);
+
+        $globalStart = Carbon::parse($tanggal_awal);
+        $globalEnd = Carbon::parse($tanggal_akhir);
+
+        foreach ($pegawaiRows as $item) {
             if (!is_null($item->tmt)) {
-                // tanggal akhir = tmt - 1 hari
-                $tanggal_akhir_final = Carbon::parse($item->tmt)
-                    ->subDay()
-                    ->format('Y-m-d');
+                $end = Carbon::parse($item->tmt)->subDay();
+                if ($end->greaterThan($globalEnd)) {
+                    $globalEnd = $end->copy();
+                }
+            }
+        }
+
+        $pegawaiIds = $pegawaiRows->pluck('id')->unique()->values()->all();
+        $absenValidatedMap = [];
+        $absenValidatedCount = [];
+        $absenRawShiftMap = [];
+
+        $startedLoadAbsen = microtime(true);
+        if (!empty($pegawaiIds)) {
+            $validatedRows = DB::table('tb_absen')
+                ->select('id_pegawai', 'tanggal_absen', 'status', 'waktu_masuk', 'waktu_keluar', 'waktu_istirahat', 'waktu_masuk_istirahat', 'shift', 'status_masuk_istirahat')
+                ->whereIn('id_pegawai', $pegawaiIds)
+                ->where('validation', 1)
+                ->whereBetween('tanggal_absen', [$tanggal_awal, $globalEnd->format('Y-m-d')])
+                ->get();
+
+            foreach ($validatedRows as $row) {
+                $absenValidatedCount[$row->id_pegawai] = ($absenValidatedCount[$row->id_pegawai] ?? 0) + 1;
+                $absenValidatedMap[$row->id_pegawai][$row->tanggal_absen] = [
+                    'status' => $row->status,
+                    'waktu_masuk' => $row->waktu_masuk,
+                    'waktu_keluar' => $row->waktu_keluar,
+                    'waktu_istirahat' => $row->waktu_istirahat,
+                    'waktu_masuk_istirahat' => $row->waktu_masuk_istirahat,
+                    'shift' => $row->shift,
+                    'status_masuk_istirahat' => $row->status_masuk_istirahat,
+                ];
+            }
+
+            $rawRows = DB::table('tb_absen')
+                ->select('id_pegawai', 'tanggal_absen', 'shift')
+                ->whereIn('id_pegawai', $pegawaiIds)
+                ->whereBetween('tanggal_absen', [$globalStart->copy()->subDays(2)->format('Y-m-d'), $globalEnd->format('Y-m-d')])
+                ->get();
+
+            foreach ($rawRows as $row) {
+                if (!isset($absenRawShiftMap[$row->id_pegawai][$row->tanggal_absen])) {
+                    $absenRawShiftMap[$row->id_pegawai][$row->tanggal_absen] = ['shift' => $row->shift];
+                }
+            }
+        }
+        $metrics['load_absen_batch_seconds'] = round(microtime(true) - $startedLoadAbsen, 4);
+
+        $cache = $this->preloadMasterCache($globalStart->format('Y-m-d'), $globalEnd->format('Y-m-d'));
+
+        $startedHitung = microtime(true);
+        $data = $pegawaiRows->map(function ($item) use ($tanggal_awal, $tanggal_akhir, $absenValidatedMap, $absenRawShiftMap, $cache) {
+            if (!is_null($item->tmt)) {
+                $tanggal_akhir_final = Carbon::parse($item->tmt)->subDay()->format('Y-m-d');
             } else {
-                // pegawai aktif
                 $tanggal_akhir_final = $tanggal_akhir;
             }
-            $child = $this->data_kehadiran_pegawai($item->id, $tanggal_awal, $tanggal_akhir_final, $item->waktu_masuk, $item->waktu_keluar, $item->tipe_pegawai, $item->jumlah_shift);
 
+            $child = $this->calculatePegawaiKehadiranCached(
+                (int) $item->id,
+                $tanggal_awal,
+                $tanggal_akhir_final,
+                $item->waktu_masuk,
+                $item->waktu_keluar,
+                $item->tipe_pegawai,
+                $item->jumlah_shift,
+                $absenValidatedMap[(int) $item->id] ?? [],
+                $absenRawShiftMap[(int) $item->id] ?? [],
+                $cache,
+                $absenValidatedCount[(int) $item->id] ?? 0
+            );
 
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
@@ -642,82 +1002,531 @@ class LaporanKehadiranController extends Controller
             $item->jml_menit_terlambat_pulang_kerja = $child['jml_menit_terlambat_pulang_kerja'];
             return $item;
         });
+        $metrics['hitung_rekap_seconds'] = round(microtime(true) - $startedHitung, 4);
+        $metrics['query_count'] = count(DB::getQueryLog());
+        DB::disableQueryLog();
 
-        return $data;
+        return ['data' => $data, 'metrics' => $metrics];
     }
 
-    public function export_opd()
+    private function preloadMasterCache(string $tanggalAwal, string $tanggalAkhir): array
     {
-        $satuan_kerja = '';
-        $nama_satuan_kerja = '';
-        $unit_kerja = '';
-        $nama_unit_kerja = '';
-        $bulan = request('bulan');
-        $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
+        $liburIntervals = [
+            'pegawai_administratif' => [],
+            'tenaga_kesehatan_non_shift' => [],
+            'tenaga_pendidik' => [],
+        ];
 
-        $status_kepegawaian = request('status_kepegawaian');
-        $tipe_pegawai = request('tipe_pegawai');
+        $liburRows = DB::table('tb_libur')
+            ->select('tipe', 'tanggal_mulai', 'tanggal_selesai')
+            ->where('tanggal_mulai', '<=', $tanggalAkhir)
+            ->where('tanggal_selesai', '>=', $tanggalAwal)
+            ->get();
 
-        if (request('satuan_kerja')) {
-            $satuan_kerja = request('satuan_kerja');
-            $nama_satuan_kerja = request('nama_satuan_kerja');
-            $unit_kerja = request('id_unit_kerja');
-            $nama_unit_kerja = request('nama_unit_kerja');
-        } else {
-            $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_satuan_kerja;
-            $nama_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_satuan_kerja;
-            $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
-            $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
+        foreach ($liburRows as $row) {
+            if (!isset($liburIntervals[$row->tipe])) {
+                $liburIntervals[$row->tipe] = [];
+            }
+            $liburIntervals[$row->tipe][] = [$row->tanggal_mulai, $row->tanggal_selesai];
         }
 
-        $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai);
-        $type = request('type');
-        return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
+        $ramadanIntervals = [];
+        $ramadanRows = Ramadan::query()
+            ->select('tanggal_mulai', 'tanggal_selesai')
+            ->where('tanggal_mulai', '<=', $tanggalAkhir)
+            ->where('tanggal_selesai', '>=', $tanggalAwal)
+            ->get();
+        foreach ($ramadanRows as $row) {
+            $ramadanIntervals[] = [$row->tanggal_mulai, $row->tanggal_selesai];
+        }
+
+        $jamKerjaRows = JamKerja::query()
+            ->select('tipe_pegawai', 'kategori', 'hari', 'shift', 'jumlah_shift', 'jam_masuk', 'jam_keluar')
+            ->where('is_active', true)
+            ->get();
+        $jamKerjaMap = [];
+        foreach ($jamKerjaRows as $row) {
+            $jamKerjaMap[$row->tipe_pegawai . '|' . $row->kategori . '|' . $row->hari . '|' . ($row->shift ?? '-') . '|' . ($row->jumlah_shift ?? '-')] = $row;
+        }
+
+        $jamApelRows = JamApel::query()
+            ->select('tipe_pegawai', 'jenis', 'shift', 'batas_akhir')
+            ->where('is_active', true)
+            ->get();
+        $jamApelMap = [];
+        foreach ($jamApelRows as $row) {
+            $jamApelMap[$row->tipe_pegawai . '|' . $row->jenis . '|' . ($row->shift ?? '-')] = $row;
+        }
+
+        return [
+            'libur_intervals' => $liburIntervals,
+            'ramadan_intervals' => $ramadanIntervals,
+            'jam_kerja_map' => $jamKerjaMap,
+            'jam_apel_map' => $jamApelMap,
+        ];
     }
 
-    public function export_opd_bulan()
+    private function normalizeTipeLibur(string $tipePegawai): string
     {
-        $satuan_kerja = '';
-        $nama_satuan_kerja = '';
-        $unit_kerja = '';
-        $nama_unit_kerja = '';
-
-        $bulan = request('bulan');
-
-        // $tanggalAwal = Carbon::create(session('tahun_penganggaran'), $bulan, 1)->startOfMonth();
-        // $tanggalAkhir = Carbon::create(session('tahun_penganggaran'), $bulan, 1)->endOfMonth();
-
-        $tanggal_awal = date("Y-m-d", strtotime(date('Y-') . $bulan . '-01'));
-        $tanggal_akhir = date("Y-m-d", strtotime(date('Y-') . $bulan . '-' . cal_days_in_month(CAL_GREGORIAN, $bulan, date('Y'))));
-
-
-        $status_kepegawaian = request('status_kepegawaian');
-        $tipe_pegawai = request('tipe_pegawai');
-
-        if (request('satuan_kerja')) {
-
-            $satuan_kerja = request('satuan_kerja');
-            $nama_satuan_kerja = request('nama_satuan_kerja');
-            $unit_kerja = request('id_unit_kerja');
-            $nama_unit_kerja = request('nama_unit_kerja');
-        } else {
-            $satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_satuan_kerja;
-            $nama_satuan_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_satuan_kerja;
-            $unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->id_unit_kerja;
-            $nama_unit_kerja = $this->infoSatuanKerja(Auth::user()->id_pegawai)->nama_unit_kerja;
+        if ($tipePegawai === 'pegawai_administratif' || $tipePegawai === 'tenaga_kesehatan') {
+            return 'pegawai_administratif';
         }
-
-        $data = $this->data_kehadiran_pegawai_by_opd($satuan_kerja, $unit_kerja, $tanggal_awal, $tanggal_akhir, $status_kepegawaian, $tipe_pegawai);
-        $type = request('type');
-        if ($this->CheckOpd($unit_kerja) && $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_kesehatan_non_shift' || $tipe_pegawai == 'tenaga_kesehatan') {
-            return $this->export_rekapitulasi_absen_guru($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
-        } else {
-            return $this->export_rekapitulasi_absen($data, $type, $bulan, $nama_satuan_kerja, $nama_unit_kerja);
+        if ($tipePegawai === 'tenaga_kesehatan_non_shift') {
+            return 'tenaga_kesehatan_non_shift';
         }
+        return 'tenaga_pendidik';
     }
 
-    public function export_rekapitulasi_absen($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja)
+    private function isDateInIntervals(string $tanggal, array $intervals): bool
+    {
+        foreach ($intervals as $interval) {
+            if ($tanggal >= $interval[0] && $tanggal <= $interval[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function isTanggalLiburCached(string $tanggal, string $tipePegawai, array $cache): bool
+    {
+        $normalized = $this->normalizeTipeLibur($tipePegawai);
+        return $this->isDateInIntervals($tanggal, $cache['libur_intervals'][$normalized] ?? []);
+    }
+
+    private function isRamadanCached(string $tanggal, array $cache): bool
+    {
+        if ($this->isDateInIntervals($tanggal, $cache['ramadan_intervals'] ?? [])) {
+            return true;
+        }
+
+        return $tanggal >= '2025-03-01' && $tanggal <= '2025-03-31';
+    }
+
+    private function getJamKerjaCached(string $tipePegawai, int $hari, ?string $shift, $jumlahShift, string $kategori, array $cache)
+    {
+        $key = $tipePegawai . '|' . $kategori . '|' . $hari . '|' . ($shift ?? '-') . '|' . ($jumlahShift ?? '-');
+        return $cache['jam_kerja_map'][$key] ?? null;
+    }
+
+    private function getJamApelCached(string $tipePegawai, string $jenis, ?string $shift, array $cache)
+    {
+        $key = $tipePegawai . '|' . $jenis . '|' . ($shift ?? '-');
+        return $cache['jam_apel_map'][$key] ?? null;
+    }
+
+    private function konvertWaktuCached($params, $waktu, $tanggal, $waktuDefaultAbsen, $tipePegawai, array $cache): int
+    {
+        $menit = 0;
+        $dayOfWeek = (int) date('N', strtotime($tanggal));
+        $kategori = $this->isRamadanCached($tanggal, $cache) ? 'ramadan' : 'reguler';
+        $jamKerja = $this->getJamKerjaCached($tipePegawai, $dayOfWeek, null, null, $kategori, $cache);
+
+        if ($waktu !== null) {
+            if ($params === 'masuk') {
+                if ($jamKerja) {
+                    $waktuTetapAbsen = strtotime($jamKerja->jam_masuk);
+                } else {
+                    if (!$this->isRamadanCached($tanggal, $cache)) {
+                        $waktuTetapAbsen = strtotime($waktuDefaultAbsen);
+                    } else {
+                        $waktuTetapAbsen = strtotime('08:00:00');
+                    }
+
+                    if (($tipePegawai == 'tenaga_pendidik' || $tipePegawai == 'tenaga_pendidik_non_guru')) {
+                        if ($dayOfWeek == 1 || $dayOfWeek == 5) {
+                            $waktuTetapAbsen = strtotime('07:00');
+                        } elseif ($dayOfWeek == 2 || $dayOfWeek == 3 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                            $waktuTetapAbsen = strtotime('07:30');
+                        }
+                    }
+                }
+
+                $diff = strtotime($waktu) - $waktuTetapAbsen;
+            } else {
+                if ($jamKerja) {
+                    $waktuCheckout = $jamKerja->jam_keluar;
+                } else {
+                    if (!$this->isRamadanCached($tanggal, $cache)) {
+                        $waktuCheckout = $waktuDefaultAbsen;
+                    } else {
+                        $waktuCheckout = '15:00:00';
+                    }
+
+                    if ($tipePegawai == 'pegawai_administratif' && Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                        $waktuCheckout = '15:30:00';
+                    }
+
+                    if ($tipePegawai == 'tenaga_pendidik') {
+                        $waktuCheckout = '14:00:00';
+                        if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                            $waktuCheckout = '11:30:00';
+                        }
+                        if ($this->isRamadanCached($tanggal, $cache)) {
+                            $waktuCheckout = '13:30:00';
+                            if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                                $waktuCheckout = '11:00:00';
+                            }
+                        }
+                    }
+
+                    if ($tipePegawai == 'tenaga_pendidik_non_guru') {
+                        $waktuCheckout = '14:00:00';
+                        if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                            $waktuCheckout = '11:30:00';
+                        }
+                        if ($this->isRamadanCached($tanggal, $cache)) {
+                            $waktuCheckout = '13:30:00';
+                            if (Carbon::parse($tanggal)->dayOfWeek === Carbon::FRIDAY) {
+                                $waktuCheckout = '11:00:00';
+                            }
+                        }
+                    }
+                }
+
+                $diff = strtotime($waktuCheckout) - strtotime($waktu);
+            }
+
+            if ($diff > 0) {
+                $menit = (int) floor($diff / 60);
+            }
+        } else {
+            $menit = 90;
+        }
+
+        return $menit;
+    }
+
+    private function konvertWaktuNakesCached($params, $waktu, $tanggal, $shift, $waktuTetap, $jumlahShift, $tipePegawai, array $cache): int
+    {
+        $menit = 0;
+        $dayOfWeek = (int) date('N', strtotime($tanggal));
+        $kategori = $this->isRamadanCached($tanggal, $cache) ? 'ramadan' : 'reguler';
+        $jamKerja = $this->getJamKerjaCached($tipePegawai, $dayOfWeek, $shift, $jumlahShift, $kategori, $cache);
+
+        $waktuAbsenDatang = '';
+        $waktuAbsenPulang = '';
+
+        if ($jamKerja) {
+            $waktuAbsenDatang = $jamKerja->jam_masuk;
+            $waktuAbsenPulang = $jamKerja->jam_keluar;
+
+            $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
+            if ($tipePegawai == 'tenaga_kesehatan' && $shift == 'pagi' && $tanggalCarbon->isMonday()) {
+                if ($params == 'masuk' && $jumlahShift == 3) {
+                    $waktuAbsenDatang = $waktuTetap;
+                }
+            }
+        } else {
+            if ($tipePegawai == 'tenaga_kesehatan') {
+                if ($shift == 'pagi') {
+                    $waktuAbsenDatang = $jumlahShift == 3 ? '08:00:00' : '07:30:00';
+                    $waktuAbsenPulang = $jumlahShift == 3 ? '14:00:00' : '17:00:00';
+                } elseif ($shift == 'siang') {
+                    $waktuAbsenDatang = '14:00:00';
+                    $waktuAbsenPulang = '21:00:00';
+                } else {
+                    $waktuAbsenDatang = $jumlahShift == 3 ? '21:00:00' : '17:00:00';
+                    $waktuAbsenPulang = $jumlahShift == 3 ? '08:00:00' : '07:30:00';
+                }
+            }
+            if ($tipePegawai == 'tenaga_kesehatan_non_shift') {
+                if ($dayOfWeek == 1 || $dayOfWeek == 5) {
+                    $waktuAbsenDatang = '07:00:00';
+                } elseif ($dayOfWeek == 2 || $dayOfWeek == 3 || $dayOfWeek == 4 || $dayOfWeek == 6) {
+                    $waktuAbsenDatang = '07:30:00';
+                }
+                $waktuAbsenPulang = '14:00:00';
+                if ($dayOfWeek == 5) {
+                    $waktuAbsenPulang = '11:30:00';
+                }
+            }
+        }
+
+        if ($waktu !== null) {
+            if ($params == 'masuk') {
+                $diff = strtotime($waktu) - strtotime($waktuAbsenDatang);
+            } else {
+                $diff = strtotime($waktuAbsenPulang) - strtotime($waktu);
+            }
+
+            if ($diff > 0) {
+                $menit = (int) floor($diff / 60);
+            }
+        } else {
+            $menit = 90;
+        }
+
+        return $menit;
+    }
+
+    private function calculatePegawaiKehadiranCached(
+        int $pegawai,
+        string $tanggal_awal,
+        string $tanggal_akhir,
+        $waktu_tetap_masuk,
+        $waktu_tetap_keluar,
+        string $tipe_pegawai,
+        $jumlah_shift,
+        array $absenPerTanggal,
+        array $rawShiftPerTanggal,
+        array $cache,
+        int $kehadiranKerjaCount
+    ): array {
+        $daftar_tanggal = [];
+        $current_date = new Carbon($tanggal_awal);
+        $jml_alfa = 0;
+        $kmk_30 = $kmk_60 = $kmk_90 = $kmk_90_keatas = 0;
+        $cpk_30 = $cpk_60 = $cpk_90 = $cpk_90_keatas = 0;
+        $count_apel = $count_hadir = $count_sakit = $count_izin_cuti = $count_dinas_luar = $count_cuti = 0;
+        $jml_tidak_apel = $jml_tidak_apel_hari_senin = $jml_tidak_hadir_berturut_turut = 0;
+
+        while ($current_date->lte(Carbon::parse($tanggal_akhir))) {
+            if ($tipe_pegawai == 'pegawai_administratif') {
+                if ($current_date->dayOfWeek !== 6 && $current_date->dayOfWeek !== 0) {
+                    if (!$this->isTanggalLiburCached($current_date->toDateString(), $tipe_pegawai, $cache)) {
+                        $daftar_tanggal[] = $current_date->toDateString();
+                    }
+                }
+            } elseif ($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
+                if ($current_date->dayOfWeek !== 0) {
+                    if (!$this->isTanggalLiburCached($current_date->toDateString(), $tipe_pegawai, $cache)) {
+                        $daftar_tanggal[] = $current_date->toDateString();
+                    }
+                }
+            } else {
+                $daftar_tanggal[] = $current_date->toDateString();
+            }
+            $current_date->addDay();
+        }
+
+        $hasil_akhir = [];
+        $hari_tidak_hadir_nakes = [];
+        $jml_menit_terlambat_masuk_kerja = 0;
+        $jml_menit_terlambat_pulang_kerja = 0;
+        $selisih_waktu_masuk = 0;
+        $selisih_waktu_pulang = 0;
+
+        foreach ($daftar_tanggal as $tanggal) {
+            if (isset($absenPerTanggal[$tanggal])) {
+                $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
+                $absen = $absenPerTanggal[$tanggal];
+
+                if ($tanggalCarbon->isMonday()) {
+                    if ($absen['status'] !== 'apel' && $absen['status'] !== 'dinas luar' && $absen['status'] !== 'cuti' && $absen['status'] !== 'dinas luar' && $absen['status'] !== 'sakit') {
+                        if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRamadanCached($tanggalCarbon->toDateString(), $cache)) {
+                            $jml_tidak_apel += 1;
+                        } elseif ($tipe_pegawai == 'tenaga_kesehatan') {
+                            if ($absen['shift'] == 'pagi' && !$this->isTanggalLiburCached($tanggalCarbon->toDateString(), $tipe_pegawai, $cache) && !$this->isRamadanCached($tanggalCarbon->toDateString(), $cache)) {
+                                $jml_tidak_apel += 1;
+                            }
+                        }
+                    }
+
+                    if ($absen['status'] == 'apel') {
+                        $count_apel += 1;
+                    }
+                }
+
+                if (in_array($tanggalCarbon->format('l'), ['Tuesday', 'Wednesday', 'Thursday', 'Friday'])) {
+                    if ($absen['status'] !== 'apel' && $absen['status'] !== 'dinas luar' && $absen['status'] !== 'cuti' && $absen['status'] !== 'dinas luar' && $absen['status'] !== 'sakit') {
+                        if ($tipe_pegawai == 'pegawai_administratif' && !$this->isRamadanCached($tanggalCarbon->toDateString(), $cache)) {
+                            $jml_tidak_apel_hari_senin += 1;
+                        }
+                    }
+                }
+
+                if ($absen['status'] == 'hadir' || $absen['status'] == 'apel') {
+                    $count_hadir += 1;
+                } elseif ($absen['status'] == 'sakit') {
+                    $count_sakit += 1;
+                } elseif ($absen['status'] == 'izin' || $absen['status'] == 'cuti') {
+                    $count_izin_cuti += 1;
+                }
+
+                if ($absen['status'] == 'dinas luar') {
+                    $count_dinas_luar += 1;
+                }
+
+                if ($absen['status'] == 'cuti') {
+                    $count_cuti += 1;
+                }
+
+                if ($absen['status'] == 'apel' && $absen['waktu_masuk'] !== null) {
+                    $shift_apel = ($tipe_pegawai == 'tenaga_kesehatan') ? $absen['shift'] : null;
+                    $jamApel = $this->getJamApelCached($tipe_pegawai, 'reguler', $shift_apel, $cache);
+                    if ($jamApel) {
+                        $diff_apel = strtotime($absen['waktu_masuk']) - strtotime($jamApel->batas_akhir);
+                        $selisih_waktu_masuk = ($diff_apel > 0) ? (int) floor($diff_apel / 60) : 0;
+                    } else {
+                        $selisih_waktu_masuk = 0;
+                    }
+                } elseif ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                    $selisih_waktu_masuk = $this->konvertWaktuCached('masuk', $absen['waktu_masuk'], $tanggal, $waktu_tetap_masuk, $tipe_pegawai, $cache);
+                } else {
+                    $selisih_waktu_masuk = $this->konvertWaktuNakesCached('masuk', $absen['waktu_masuk'], $tanggal, $absen['shift'], $waktu_tetap_masuk, $jumlah_shift, $tipe_pegawai, $cache);
+                }
+
+                if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
+                    $selisih_waktu_masuk = $this->konvertWaktuCached('masuk', $absen['waktu_masuk'], $tanggal, $waktu_tetap_masuk, $tipe_pegawai, $cache);
+                    $selisih_waktu_pulang = $this->konvertWaktuCached('keluar', $absen['waktu_keluar'], $tanggal, $waktu_tetap_keluar, $tipe_pegawai, $cache);
+                } else {
+                    $selisih_waktu_masuk = $this->konvertWaktuNakesCached('masuk', $absen['waktu_masuk'], $tanggal, $absen['shift'], $waktu_tetap_masuk, $jumlah_shift, $tipe_pegawai, $cache);
+                    $selisih_waktu_pulang = $this->konvertWaktuNakesCached('keluar', $absen['waktu_keluar'], $tanggal, $absen['shift'], $waktu_tetap_keluar, $jumlah_shift, $tipe_pegawai, $cache);
+                }
+
+                if ($absen['waktu_masuk'] !== null) {
+                    $jml_menit_terlambat_masuk_kerja += $selisih_waktu_masuk;
+                }
+                if ($tanggal !== date('Y-m-d')) {
+                    $jml_menit_terlambat_pulang_kerja += $selisih_waktu_pulang;
+                }
+
+                if ($absen['status'] !== 'cuti' && $absen['status'] !== 'dinas luar' && $absen['status'] !== 'sakit') {
+                    if ($selisih_waktu_masuk >= 1 && $selisih_waktu_masuk <= 30) {
+                        $kmk_30 += 1;
+                    } elseif ($selisih_waktu_masuk >= 31 && $selisih_waktu_masuk <= 60) {
+                        $kmk_60 += 1;
+                    } elseif ($selisih_waktu_masuk >= 61 && $selisih_waktu_masuk <= 90) {
+                        $kmk_90 += 1;
+                    } elseif ($selisih_waktu_masuk >= 91) {
+                        $kmk_90_keatas += 1;
+                    }
+
+                    if ($selisih_waktu_pulang >= 1 && $selisih_waktu_pulang <= 30) {
+                        $cpk_30 += 1;
+                    } elseif ($selisih_waktu_pulang >= 31 && $selisih_waktu_pulang <= 60) {
+                        $cpk_60 += 1;
+                    } elseif ($selisih_waktu_pulang >= 61 && $selisih_waktu_pulang <= 90) {
+                        $cpk_90 += 1;
+                    } elseif ($selisih_waktu_pulang >= 91) {
+                        $cpk_90_keatas += 1;
+                    }
+                }
+
+                $waktu_pulang = $absen['waktu_keluar'];
+                if ($waktu_pulang) {
+                    $keterangan_pulang = $selisih_waktu_pulang > 0 ? 'Cepat ' . $selisih_waktu_pulang . ' menit' : 'Tepat waktu';
+                } else {
+                    if (Carbon::now()->greaterThan(Carbon::parse('22:00:00'))) {
+                        $waktu_pulang = '14:00:00';
+                        $keterangan_pulang = 'Cepat 90 menit';
+                    } else {
+                        $waktu_pulang = 'Belum Absen';
+                        $keterangan_pulang = 'Belum Absen';
+                    }
+                }
+
+                $hasil_akhir[] = [
+                    'tanggal_absen' => $tanggal,
+                    'status' => $absen['status'],
+                    'waktu_masuk' => $absen['waktu_masuk'],
+                    'waktu_keluar' => $waktu_pulang,
+                    'waktu_istirahat' => $absen['waktu_istirahat'],
+                    'waktu_masuk_istirahat' => $absen['waktu_masuk_istirahat'],
+                    'keterangan_masuk' => $selisih_waktu_masuk > 0 ? 'Telat ' . $selisih_waktu_masuk . ' menit' : 'Tepat waktu',
+                    'keterangan_pulang' => $keterangan_pulang,
+                    'shift' => $absen['shift'],
+                    'status_masuk_istirahat' => $absen['status_masuk_istirahat'],
+                ];
+            } else {
+                $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
+                if ($tanggalCarbon->isWeekday() && !$tanggalCarbon->isTomorrow() && !$this->isTanggalLiburCached($tanggalCarbon->toDateString(), $tipe_pegawai, $cache)) {
+                    $jml_tidak_hadir_berturut_turut += 1;
+                } else {
+                    $jml_tidak_hadir_berturut_turut = 0;
+                }
+
+                $status_ = 'Tanpa Keterangan';
+                if (strtotime($tanggal) > strtotime(date('Y-m-d'))) {
+                    $status_ = 'Belum absen';
+                } else {
+                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik') {
+                        $jml_alfa += 1;
+                    } else {
+                        $mingguKe = $tanggalCarbon->weekOfMonth;
+                        $tanggalSebelumnya = date('Y-m-d', strtotime($tanggal . ' -1 day'));
+                        $tanggalSebelumnya2 = date('Y-m-d', strtotime($tanggal . ' -2 day'));
+                        $check_last_day = $rawShiftPerTanggal[$tanggalSebelumnya] ?? null;
+                        $check_last_day2 = $rawShiftPerTanggal[$tanggalSebelumnya2] ?? null;
+
+                        if ($tipe_pegawai == 'tenaga_kesehatan') {
+                            if (!is_null($check_last_day) && ($check_last_day['shift'] ?? null) == 'malam') {
+                                $status_ = 'Lepas Jaga / Lepas Piket';
+                            } elseif (!is_null($check_last_day2) && ($check_last_day2['shift'] ?? null) == 'malam') {
+                                $status_ = 'Lepas Jaga / Lepas Piket';
+                            } else {
+                                $hari_tidak_hadir_nakes[] = ['tanggal' => $tanggal, 'minggu' => $mingguKe];
+                                $status_ = '-';
+                            }
+                        }
+                    }
+                }
+
+                $hasil_akhir[] = [
+                    'tanggal_absen' => $tanggal,
+                    'status' => $status_,
+                    'waktu_masuk' => '-',
+                    'waktu_keluar' => '-',
+                    'waktu_istirahat' => '-',
+                    'waktu_masuk_istirahat' => '-',
+                    'keterangan_masuk' => '-',
+                    'keterangan_pulang' => '-',
+                    'shift' => '-',
+                    'status_masuk_istirahat' => '-',
+                ];
+            }
+        }
+
+        $jumlah_alfa_nakes = 0;
+        if ($tipe_pegawai == 'tenaga_kesehatan') {
+            $jumlahHariMingguSama = array_count_values(array_column($hari_tidak_hadir_nakes, 'minggu'));
+            foreach ($jumlahHariMingguSama as $minggu => $jumlah) {
+                if ($jumlah > 1) {
+                    $jumlah_alfa_nakes += $jumlah - 1;
+                }
+            }
+            $jml_alfa = $jumlah_alfa_nakes;
+        }
+
+        $potongan_masuk_kerja = ($kmk_30 * 0.5) + ($kmk_60 * 1) + ($kmk_90 * 1.25) + ($kmk_90_keatas * 1.5);
+        $potongan_pulang_kerja = ($cpk_30 * 0.5) + ($cpk_60 * 1) + ($cpk_90 * 1.25) + ($cpk_90_keatas * 1.5);
+        $potongan_tanpa_keterangan = $jml_alfa * 3;
+        $potongan_apel = ($jml_tidak_apel * 2) + ($jml_tidak_apel_hari_senin * 0.25);
+        $jml_potongan_kehadiran_kerja = $potongan_tanpa_keterangan + $potongan_masuk_kerja + $potongan_pulang_kerja + $potongan_apel;
+
+        return [
+            'data' => $hasil_akhir,
+            'jml_hari_kerja' => count($hasil_akhir),
+            'kehadiran_kerja' => $kehadiranKerjaCount,
+            'tanpa_keterangan' => $jml_alfa,
+            'potongan_tanpa_keterangan' => $potongan_tanpa_keterangan,
+            'potongan_masuk_kerja' => $potongan_masuk_kerja,
+            'potongan_pulang_kerja' => $potongan_pulang_kerja,
+            'potongan_apel' => $potongan_apel,
+            'jml_potongan_kehadiran_kerja' => $jml_potongan_kehadiran_kerja,
+            'jml_apel' => $count_apel,
+            'jml_hadir' => $count_hadir,
+            'jml_sakit' => $count_sakit,
+            'jml_cuti' => $count_cuti,
+            'jml_izin_cuti' => $count_izin_cuti,
+            'jml_dinas_luar' => $count_dinas_luar,
+            'kmk_30' => $kmk_30,
+            'kmk_60' => $kmk_60,
+            'kmk_90' => $kmk_90,
+            'kmk_90_keatas' => $kmk_90_keatas,
+            'cpk_30' => $cpk_30,
+            'cpk_60' => $cpk_60,
+            'cpk_90' => $cpk_90,
+            'cpk_90_keatas' => $cpk_90_keatas,
+            'jml_tidak_apel' => $jml_tidak_apel,
+            'jml_tidak_apel_hari_senin' => $jml_tidak_apel_hari_senin,
+            'jml_tidak_hadir_berturut_turut' => $jml_tidak_hadir_berturut_turut,
+            'jml_menit_terlambat_masuk_kerja' => $jml_menit_terlambat_masuk_kerja,
+            'jml_menit_terlambat_pulang_kerja' => $jml_menit_terlambat_pulang_kerja,
+        ];
+    }
+
+    public function export_rekapitulasi_absen($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja, ?string $savePath = null)
     {
 
         $spreadsheet = new Spreadsheet();
@@ -908,11 +1717,11 @@ class LaporanKehadiranController extends Controller
         $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
         if ($type == 'excel') {
             $writer = new Xlsx($spreadsheet);
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-            $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
-            $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
-            header("Content-Disposition: attachment;filename=\"$filename\"");
+            if (is_null($savePath)) {
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
+                header("Content-Disposition: attachment;filename=\"$filename\"");
+            }
         } else {
             $spreadsheet->getActiveSheet()->getHeaderFooter()
                 ->setOddHeader('&C&H' . url()->current());
@@ -920,15 +1729,23 @@ class LaporanKehadiranController extends Controller
                 ->setOddFooter('&L&B &RPage &P of &N');
             $class = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf::class;
             \PhpOffice\PhpSpreadsheet\IOFactory::registerWriter('Pdf', $class);
-            header('Content-Type: application/pdf');
-            header('Cache-Control: max-age=0');
+            if (is_null($savePath)) {
+                header('Content-Type: application/pdf');
+                header('Cache-Control: max-age=0');
+            }
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Pdf');
         }
 
-        $writer->save('php://output');
+        if (is_null($savePath)) {
+            $writer->save('php://output');
+            return null;
+        }
+
+        $writer->save($savePath);
+        return $savePath;
     }
 
-    public function export_rekapitulasi_absen_guru($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja)
+    public function export_rekapitulasi_absen_guru($data, $type, $tanggal_awal, $tanggal_akhir, $satuan_kerja, ?string $savePath = null)
     {
 
         $spreadsheet = new Spreadsheet();
@@ -1048,11 +1865,11 @@ class LaporanKehadiranController extends Controller
         $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
         if ($type == 'excel') {
             $writer = new Xlsx($spreadsheet);
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-            $periode = $tanggal_awal . ' s/d ' . $tanggal_akhir;
-            $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
-            header("Content-Disposition: attachment;filename=\"$filename\"");
+            if (is_null($savePath)) {
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $filename = "Laporan Absen {$satuan_kerja} {$periode}.xlsx";
+                header("Content-Disposition: attachment;filename=\"$filename\"");
+            }
         } else {
             $spreadsheet->getActiveSheet()->getHeaderFooter()
                 ->setOddHeader('&C&H' . url()->current());
@@ -1060,11 +1877,19 @@ class LaporanKehadiranController extends Controller
                 ->setOddFooter('&L&B &RPage &P of &N');
             $class = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf::class;
             \PhpOffice\PhpSpreadsheet\IOFactory::registerWriter('Pdf', $class);
-            header('Content-Type: application/pdf');
-            header('Cache-Control: max-age=0');
+            if (is_null($savePath)) {
+                header('Content-Type: application/pdf');
+                header('Cache-Control: max-age=0');
+            }
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Pdf');
         }
 
-        $writer->save('php://output');
+        if (is_null($savePath)) {
+            $writer->save('php://output');
+            return null;
+        }
+
+        $writer->save($savePath);
+        return $savePath;
     }
 }

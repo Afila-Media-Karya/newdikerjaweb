@@ -341,6 +341,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/export-pegawai-bulan', 'LaporanKehadiranController@export_pegawai_bulan')->name('kabupaten.laporan.kehadiran.export2');
                 Route::get('/export-opd', 'LaporanKehadiranController@export_opd')->name('kabupaten.laporan.kehadiran_opd.export');
                 Route::get('/export-opd-bulan', 'LaporanKehadiranController@export_opd_bulan')->name('kabupaten.laporan.kehadiran_opd_bulan.export');
+                Route::get('/export-status/{id}', 'LaporanKehadiranController@export_status')->name('kabupaten.laporan.kehadiran_opd_bulan.export_status');
+                Route::get('/export-download/{id}', 'LaporanKehadiranController@export_download')->name('kabupaten.laporan.kehadiran_opd_bulan.export_download');
             });
             Route::prefix('kinerja')->group(function () {
                 Route::get('/', 'LaporanKinerjaController@index_kabupaten')->name('kabupaten.laporan.kinerja.index');
@@ -796,6 +798,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/export-opd', 'LaporanKehadiranController@export_opd')->name('opd.laporan.kehadiran_opd.export');
                 Route::get('/export-pegawai-bulan', 'LaporanKehadiranController@export_pegawai_bulan')->name('opd.laporan.kehadiran.export2');
                 Route::get('/export-opd-bulan', 'LaporanKehadiranController@export_opd_bulan')->name('opd.laporan.kehadiran_opd_bulan.export');
+                Route::get('/export-status/{id}', 'LaporanKehadiranController@export_status')->name('opd.laporan.kehadiran_opd_bulan.export_status');
+                Route::get('/export-download/{id}', 'LaporanKehadiranController@export_download')->name('opd.laporan.kehadiran_opd_bulan.export_download');
 
             });
             Route::prefix('kinerja')->group(function () {
