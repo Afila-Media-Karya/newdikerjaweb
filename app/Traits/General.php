@@ -692,7 +692,7 @@ trait General
                         $daftar_tanggal[] = $current_date->toDateString();
                     }
                 }
-            } elseif ($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
+            } else if ($tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
                 if ($current_date->dayOfWeek !== 0) {
                     if (!$this->isTanggalLibur($current_date->toDateString(), $tipe_pegawai)) {
                         $daftar_tanggal[] = $current_date->toDateString();
@@ -876,6 +876,7 @@ trait General
                     'status_masuk_istirahat' => $absen_per_tanggal[$tanggal]['status_masuk_istirahat']
                 ];
             } else {
+                ///alfa atau tanpa keterangan
                 // array_push($tes,$tanggal);
                 $tanggalCarbon = Carbon::createFromFormat('Y-m-d', $tanggal);
                 if ($tanggalCarbon->isWeekday() && !$tanggalCarbon->isTomorrow() && !$this->isTanggalLibur($tanggalCarbon->toDateString(), $tipe_pegawai)) {
@@ -889,7 +890,7 @@ trait General
                 if (strtotime($tanggal) > strtotime(date('Y-m-d'))) {
                     $status_ = 'Belum absen';
                 } else {
-                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik') {
+                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru' || $tipe_pegawai == 'tenaga_kesehatan_non_shift') {
                         $jml_alfa += 1;
                     } else {
                         $mingguKe = $tanggalCarbon->weekOfMonth;
