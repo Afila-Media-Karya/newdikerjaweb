@@ -122,8 +122,9 @@ class LaporanKehadiranController extends Controller
         $pegawai_info = $this->findPegawaiByMutasi($pegawai, $satuan_kerja, $tahun);
         $data = $this->data_kehadiran_pegawai($pegawai, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->waktu_masuk, $pegawai_info->waktu_keluar, $pegawai_info->tipe_pegawai, $pegawai_info->jumlah_shift);
 
+        // dd($pegawai_info);
         $type = request('type');
-        if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik') {
+        if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik_non_guru') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->tipe_pegawai);
         } else {
             return $this->export_rekap_pegawai_nakes($data, $type, $pegawai_info, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir']);
@@ -132,6 +133,7 @@ class LaporanKehadiranController extends Controller
 
     public function export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir, $tipe_pegawai)
     {
+        
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
@@ -273,7 +275,7 @@ class LaporanKehadiranController extends Controller
         $sheet->setCellValue('C' . $cell, $data['tanpa_keterangan']);
         $sheet->setCellValue('D' . $cell, 'Hari');
         $sheet->getRowDimension($cell)->setRowHeight(20);
-        if ($tipe_pegawai == 'pegawai_administratif') {
+        if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
             $cell = $cell + 1;
             $sheet->setCellValue('A' . $cell, 'Potongan tanpa keterangan')->mergeCells('A' . $cell . ':B' . $cell);
             $sheet->setCellValue('C' . $cell, $data['potongan_tanpa_keterangan']);
@@ -486,30 +488,30 @@ class LaporanKehadiranController extends Controller
         $sheet->setCellValue('D' . $cell, 'Hari');
         $sheet->getRowDimension($cell)->setRowHeight(20);
         $cell = $cell + 1;
-        $sheet->setCellValue('A' . $cell, 'Potongan tanpa keterangan')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['potongan_tanpa_keterangan']);
-        $sheet->setCellValue('D' . $cell, '%');
+        $sheet->setCellValue('A' . $cell, 'Potongan terlambat datang dan cepat pulang')->mergeCells('A' . $cell . ':B' . $cell);
+        $sheet->setCellValue('C' . $cell, $data['jml_menit_terlambat_masuk_kerja']+$data['jml_menit_terlambat_pulang_kerja']);
+        $sheet->setCellValue('D' . $cell, 'Menit');
         $sheet->getRowDimension($cell)->setRowHeight(20);
-        $cell = $cell + 1;
-        $sheet->setCellValue('A' . $cell, 'Potongan masuk kerja')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['potongan_masuk_kerja']);
-        $sheet->setCellValue('D' . $cell, '%');
-        $sheet->getRowDimension($cell)->setRowHeight(20);
-        $cell = $cell + 1;
-        $sheet->setCellValue('A' . $cell, 'Potongan pulang kerja')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['potongan_pulang_kerja']);
-        $sheet->setCellValue('D' . $cell, '%');
-        $sheet->getRowDimension($cell)->setRowHeight(20);
-        $cell = $cell + 1;
-        $sheet->setCellValue('A' . $cell, 'Potongan apel')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['potongan_apel']);
-        $sheet->setCellValue('D' . $cell, '%');
-        $sheet->getRowDimension($cell)->setRowHeight(20);
-        $cell = $cell + 1;
-        $sheet->setCellValue('A' . $cell, 'Total potongan')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['jml_potongan_kehadiran_kerja']);
-        $sheet->setCellValue('D' . $cell, '%');
-        $sheet->getRowDimension($cell)->setRowHeight(25);
+        // $cell = $cell + 1;
+        // $sheet->setCellValue('A' . $cell, 'Potongan masuk kerja')->mergeCells('A' . $cell . ':B' . $cell);
+        // $sheet->setCellValue('C' . $cell, $data['potongan_masuk_kerja']);
+        // $sheet->setCellValue('D' . $cell, '%');
+        // $sheet->getRowDimension($cell)->setRowHeight(20);
+        // $cell = $cell + 1;
+        // $sheet->setCellValue('A' . $cell, 'Potongan pulang kerja')->mergeCells('A' . $cell . ':B' . $cell);
+        // $sheet->setCellValue('C' . $cell, $data['potongan_pulang_kerja']);
+        // $sheet->setCellValue('D' . $cell, '%');
+        // $sheet->getRowDimension($cell)->setRowHeight(20);
+        // $cell = $cell + 1;
+        // $sheet->setCellValue('A' . $cell, 'Potongan apel')->mergeCells('A' . $cell . ':B' . $cell);
+        // $sheet->setCellValue('C' . $cell, $data['potongan_apel']);
+        // $sheet->setCellValue('D' . $cell, '%');
+        // $sheet->getRowDimension($cell)->setRowHeight(20);
+        // $cell = $cell + 1;
+        // $sheet->setCellValue('A' . $cell, 'Total potongan')->mergeCells('A' . $cell . ':B' . $cell);
+        // $sheet->setCellValue('C' . $cell, $data['jml_potongan_kehadiran_kerja']);
+        // $sheet->setCellValue('D' . $cell, '%');
+        // $sheet->getRowDimension($cell)->setRowHeight(25);
         $sheet->getStyle('A' . $cell . ':D' . $cell)->getFont()->setBold(true);
         $sheet->getStyle('A' . $cell . ':D' . $cell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E1F5FE');
 
