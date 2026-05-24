@@ -325,6 +325,8 @@
             var hariKerjaPerTipe = @json($hariKerjaPerTipe);
             var namaHari = @json($namaHari);
 
+            console.log("HARI KERJA: ",hariKerjaPerTipe);
+
             // ============================================
             // NON-SHIFT: Tipe Pegawai + Hari dropdowns
             // ============================================
