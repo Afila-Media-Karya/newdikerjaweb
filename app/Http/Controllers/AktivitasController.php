@@ -12,6 +12,7 @@ use App\Traits\General;
 use Carbon\Carbon;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid as Generator;
+use Illuminate\Support\Facades\Log;
 
 class AktivitasController extends BaseController
 {
@@ -114,6 +115,7 @@ class AktivitasController extends BaseController
     }
 
     public function update(AktivitasRequest $request, $params){
+        
         $data = array();
         try {
 
@@ -141,18 +143,18 @@ class AktivitasController extends BaseController
                     }
                 }
 
-                $jumlah_kinerja = $this->checkMenitKinerja($request->tanggal,$pegawai);
-                $total_time_recorded = $jumlah_kinerja->count;
-                $requested_time = $request->waktu;
-                $remaining_time = 420 - $total_time_recorded;
-                $total_time = $total_time_recorded + $requested_time;
+                // $jumlah_kinerja = $this->checkMenitKinerja($request->tanggal,$pegawai);
+                // $total_time_recorded = $jumlah_kinerja->count;
+                // $requested_time = $request->waktu;
+                // $remaining_time = 420 - $total_time_recorded;
+                // $total_time = $total_time_recorded + $requested_time;
 
-                if ($total_time > 420) {
-                    $exceeded_time = $total_time - 420;
-                    return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 420 menit', 'Gagal', 200); 
-                } else {
-                    $waktu = $requested_time;
-                }
+                // if ($total_time > 420) {
+                //     $exceeded_time = $total_time - 420;
+                //     return $this->sendError('Jumlah waktu sudah mencapai batas maksimum, Anda tidak bisa menambah aktivitas lebih dari 420 menit', 'Gagal', 200); 
+                // } else {
+                //     $waktu = $requested_time;
+                // }
             }
 
             $data = Aktivitas::where('uuid',$params)->first();
@@ -160,7 +162,7 @@ class AktivitasController extends BaseController
             $data->keterangan = $request->keterangan;
             $data->volume = $request->volume;
             $data->satuan = $request->satuan;
-            $data->waktu = $waktu;
+            // $data->waktu = $waktu;
             $data->id_sasaran = $request->id_sasaran;
             $data->id_pegawai = $pegawai;
             $data->user_update = Auth::user()->id_pegawai;
