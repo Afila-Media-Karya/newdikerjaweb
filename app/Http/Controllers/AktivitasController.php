@@ -186,7 +186,6 @@ class AktivitasController extends BaseController
     public function delete(Request $request, $params){
         $data = array();
         try {
-
             $tmt_aktivitas = DB::table('tb_aktivitas')->where('uuid', $params)->first();
             if ($tmt_aktivitas) {
                 DB::table('tb_riwayat_aktivitas')->insert([
