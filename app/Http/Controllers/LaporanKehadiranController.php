@@ -104,6 +104,7 @@ class LaporanKehadiranController extends Controller
 
     public function export_pegawai_bulan()
     {
+        
         $satuan_kerja = request('satuan_kerja');
         $bulan = request('bulan');
         $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
@@ -121,8 +122,6 @@ class LaporanKehadiranController extends Controller
         // $pegawai_info = $this->findPegawai($pegawai, $jabatan_req);
         $pegawai_info = $this->findPegawaiByMutasi($pegawai, $satuan_kerja, $tahun);
         $data = $this->data_kehadiran_pegawai($pegawai, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->waktu_masuk, $pegawai_info->waktu_keluar, $pegawai_info->tipe_pegawai, $pegawai_info->jumlah_shift);
-
-        // dd($pegawai_info);
         $type = request('type');
         if ($pegawai_info->tipe_pegawai == 'pegawai_administratif' || $pegawai_info->tipe_pegawai == 'tenaga_pendidik_non_guru') {
             return $this->export_rekap_pegawai($data, $type, $pegawai_info, $periodePegawai['tanggal_awal'], $periodePegawai['tanggal_akhir'], $pegawai_info->tipe_pegawai);
@@ -133,9 +132,7 @@ class LaporanKehadiranController extends Controller
 
     public function export_rekap_pegawai($data, $type, $pegawai_info, $tanggal_awal, $tanggal_akhir, $tipe_pegawai)
     {
-        
         $spreadsheet = new Spreadsheet();
-
         $spreadsheet->getProperties()->setCreator('BKPSDM BULUKUMBA')
             ->setLastModifiedBy('BKPSDM BULUKUMBA')
             ->setTitle('Laporan Rekapitulasi Absen Pegawai')
@@ -489,7 +486,7 @@ class LaporanKehadiranController extends Controller
         $sheet->getRowDimension($cell)->setRowHeight(20);
         $cell = $cell + 1;
         $sheet->setCellValue('A' . $cell, 'Potongan terlambat datang dan cepat pulang')->mergeCells('A' . $cell . ':B' . $cell);
-        $sheet->setCellValue('C' . $cell, $data['jml_menit_terlambat_masuk_kerja']+$data['jml_menit_terlambat_pulang_kerja']);
+        $sheet->setCellValue('C' . $cell, $data['jml_menit_terlambat_masuk_kerja'] + $data['jml_menit_terlambat_pulang_kerja']);
         $sheet->setCellValue('D' . $cell, 'Menit');
         $sheet->getRowDimension($cell)->setRowHeight(20);
         // $cell = $cell + 1;
@@ -582,6 +579,8 @@ class LaporanKehadiranController extends Controller
 
     public function export_opd_bulan()
     {
+        Log::info('=== EXPORT OPD BULAN ===');
+        Log::info('Request params', request()->all());
         $context = $this->resolveExportOpdContext(request());
         $mode = request('mode', 'auto');
         $forceAsync = request('force_async') == '1';
@@ -975,6 +974,8 @@ class LaporanKehadiranController extends Controller
                 $absenValidatedCount[(int) $item->id] ?? 0
             );
 
+            
+
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
             $item->tanpa_keterangan = $child['tanpa_keterangan'];
@@ -1002,6 +1003,7 @@ class LaporanKehadiranController extends Controller
             $item->jml_tidak_hadir_berturut_turut = $child['jml_tidak_hadir_berturut_turut'];
             $item->jml_menit_terlambat_masuk_kerja = $child['jml_menit_terlambat_masuk_kerja'];
             $item->jml_menit_terlambat_pulang_kerja = $child['jml_menit_terlambat_pulang_kerja'];
+
             return $item;
         });
         $metrics['hitung_rekap_seconds'] = round(microtime(true) - $startedHitung, 4);
@@ -1442,7 +1444,7 @@ class LaporanKehadiranController extends Controller
                 if (strtotime($tanggal) > strtotime(date('Y-m-d'))) {
                     $status_ = 'Belum absen';
                 } else {
-                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik') {
+                    if ($tipe_pegawai == 'pegawai_administratif' || $tipe_pegawai == 'tenaga_pendidik' || $tipe_pegawai == 'tenaga_pendidik_non_guru') {
                         $jml_alfa += 1;
                     } else {
                         $mingguKe = $tanggalCarbon->weekOfMonth;
