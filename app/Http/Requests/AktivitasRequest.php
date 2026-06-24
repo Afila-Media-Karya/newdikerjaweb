@@ -27,6 +27,8 @@ class AktivitasRequest extends FormRequest
             'aktivitas' => 'required',
             'keterangan' => 'required',
             'volume' => 'required',
+            'satuan' => 'required',
+            'waktu' => 'required'
         ];
     }
 
@@ -38,6 +40,8 @@ class AktivitasRequest extends FormRequest
                 'aktivitas.required' => 'kolom aktivitas tidak boleh kosong.',
                 'keterangan.required' => 'kolom keterangan tidak boleh kosong.',
                 'volume.required' => 'kolom hasil tidak boleh kosong.',
+                'satuan.required' => 'kolom satuan tidak boleh kosong.',
+                'waktu.required' => 'kolom waktu tidak boleh kosong.',
             ]; 
     }
 }
