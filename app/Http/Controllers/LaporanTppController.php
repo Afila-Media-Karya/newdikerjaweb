@@ -12,6 +12,7 @@ use Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LaporanTppController extends BaseController
 {
@@ -600,6 +601,7 @@ class LaporanTppController extends BaseController
             $bpjs = 1 * $nilaiPaguTpp / 100;
             $data->tanpa_keterangan > 3 || $data->potongan_apel > 40 ? $keterangan = 'TMS'  : $keterangan = 'MS';
             $tppBruto = 0;
+            Log::info($data->tanpa_keterangan);
             $iuran = 4 * $nilaiPaguTpp / 100;
             if ($keterangan === 'TMS') {
                 $tppBruto = 0;

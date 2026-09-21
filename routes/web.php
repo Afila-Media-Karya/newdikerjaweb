@@ -426,6 +426,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/show/{params}', 'jabatan\MutasiController@show')->name('kabupaten.Jabatan.mutasi.show');
                 Route::get('/detail/{params}', 'jabatan\MutasiController@detail')->name('kabupaten.Jabatan.mutasi.detail');
                 Route::delete('/delete/{params}', 'jabatan\MutasiController@delete')->name('kabupaten.Jabatan.mutasi.delete');
+                Route::get('/option-unit-kerja/{id}', 'jabatan\MutasiController@get_unit_kerja_baru')->name('jabatan.mutasi.get_unit_kerja');
             });
         });
 

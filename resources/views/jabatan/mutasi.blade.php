@@ -19,7 +19,7 @@
     </div>
 @endsection
 @section('content')
-<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container">
             <div class="row">
@@ -30,18 +30,21 @@
                         <div class="container">
                             <div class="py-5">
 
-                            @if($role['guard'] == 'administrator' && $role['role'] == '2')
+                                @if ($role['guard'] == 'administrator' && $role['role'] == '2')
                                     <div style="position:absolute">
-                                    <div class="btn-group" style="position: relative;left: 26rem;top: 12px;width:38rem;">
-                                        <select name="tenaga_kesehatan_id" id="satuan_kerja_filter" data-control="select2" data-placeholder="Filter Satuan Kerja" class="form-control form-control-sm form-control-solid">
-                                            <option selected value="0">Filter by Unit Kerja</option>
-                                            @foreach($unit_kerja as $val)
-                                                <option value="{{$val->value}}">{{$val->text}}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="btn-group"
+                                            style="position: relative;left: 26rem;top: 12px;width:38rem;">
+                                            <select name="tenaga_kesehatan_id" id="satuan_kerja_filter"
+                                                data-control="select2" data-placeholder="Filter Satuan Kerja"
+                                                class="form-control form-control-sm form-control-solid">
+                                                <option selected value="0">Filter by Unit Kerja</option>
+                                                @foreach ($unit_kerja as $val)
+                                                    <option value="{{ $val->value }}">{{ $val->text }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
 
                                 <table id="kt_table_data" class="table table-row-dashed table-row-gray-300 gy-7">
                                     <thead class="text-center">
@@ -95,8 +98,7 @@
                                 width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g transform="translate(12.000000, 12.000000) rotate(-45.000000) translate(-12.000000, -12.000000) translate(4.000000, 4.000000)"
                                     fill="#000000">
-                                    <rect fill="#000000" x="0" y="7" width="16" height="2"
-                                        rx="1" />
+                                    <rect fill="#000000" x="0" y="7" width="16" height="2" rx="1" />
                                     <rect fill="#000000" opacity="0.5"
                                         transform="translate(8.000000, 8.000000) rotate(-270.000000) translate(-8.000000, -8.000000)"
                                         x="0" y="7" width="16" height="2" rx="1" />
@@ -119,10 +121,11 @@
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Satuan Kerja Lama</label>
-                        <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja" data-control="select2" data-placeholder="Pilih Satuan Kerja">
+                        <select class="form-select form-control" id="id_satuan_kerja" name="id_satuan_kerja"
+                            data-control="select2" data-placeholder="Pilih Satuan Kerja">
                             <option></option>
-                            @foreach($satuan_kerja as $val)
-                                <option value="{{$val->value}}">{{$val->text}}</option>
+                            @foreach ($satuan_kerja as $val)
+                                <option value="{{ $val->value }}">{{ $val->text }}</option>
                             @endforeach
                         </select>
                         <small class="text-danger id_satuan_kerja_error"></small>
@@ -130,7 +133,8 @@
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Pegawai</label>
-                        <select class="form-select form-control" id="id_pegawai" name="id_pegawai" data-control="select2" data-placeholder="Pilih Pegawai">
+                        <select class="form-select form-control" id="id_pegawai" name="id_pegawai" data-control="select2"
+                            data-placeholder="Pilih Pegawai">
                             <option></option>
                         </select>
                         <small class="text-danger id_pegawai_error"></small>
@@ -138,18 +142,29 @@
 
                     <div class="mb-10">
                         <label class="form-label">Pilih Satuan Kerja Baru</label>
-                        <select class="form-select form-control" id="id_satuan_kerja_baru" name="id_satuan_kerja_baru" data-control="select2" data-placeholder="Pilih Satuan Kerja">
+                        <select class="form-select form-control" id="id_satuan_kerja_baru" name="id_satuan_kerja_baru"
+                            data-control="select2" data-placeholder="Pilih Satuan Kerja">
                             <option></option>
-                            @foreach($satuan_kerja as $val)
-                                <option value="{{$val->value}}">{{$val->text}}</option>
+                            @foreach ($satuan_kerja as $val)
+                                <option value="{{ $val->value }}">{{ $val->text }}</option>
                             @endforeach
                         </select>
                         <small class="text-danger id_satuan_kerja_baru_error"></small>
                     </div>
 
                     <div class="mb-10">
+                        <label class="form-label">Pilih Unit Kerja Baru</label>
+                        <select class="form-select form-control" id="id_unit_kerja_baru" name="id_unit_kerja_baru"
+                            data-control="select2" data-placeholder="Pilih Unit Kerja">
+                            <option></option>
+                        </select>
+                        <small class="text-danger id_unit_kerja_baru_error"></small>
+                    </div>
+
+                    <div class="mb-10">
                         <label class="form-label">Pilih Jabatan Baru</label>
-                        <select class="form-select form-control" id="id_jabatan_baru" name="id_jabatan_baru" data-control="select2" data-placeholder="Pilih Jabatan Masuk">
+                        <select class="form-select form-control" id="id_jabatan_baru" name="id_jabatan_baru"
+                            data-control="select2" data-placeholder="Pilih Jabatan Masuk">
                             <option></option>
                         </select>
                         <small class="text-danger id_jabatan_baru_error"></small>
@@ -190,10 +205,10 @@
             e.preventDefault();
             let type = $(this).attr('data-type');
             if (type == 'add') {
-                control.submitFormMultipart('/jabatan/mutasi/store', 'Tambah', 'Mutasi','POST');
+                control.submitFormMultipart('/jabatan/mutasi/store', 'Tambah', 'Mutasi', 'POST');
             } else {
                 let uuid = $("input[name='uuid']").val();
-                control.submitFormMultipart('/jabatan/mutasi/update/' + uuid, 'Update','Mutasi', 'POST');
+                control.submitFormMultipart('/jabatan/mutasi/update/' + uuid, 'Update', 'Mutasi', 'POST');
             }
         });
 
@@ -210,69 +225,84 @@
             control.ajaxDelete(url, label)
         })
 
-        $(document).on('change','#id_satuan_kerja', function (e) {
-             e.preventDefault();
+        $(document).on('change', '#id_satuan_kerja', function(e) {
+            e.preventDefault();
             if ($(this).val() !== '') {
-                control.push_select(`/pegawai/list-pegawai/option?satuan_kerja=${$(this).val()}`,'#id_pegawai');
+                control.push_select(`/pegawai/list-pegawai/option?satuan_kerja=${$(this).val()}`, '#id_pegawai');
             }
         })
 
-        $(document).on('change','#id_satuan_kerja_baru', function () {
+        $(document).on('change', '#id_satuan_kerja_baru', function() {
             if ($(this).val() !== '') {
-                control.push_select(`/jabatan/jabatan-kosong/option/${$(this).val()}`,'#id_jabatan_baru');
+                let id = $(this).val();
+                if (id === '') return;
+
+                control.push_select(`/jabatan/jabatan-kosong/option/${$(this).val()}`, '#id_jabatan_baru');
+
+                let $unit = $('#id_unit_kerja_baru');
+                $unit.empty().append('<option></option>');
+
+                $.get(`/jabatan/mutasi/option-unit-kerja/${id}`, function(res) {
+                    $.each(res, function(i, item) {
+                        $unit.append(new Option(item.text, item.value));
+                    });
+                    $unit.trigger('change');
+                }).fail(function(xhr) {
+                    console.error('Gagal load unit kerja', xhr.status, xhr.responseText);
+                });
             }
         })
 
-        $(document).on('change','#satuan_kerja_filter', function () {
+        $(document).on('change', '#satuan_kerja_filter', function() {
             datatable($(this).val());
         })
 
-        datatable = (params) =>{
+        datatable = (params) => {
             let columns = [{
                 data: null,
-                className : 'text-center',
+                className: 'text-center',
                 render: function(data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             }, {
                 data: 'nip',
-                className : 'text-right',
+                className: 'text-right',
             }, {
                 data: 'nama',
-                className : 'text-right',
+                className: 'text-right',
             }, {
                 data: 'jabatan_lama',
-                className : 'text-right',
+                className: 'text-right',
                 render: function(data, type, row, meta) {
-                   if (row.status_jabatan_lama !== 'definitif' && data !== null) {
+                    if (row.status_jabatan_lama !== 'definitif' && data !== null) {
                         let status_jabatan_lama = row.status_jabatan_lama;
                         return `${status_jabatan_lama.toUpperCase()} ${data}`;
                     }
 
                     if (data !== null) {
-                        return data;  
+                        return data;
                     }
-                    
+
                     return '-';
                 }
             }, {
                 data: 'jabatan_baru',
-                className : 'text-right',
+                className: 'text-right',
                 render: function(data, type, row, meta) {
-                   if (row.status_jabatan_baru !== 'definitif' && data !== null) {
+                    if (row.status_jabatan_baru !== 'definitif' && data !== null) {
                         let status_jabatan_baru = row.status_jabatan_baru;
                         return `${status_jabatan_baru.toUpperCase()} ${data}`;
                     }
 
                     if (data !== null) {
-                        return data;  
+                        return data;
                     }
-                    
+
                     return '-';
                 }
             }, {
                 data: 'uuid',
-                className : 'text-center',
+                className: 'text-center',
             }];
             let columnDefs = [{
                 targets: -1,
@@ -282,10 +312,10 @@
                 render: function(data, type, full, meta) {
                     return `
                             <a href="/jabatan/mutasi/detail/${data}" type="button" data-uuid="${data}" class="btn btn-warning btn-icon btn-sm"> 
-                                <img src="{{ asset('admin/assets/media/icons/eye.svg')}}" alt="" srcset="">
+                                <img src="{{ asset('admin/assets/media/icons/eye.svg') }}" alt="" srcset="">
                             </a>
                             `;
-                    },
+                },
             }];
             control.initDatatable(`/jabatan/mutasi/datatable?satuan_kerja=${params}`, columns, columnDefs);
         }

@@ -9,6 +9,7 @@ use App\Traits\General;
 use App\Traits\Presensi;
 use DB;
 use Hash;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid as Generator;
 
@@ -83,6 +84,8 @@ class DashboardController extends BaseController
         $pegawai = $this->findPegawai(Auth::user()->id_pegawai);
         $atasan = $this->findAtasan(Auth::user()->id_pegawai);
         $tpp = (new LaporanTppController)->data_tpp_pegawai(Auth::user()->id_pegawai, $bulan);
+
+        
 
         $pegawai_dinilai = DB::table("tb_jabatan")
         ->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', '=', 'tb_master_jabatan.id')

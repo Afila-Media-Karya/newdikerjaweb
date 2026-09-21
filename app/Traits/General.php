@@ -42,6 +42,14 @@ trait General
         return DB::table('tb_unit_kerja')->select('id', 'nama_unit_kerja as text')->where('id_satuan_kerja', $params)->get();
     }
 
+    public function option_unit_kerja_at_mutasi($params)
+    {
+        return DB::table('tb_unit_kerja')
+            ->select('id as value', 'nama_unit_kerja as text')
+            ->where('id_satuan_kerja', $params)
+            ->get();
+    }
+
     public function option_akan_pensiun($params)
     {
         $semuaPegawai = DB::table('tb_pegawai')->leftJoin('tb_jabatan', 'tb_jabatan.id_pegawai', 'tb_pegawai.id')->leftJoin('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->leftJoin('tb_satuan_kerja', 'tb_pegawai.id_satuan_kerja', '=', 'tb_satuan_kerja.id')->select('tb_pegawai.id', DB::raw('CONCAT(tb_pegawai.nama, " - ", tb_pegawai.nip) as text'), 'tb_pegawai.nip', 'tb_master_jabatan.jenis_jabatan')->where('tb_pegawai.id_satuan_kerja', $params)->get();
@@ -360,8 +368,10 @@ trait General
     public function checkJabatanAll($pegawai)
     {
         return DB::table('tb_pegawai')->join(
-            'tb_jabatan', 
-            'tb_jabatan.id_pegawai', 'tb_pegawai.id')->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu', 'tb_jabatan.id_unit_kerja')->where('tb_pegawai.id', $pegawai)->get();
+            'tb_jabatan',
+            'tb_jabatan.id_pegawai',
+            'tb_pegawai.id'
+        )->join('tb_master_jabatan', 'tb_jabatan.id_master_jabatan', 'tb_master_jabatan.id')->select('tb_pegawai.id', 'tb_pegawai.uuid', 'tb_pegawai.id_satuan_kerja', 'tb_pegawai.nip', 'tb_pegawai.nama', 'tb_master_jabatan.nama_jabatan', 'tb_master_jabatan.level_jabatan', 'tb_jabatan.id_parent', 'tb_jabatan.id as id_jabatan', 'tb_jabatan.status', 'tb_master_jabatan.id_kelompok_jabatan', 'tb_master_jabatan.id as id_master_jabatan', 'tb_jabatan.target_waktu', 'tb_jabatan.id_unit_kerja')->where('tb_pegawai.id', $pegawai)->get();
     }
 
     public function optionJabatanKosong($params)
@@ -657,7 +667,7 @@ trait General
         }
     }
 
-    public function data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai, $jumlah_shift=null)
+    public function data_kehadiran_pegawai($pegawai, $tanggal_awal, $tanggal_akhir, $waktu_tetap_masuk, $waktu_tetap_keluar, $tipe_pegawai, $jumlah_shift = null)
     {
         $result = array();
         $daftar_tanggal = [];

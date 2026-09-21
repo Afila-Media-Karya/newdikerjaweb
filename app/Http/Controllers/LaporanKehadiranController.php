@@ -104,7 +104,8 @@ class LaporanKehadiranController extends Controller
 
     public function export_pegawai_bulan()
     {
-        
+        Log::info('=== EXPORT PEGAWAI BULAN ===');
+
         $satuan_kerja = request('satuan_kerja');
         $bulan = request('bulan');
         $tahun = session('tahun_penganggaran') ? session('tahun_penganggaran') : date('Y');
@@ -594,7 +595,6 @@ class LaporanKehadiranController extends Controller
             $context['tipe_pegawai']
         );
         $loadPegawaiSeconds = microtime(true) - $startedLoadPegawai;
-
         $jumlahHari = Carbon::parse($context['tanggal_awal'])->diffInDays(Carbon::parse($context['tanggal_akhir'])) + 1;
         $estimatedWorkload = $pegawaiRows->count() * $jumlahHari;
         $shouldAsync = $forceAsync
@@ -817,7 +817,8 @@ class LaporanKehadiranController extends Controller
 
     private function loadPegawaiDataByOpd($satuan_kerja, $unit_kerja, $tanggal_awal, $status_kepegawaian, $tipe_pegawai)
     {
-        $query_mutasi_check = DB::table('tb_pegawai')
+        $tanggal_akhir = \Carbon\Carbon::parse($tanggal_awal)->endOfMonth()->format('Y-m-d');
+        $query_mutasi_keluar = DB::table('tb_pegawai')
             ->select(
                 "tb_pegawai.id",
                 "tb_pegawai.nama",
@@ -831,8 +832,36 @@ class LaporanKehadiranController extends Controller
             ->join('tb_mutasi', 'tb_mutasi.id_pegawai', '=', 'tb_pegawai.id')
             ->join('tb_jabatan', 'tb_jabatan.id', '=', 'tb_mutasi.id_jabatan_lama')
             ->join('tb_unit_kerja', 'tb_unit_kerja.id', '=', 'tb_jabatan.id_unit_kerja')
-            ->where('tb_mutasi.id_satuan_kerja', $satuan_kerja)
-            ->whereDate('tb_mutasi.tmt', '>=', $tanggal_awal);
+            ->where('tb_mutasi.id_unit_kerja_lama', $unit_kerja)
+            ->where(function ($q) {
+                // Hanya anggap "keluar" kalau unit kerja BENAR-BENAR berubah
+                $q->whereColumn('tb_mutasi.id_unit_kerja_lama', '!=', 'tb_mutasi.id_unit_kerja')
+                    ->orWhereNull('tb_mutasi.id_unit_kerja'); // termasuk kasus unit baru belum diisi tapi satuan kerja berubah
+            })
+            ->whereDate('tb_mutasi.tmt', '>=', $tanggal_awal)
+            ->whereDate('tb_mutasi.tmt', '<=', $tanggal_akhir);
+
+        $query_mutasi_masuk = DB::table('tb_pegawai')
+            ->select(
+                "tb_pegawai.id",
+                "tb_pegawai.nama",
+                'tb_pegawai.nip',
+                'tb_unit_kerja.waktu_masuk',
+                'tb_unit_kerja.waktu_keluar',
+                'tb_pegawai.tipe_pegawai',
+                'tb_unit_kerja.jumlah_shift',
+                'tb_mutasi.tmt'
+            )
+            ->join('tb_mutasi', 'tb_mutasi.id_pegawai', '=', 'tb_pegawai.id')
+            ->join('tb_jabatan', 'tb_jabatan.id', '=', 'tb_mutasi.id_jabatan_baru')
+            ->join('tb_unit_kerja', 'tb_unit_kerja.id', '=', 'tb_jabatan.id_unit_kerja')
+            ->where('tb_mutasi.id_unit_kerja', $unit_kerja)
+            ->where(function ($q) {
+                $q->whereColumn('tb_mutasi.id_unit_kerja_lama', '!=', 'tb_mutasi.id_unit_kerja')
+                    ->orWhereNull('tb_mutasi.id_unit_kerja_lama');
+            })
+            ->whereDate('tb_mutasi.tmt', '>=', $tanggal_awal)
+            ->whereDate('tb_mutasi.tmt', '<=', $tanggal_akhir);
 
         $query = DB::table('tb_pegawai')
             ->select(
@@ -864,7 +893,19 @@ class LaporanKehadiranController extends Controller
             $query->where('tipe_pegawai', $tipe_pegawai);
         }
 
-        return $query->union($query_mutasi_check)->get();
+        $q1 = $query_mutasi_keluar->get();
+        $q2 = $query_mutasi_masuk->get();
+        $q3 = $query->get();
+
+        Log::info("query mutasi keluar = $q1");
+        Log::info("query mutasi masuk = $q2");
+        Log::info("query = $q3");
+
+        $unionData = $query->union($query_mutasi_keluar)->union($query_mutasi_masuk)->get();
+
+        return $unionData;
+
+        // return $query->union($query_mutasi_keluar)->get();
     }
 
     private function calculateDataKehadiranPegawaiByOpdOptimized(
@@ -974,7 +1015,7 @@ class LaporanKehadiranController extends Controller
                 $absenValidatedCount[(int) $item->id] ?? 0
             );
 
-            
+
 
             $item->jml_hari_kerja = $child['jml_hari_kerja'];
             $item->kehadiran_kerja = $child['kehadiran_kerja'];
