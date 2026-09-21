@@ -11,7 +11,7 @@ class Mutasi extends Model
 {
     use HasFactory;
     protected $table = 'tb_mutasi';
-    protected $fillable = ['id','uuid','id_satuan_kerja','id_pegawai','id_satuan_kerja_baru','id_jabatan_baru','tmt'];
+    protected $fillable = ['id','uuid','id_satuan_kerja','id_pegawai','id_satuan_kerja_baru','id_jabatan_baru','tmt','id_unit_kerja'];
 
     protected static function boot(){
         parent::boot();

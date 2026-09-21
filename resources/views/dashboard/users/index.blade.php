@@ -22,7 +22,7 @@
                 @if($role['guard'] == 'web' && $role['role'] !== '3' && $tipe_pegawai !== 'tenaga_pendidik' && $tipe_pegawai !== 'tenaga_kesehatan')
                     <div class="box-tpp">
                         <span>TPP Anda Bulan ini</span>
-                        <h1>Rp 0</h1>
+                        <h1>Rp hahahah</h1>
                         <div class="progress-bar__wrapper">
                             <label class="progress-bar__value" htmlFor="progress-bar"></label>
                             <progress id="progress-bar" value="40" max="100"></progress>
